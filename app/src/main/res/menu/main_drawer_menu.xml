@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:title="@string/action_favorite"
-        />
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
 
     <item
-        android:title="@string/action_settings"
-        />
+        android:id="@+id/my_profile_button"
+        android:title="@string/my_profile" />
+    <item
+        android:id="@+id/select_stores_button"
+        android:title="@string/select_store" />
+
 </menu>

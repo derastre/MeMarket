@@ -16,6 +16,8 @@
         <item>Variedades</item>
     </string-array>
     <string name="ok">OK</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Scan detector dependencies cannot be downloaded due to low device storage</string>
@@ -28,9 +30,9 @@
     <string name="barcode_manual_entry_button">"Enter code manually"</string>
 
     <string name="search_product">"SCAN PRODUCT"</string>
-    <string name="select_store">"SELECT STORE"</string>
+    <string name="select_store">"Select store"</string>
     <string name="register_purchases">"REGISTER YOUR PURCHASES"</string>
-    <string name="my_profile">"MY PROFILE"</string>
+    <string name="my_profile">"My profile"</string>
 
     <string name="no_company_selected">"No company selected."</string>
     <string name="no_store_selected">"No store selected."</string>

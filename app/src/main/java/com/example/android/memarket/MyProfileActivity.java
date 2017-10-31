@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
 
     private TextView mUserNameTexView;
     private TextView mEmailTexView;
+    private Button mEmailVerifiedButton;
 
     private FirebaseAuth mAuth;
 
@@ -42,11 +44,12 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
 
         mUserNameTexView = (TextView) findViewById(R.id.profileUserName);
         mEmailTexView = (TextView) findViewById(R.id.profileEmail);
+        mEmailVerifiedButton = (Button) findViewById(R.id.verify_email_button);
 
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.verify_email_button).setOnClickListener(this);
+        mEmailVerifiedButton.setOnClickListener(this);
 
     }
 
@@ -134,6 +137,7 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
         if (user != null) {
             String email = user.getEmail();
             String name = user.getDisplayName();
+            Boolean vemail = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
             ImageView profileAvatar = (ImageView) findViewById(R.id.profilePicture);
             Glide.with(this)
@@ -148,6 +152,12 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
 
             if(name!=null) mUserNameTexView.setText(name);
             mEmailTexView.setText(email);
+            if (vemail){
+                mEmailVerifiedButton.setVisibility(View.GONE);
+            }else{
+                mEmailVerifiedButton.setVisibility(View.VISIBLE);
+            }
+                
             findViewById(R.id.verify_email_button).setEnabled(!emailVerification);
 
         }else{

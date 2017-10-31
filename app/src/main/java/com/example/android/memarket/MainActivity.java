@@ -2,7 +2,11 @@ package com.example.android.memarket;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +22,7 @@ import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener,NavigationView.OnNavigationItemSelectedListener {
 
     public static final String FROM_MAIN = "com.example.android.memarket.FROM_MAIN";
     public static final String PREFS_FILE = "MyPrefsFile";
@@ -29,20 +33,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String selectedStoreId;
     private String mUserEmail;
     private Boolean mEmailVerified;
+    private Toolbar mainToolbar;
+    private ActionBarDrawerToggle mainActionBarDrawerToggle;
+    private DrawerLayout mainDrawerLayout;
+    private NavigationView mainNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Setting Toolbar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(myToolbar);
+        //Setting Toolbar and Navigation Drawer
+        mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        mainDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        setSupportActionBar(mainToolbar);
+        mainActionBarDrawerToggle = new ActionBarDrawerToggle(this,mainDrawerLayout,mainToolbar,R.string.open,R.string.close);
+        mainDrawerLayout.addDrawerListener(mainActionBarDrawerToggle);
+        mainActionBarDrawerToggle.syncState();
+        mainNavigationView = (NavigationView) findViewById(R.id.main_navigation);
+        mainNavigationView.setNavigationItemSelectedListener(this);
 
         //Setting button listeners
         findViewById(R.id.find_products_button).setOnClickListener(this);
-        findViewById(R.id.select_stores_button).setOnClickListener(this);
-        findViewById(R.id.my_profile_button).setOnClickListener(this);
+
 
         // Restore preferences from file
         SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
@@ -64,10 +77,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             textView.setText(R.string.no_store_selected);
         }
 
-        //Get user name and show it.
+        //Get user name and picture then show it on Navigation drawer.
         mUserEmail = getIntent().getStringExtra(USER_EMAIL);
         mEmailVerified = getIntent().getBooleanExtra(USER_EMAIL_VERIFICATION,true);
-        textView = (TextView) findViewById(R.id.userName);
+        View header = mainNavigationView.getHeaderView(0);
+
+        textView = header.findViewById(R.id.userName);
         if (mEmailVerified){
             textView.setText(mUserEmail);
         }else{
@@ -107,10 +122,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         int i = v.getId();
         if (i==R.id.find_products_button){
             searchProducts();
-        } else if (i==R.id.select_stores_button){
-            gotoStores();
-        }else if (i==R.id.my_profile_button){
-            gotoMyProfile();
         }
     }
 
@@ -144,4 +155,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return true;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        mainActionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item){
+        int i = item.getItemId();
+        switch (i){
+            case R.id.my_profile_button:
+                gotoMyProfile();
+                break;
+            case R.id.select_stores_button:
+                gotoStores();
+                break;
+        }
+        return true;
+    }
 }
