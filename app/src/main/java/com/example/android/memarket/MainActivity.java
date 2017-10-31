@@ -3,6 +3,9 @@ package com.example.android.memarket;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +34,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Setting Toolbar
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(myToolbar);
 
         //Setting button listeners
         findViewById(R.id.find_products_button).setOnClickListener(this);
@@ -105,6 +112,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }else if (i==R.id.my_profile_button){
             gotoMyProfile();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int i = item.getItemId();
+
+        switch (i) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                Toast.makeText(this,"Settings clicked!",Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_favorite:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Toast.makeText(this,"Favorite clicked!",Toast.LENGTH_LONG).show();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+        getMenuInflater().inflate(R.menu.main_toolbar_menu,menu);
+        return true;
     }
 
 }

@@ -41,7 +41,7 @@
     <string name="last_purchase_price_text">"Last Purchase Price:"</string>
 
     <string name="update_button">"UPDATE"</string>
-    <string name="cancel_button">"CANCEL"</string>
+    <string name="cancel_button">"Cancel"</string>
     <string name="add_button">"ADD"</string>
     <string name="search_button">"SEARCH"</string>
     <string name="scan_button">"SCAN"</string>
@@ -137,6 +137,7 @@
     <string name="fb_login_protocol_scheme">fb154652135120969</string>
     <string name="title_activity_purchase_history">purchaseHistory</string>
 
-
+    <string name="action_favorite">Favorite</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
