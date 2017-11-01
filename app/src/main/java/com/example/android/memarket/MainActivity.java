@@ -80,6 +80,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         //Get user name and picture then show it on Navigation drawer.
         mUserEmail = getIntent().getStringExtra(USER_EMAIL);
         mEmailVerified = getIntent().getBooleanExtra(USER_EMAIL_VERIFICATION,true);
+        String pictureUri = getIntent().getStringExtra(USER_PICTURE);
         View header = mainNavigationView.getHeaderView(0);
 
         textView = header.findViewById(R.id.userName);
