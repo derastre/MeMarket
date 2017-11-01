@@ -42,10 +42,11 @@ public class SplashActivity extends Activity  {
             String email = user.getEmail();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
+            stringUri = pictureUri.toString();
             startActivity(new Intent(this, MainActivity.class)
                     .putExtra(USER_EMAIL,email)
                     .putExtra(USER_EMAIL_VERIFICATION,emailVerification)
-                    .putExtra(USER_PICTURE,pictureUri)      
+                    .putExtra(USER_PICTURE,stringUri)      
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
 
