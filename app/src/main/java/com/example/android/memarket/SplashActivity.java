@@ -12,6 +12,7 @@ public class SplashActivity extends Activity  {
 
     public static final String USER_EMAIL = "com.example.android.memarket.USER_EMAIL";
     public static final String USER_EMAIL_VERIFICATION = "com.example.android.memarket.USER_EMAIL_VERIFICATION";
+    public static final String USER_PICTURE = "com.example.android.memarket.PICTURE";
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
@@ -40,10 +41,12 @@ public class SplashActivity extends Activity  {
         if (user != null) {
             String email = user.getEmail();
             Boolean emailVerification = user.isEmailVerified();
+            Uri pictureUri = user.getPhotoUrl();
             startActivity(new Intent(this, MainActivity.class)
                     .putExtra(USER_EMAIL,email)
                     .putExtra(USER_EMAIL_VERIFICATION,emailVerification)
-            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                    .putExtra(USER_PICTURE,pictureUri)      
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
 
         } else {
