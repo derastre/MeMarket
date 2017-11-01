@@ -82,10 +82,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         mEmailVerified = getIntent().getBooleanExtra(USER_EMAIL_VERIFICATION,true);
         String pictureUri = getIntent().getStringExtra(USER_PICTURE);
         View header = mainNavigationView.getHeaderView(0);
-
         textView = header.findViewById(R.id.userName);
+        ImageView profileAvatar = (ImageView) header.findViewById(R.id.profilePicture);
         if (mEmailVerified){
             textView.setText(mUserEmail);
+            Glide.with(this)
+                    .load(pictureUri)
+                    .placeholder(R.drawable.default_avatar)
+                    .error(R.drawable.error)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .animate(R.anim.fade_in)
+                    .centerCrop()
+                    .into(profileAvatar);
         }else{
             textView.setText(mUserEmail + "\n" + "(" + R.string.verify_email + ")");
         }
