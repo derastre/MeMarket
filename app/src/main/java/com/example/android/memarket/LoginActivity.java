@@ -119,10 +119,11 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             String email = user.getEmail();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
+            stringUri = pictureUri.toString();
             startActivity(new Intent(this, MainActivity.class)
                     .putExtra(USER_EMAIL,email)
                     .putExtra(USER_EMAIL_VERIFICATION,emailVerification)
-                    .putExtra(USER_PICTURE,pictureUri)
+                    .putExtra(USER_PICTURE,stringUri)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
         } else {
             findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
