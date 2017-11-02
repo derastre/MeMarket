@@ -4,9 +4,11 @@
 
     <item
         android:id="@+id/my_profile_button"
-        android:title="@string/my_profile" />
+        android:title="@string/my_profile"
+        android:icon="@drawable/ic_perm_identity_black_24dp"/>
     <item
         android:id="@+id/select_stores_button"
-        android:title="@string/select_store" />
+        android:title="@string/select_store"
+        android:icon="@drawable/ic_store_black_24dp"/>
 
 </menu>
