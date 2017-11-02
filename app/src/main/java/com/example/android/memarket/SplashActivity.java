@@ -1,6 +1,7 @@
 package com.example.android.memarket;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Handler;
@@ -42,7 +43,7 @@ public class SplashActivity extends Activity  {
             String email = user.getEmail();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
-            stringUri = pictureUri.toString();
+            String stringUri = pictureUri.toString();
             startActivity(new Intent(this, MainActivity.class)
                     .putExtra(USER_EMAIL,email)
                     .putExtra(USER_EMAIL_VERIFICATION,emailVerification)

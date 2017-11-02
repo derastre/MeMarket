@@ -20,7 +20,7 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
         <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
+            android:name="com.facebook.sdk. ApplicationId"
             android:value="@string/facebook_app_id" />
 
         <activity

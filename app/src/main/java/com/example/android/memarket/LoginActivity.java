@@ -2,6 +2,7 @@ package com.example.android.memarket;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -34,6 +35,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import static com.example.android.memarket.SplashActivity.USER_EMAIL;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
+import static com.example.android.memarket.SplashActivity.USER_PICTURE;
 
 public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
 
@@ -119,7 +121,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             String email = user.getEmail();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
-            stringUri = pictureUri.toString();
+            String stringUri = pictureUri.toString();
             startActivity(new Intent(this, MainActivity.class)
                     .putExtra(USER_EMAIL,email)
                     .putExtra(USER_EMAIL_VERIFICATION,emailVerification)

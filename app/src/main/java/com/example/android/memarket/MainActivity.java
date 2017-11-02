@@ -11,13 +11,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
 import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL;
+import static com.example.android.memarket.SplashActivity.USER_PICTURE;
 import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
 
@@ -83,7 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         String pictureUri = getIntent().getStringExtra(USER_PICTURE);
         View header = mainNavigationView.getHeaderView(0);
         textView = header.findViewById(R.id.userName);
-        ImageView profileAvatar = (ImageView) header.findViewById(R.id.profilePicture);
+        ImageView profileAvatar = header.findViewById(R.id.profilePicture);
         if (mEmailVerified){
             textView.setText(mUserEmail);
             Glide.with(this)
@@ -95,7 +100,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
                     .centerCrop()
                     .into(profileAvatar);
         }else{
-            textView.setText(mUserEmail + "\n" + "(" + R.string.verify_email + ")");
+            textView.setText(mUserEmail + "\n" + "(" + getString(R.string.verify_email) + ")");
         }
 
     }
