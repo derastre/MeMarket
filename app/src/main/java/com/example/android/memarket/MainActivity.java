@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
 
         //Setting button listeners
         findViewById(R.id.find_products_button).setOnClickListener(this);
+        findViewById(R.id.main_floating_button).setOnClickListener(this);
 
 
         // Restore preferences from file
@@ -136,9 +137,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         int i = v.getId();
         if (i==R.id.find_products_button){
             searchProducts();
+        }else if (i==R.id.main_floating_button) {
+             searchProducts();
         }
     }
 
+
+    //AppBar onClick method
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
@@ -149,10 +154,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
                 Toast.makeText(this,"Settings clicked!",Toast.LENGTH_LONG).show();
                 return true;
 
-            case R.id.action_favorite:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Toast.makeText(this,"Favorite clicked!",Toast.LENGTH_LONG).show();
+            case R.id.action_scan:
+                searchProducts();
                 return true;
 
             default:
