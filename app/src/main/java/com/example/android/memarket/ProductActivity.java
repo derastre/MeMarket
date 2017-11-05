@@ -3,12 +3,19 @@ package com.example.android.memarket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -41,16 +48,16 @@ import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
 
 
-public class ProductActivity extends BaseActivity implements View.OnClickListener {
+public class ProductActivity extends BaseActivity implements View.OnClickListener,BottomNavigationView.OnNavigationItemSelectedListener {
 
     public static final String PRODUCT_CODE = "com.example.android.memarket.PRODUCT_CODE";
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "BarcodeMain";
 
 
-    private EditText productCode;
+    private TextView productCode;
     private Button go_Button;
-    private Button scan_Button;
+    private FloatingActionButton scan_Button;
     private String productPrice;
     private String productOfferPrice;
     private String storeId;
@@ -72,27 +79,29 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private ValueEventListener productListener;
     private ValueEventListener offerListener;
     private ValueEventListener purchasesListener;
-
+    private Toolbar toolbar;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-        productCode = (EditText) findViewById(R.id.productCode);
+        productCode = (TextView) findViewById(R.id.productCode);
         go_Button = (Button) findViewById(R.id.go_button);
-        scan_Button = (Button) findViewById(R.id.scan_button);
+        scan_Button = (FloatingActionButton) findViewById(R.id.scan_button);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
+        //Setting Toolbar
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         //Buttons Listeners
         go_Button.setOnClickListener(this);
         scan_Button.setOnClickListener(this);
-        //findViewById(R.id.compare_price_button).setOnClickListener(this);
-        //findViewById(R.id.update_price_button).setOnClickListener(this);
-        findViewById(R.id.add_purchase_button).setOnClickListener(this);
-        findViewById(R.id.offer_button).setOnClickListener(this);
-        //findViewById(R.id.purchase_history_button).setOnClickListener(this);
-        findViewById(R.id.productPrice).setOnClickListener(this);
+        findViewById(R.id.update_price_button).setOnClickListener(this);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -115,7 +124,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         });
 
         if (fromMain ){
-            scan_Button.performClick();
+            scan_barcode();
         }
     }
 
@@ -157,7 +166,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                             .load(storageRef)
                             .into(productImage);
                     findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
-                    findViewById(R.id.offer_button).setVisibility(View.VISIBLE);
                 } else {
                     //if product code doesn't exist in database go to activity add new product
                     startActivity(new Intent(ProductActivity.this, NewProduct.class).putExtra(PRODUCT_CODE,code));
@@ -215,19 +223,20 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Button textButton = (Button) findViewById(R.id.offer_button);
+                TextView offer_text = (TextView) findViewById(R.id.offer_text);
 
                 //Check if product exist in database
                 if (dataSnapshot.getChildren() != null) {
                     for (DataSnapshot offerSnapshot:dataSnapshot.getChildren()) {
+                        offer_text.setVisibility(View.VISIBLE);
                         productOfferPrice = offerSnapshot.getValue().toString();
-                        String text = getResources().getString(R.string.offer_button_dialog_2) + productOfferPrice;
-                        textButton.setText(text);
+                        String text = getResources().getString(R.string.offer_button_dialog_2) + " " + productOfferPrice;
+                        offer_text.setText(text);
                         //textButton.setEnabled(false);
                     }
                 } else {
                     //if price  does'nt exist in database
-                    textButton.setText(R.string.mark_as_offer_dialog);
+                    offer_text.setVisibility(View.GONE);
                     productOfferPrice = getResources().getString(R.string.no_offer);
                 }
             }
@@ -389,7 +398,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private void showProductPriceOptions() {
+   private void showProductPriceOptions() {
         if (companyName!=null && storeName != null && companyId!=null && storeId != null && productId!=null) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -469,17 +478,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 productId = productCode.getText().toString();
                 readProductFromFirebase(productId);
                 break;
-            case R.id.compare_price_button:
-                comparePrices();
-                break;
             case R.id.update_price_button:
                 updatePrice();
-                break;
-            case R.id.add_purchase_button:
-                add_purchase();
-                break;
-            case R.id.offer_button:
-                mark_as_offer();
                 break;
             case R.id.purchase_history_button:
                 purchases_history();
@@ -491,5 +491,43 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+        getMenuInflater().inflate(R.menu.product_toolbar_menu,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //AppBar onClick method
+        int i = item.getItemId();
+
+        switch (i) {
+            case R.id.action_scan:
+                scan_barcode();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    public boolean onNavigationItemSelected(MenuItem item){
+        int i = item.getItemId();
+        switch (i){
+            case R.id.offer_button:
+                mark_as_offer();
+                break;
+            case R.id.compare_price_button:
+                comparePrices();
+                break;
+            case R.id.add_purchase_button:
+                add_purchase();
+                break;
+        }
+        return true;
+    }
 }

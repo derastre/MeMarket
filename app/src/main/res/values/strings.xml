@@ -35,28 +35,32 @@
     <string name="my_profile">"My profile"</string>
     <string name="welcome_card">"Welcome! \nUse this app to track all your favorite products and share the offers you find."</string>
 
-    <string name="no_company_selected">"No company selected."</string>
-    <string name="no_store_selected">"No store selected."</string>
-    <string name="product_price_text">"Price:"</string>
+    <string name="no_company_selected">"No company selected"</string>
+    <string name="no_store_selected">"No store selected"</string>
+    <string name="product_price_text">"Price"</string>
     <string name="no_price">"No Price"</string>
     <string name="update_price">"Update price"</string>
     <string name="purchase_history_button">"Purchases history"</string>
-    <string name="last_purchase_price_text">"Last Purchase Price:"</string>
+    <string name="last_purchase_price_text">"Last Purchase Price"</string>
 
-    <string name="update_button">"UPDATE"</string>
+    <string name="update_button">"Update"</string>
     <string name="cancel_button">"Cancel"</string>
-    <string name="add_button">"ADD"</string>
-    <string name="search_button">"SEARCH"</string>
-    <string name="scan_button">"SCAN"</string>
-    <string name="compare_button">"COMPARE"</string>
-    <string name="select_button">"SELECT"</string>
-    <string name="add_purchase_button">"ADD PURCHASE"</string>
+    <string name="add_button">"Add"</string>
+    <string name="search_button">"Search"</string>
+    <string name="scan_button">"Scan"</string>
+    <string name="compare_button">"Compare"</string>
+    <string name="select_button">"Select"</string>
+    <string name="add_purchase_button">"Add purchase"</string>
     <string name="end_register_button">"END REGISTER"</string>
     <string name="mark_as_offer_dialog">"MARK THIS PRODUCT AS OFFER"</string>
-    <string name="offer_price_text">"Offer Price:"</string>
-    <string name="offer_button_dialog_1">"MARK AS OFFER!"</string>
-    <string name="offer_button_dialog_2">"OFFER PRICE: $"</string>
+    <string name="offer_price_text">"Offer Price"</string>
+    <string name="offer_button_dialog_1">"Mark as offer!"</string>
+    <string name="offer_button_dialog_2">"Offer price"</string>
     <string name="no_offer">"No offer today"</string>
+
+    <string name="offer_bottom_nav_text">"Mark offer"</string>
+    <string name="add_purchase_bottom_nav_text">"Add purchase"</string>
+    <string name="compare_bottom_nav_text">"Compare items"</string>
 
 
     <string name="companies_list">"COMPANY LIST</string>

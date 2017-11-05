@@ -38,7 +38,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".ProductActivity" />
+        <activity android:name=".ProductActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
         <activity android:name=".NewProduct" />
         <activity android:name=".BarcodeReader" android:theme="@style/ThemeOverlay.MyNoTitleActivity" />
         <activity android:name=".CompaniesActivity" />

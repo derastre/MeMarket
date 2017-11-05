@@ -59,7 +59,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         mainNavigationView.setNavigationItemSelectedListener(this);
 
         //Setting button listeners
-        findViewById(R.id.find_products_button).setOnClickListener(this);
         findViewById(R.id.main_floating_button).setOnClickListener(this);
 
 
@@ -74,13 +73,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         //Check that there is information on the file
         TextView textView;
         if (selectedCompanyName!=null && selectedStoreName != null) {
-            textView = (TextView) findViewById(R.id.selectedCompany);
-            textView.setText(selectedCompanyName);
-            textView = (TextView) findViewById(R.id.selectedStore);
-            textView.setText(selectedStoreName);
+            //textView = (TextView) findViewById(R.id.selectedCompany);
+            //textView.setText(selectedCompanyName);
+            //textView = (TextView) findViewById(R.id.selectedStore);
+            //textView.setText(selectedStoreName);
         } else {
-            textView = (TextView) findViewById(R.id.selectedStore);
-            textView.setText(R.string.no_store_selected);
+            //textView = (TextView) findViewById(R.id.selectedStore);
+            //textView.setText(R.string.no_store_selected);
         }
 
         //Get user name and picture then show it on Navigation drawer.
@@ -101,7 +100,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
                     .centerCrop()
                     .into(profileAvatar);
         }else{
-            textView.setText(mUserEmail + "\n" + "(" + getString(R.string.verify_email) + ")");
+            textView.setText(mUserEmail + "\n" +  getString(R.string.verify_email));
         }
 
     }
@@ -142,10 +141,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         }
     }
 
-
-    //AppBar onClick method
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //AppBar onClick method
         int i = item.getItemId();
 
         switch (i) {

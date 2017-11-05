@@ -67,7 +67,7 @@ android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/product" />
+                />
 
             <TextView
                 android:id="@+id/productType"
@@ -121,36 +121,7 @@ android:gravity="center"
                 android:id="@+id/offer_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-<!--
-            <LinearLayout
-                android:id="@+id/prices_buttons_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/compare_price_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/compare_button"
-
-                    />
-
-                <Button
-                    android:id="@+id/update_price_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/update_button" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/purchase_history_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/purchase_history_button" />
--->
             <Button
                 android:id="@+id/add_purchase_button"
                 android:layout_width="match_parent"
