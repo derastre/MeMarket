@@ -56,8 +56,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
 
     private TextView productCode;
-    private Button go_Button;
-    private FloatingActionButton scan_Button;
     private String productPrice;
     private String productOfferPrice;
     private String storeId;
@@ -79,16 +77,15 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private ValueEventListener productListener;
     private ValueEventListener offerListener;
     private ValueEventListener purchasesListener;
-    private Toolbar toolbar;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+
+        //Getting widgets ids
         productCode = (TextView) findViewById(R.id.productCode);
-        go_Button = (Button) findViewById(R.id.go_button);
-        scan_Button = (FloatingActionButton) findViewById(R.id.scan_button);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         //Setting Toolbar
         setSupportActionBar(toolbar);
@@ -96,8 +93,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         ab.setDisplayHomeAsUpEnabled(true);
 
         //Buttons Listeners
-        go_Button.setOnClickListener(this);
-        scan_Button.setOnClickListener(this);
+        findViewById(R.id.scan_button).setOnClickListener(this);
         findViewById(R.id.update_price_button).setOnClickListener(this);
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -110,18 +106,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         companyId = intent.getStringExtra(COMPANY_ID);
         companyName= intent.getStringExtra(COMPANY_NAME);
         Boolean fromMain = intent.getBooleanExtra(MainActivity.FROM_MAIN,false);
-
-        productCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_GO) {
-
-                    go_Button.performClick();
-                    return true;
-                }
-                return false;
-            }
-        });
 
         if (fromMain ){
             scan_barcode();
@@ -428,14 +412,15 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Returning from barcode capture activity
         if (requestCode == RC_BARCODE_CAPTURE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     String barcode = data.getStringExtra(BarcodeReader.BarcodeObject);
-
-                    productCode.setText(barcode);
-                    go_Button.performClick();
                     Log.d(TAG, "Barcode read: " + barcode);
+                    productId = barcode;
+                    productCode.setText(barcode);
+                    readProductFromFirebase(barcode);
                 } else {
                     Log.d(TAG, "No barcode captured, intent data is null");
                     finish();
@@ -473,10 +458,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         switch (i){
             case R.id.scan_button:
                 scan_barcode();
-                break;
-            case R.id.go_button:
-                productId = productCode.getText().toString();
-                readProductFromFirebase(productId);
                 break;
             case R.id.update_price_button:
                 updatePrice();

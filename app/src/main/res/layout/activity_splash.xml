@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primaryColor"
     tools:context="com.example.android.memarket.SplashActivity"
     android:orientation="vertical"
     android:gravity="center">
@@ -13,7 +14,7 @@
         android:id="@+id/logoPicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/insertlogohere"
+        android:src="@drawable/memarket_logo"
         android:contentDescription="Logo"/>
 
 
