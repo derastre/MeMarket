@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.android.memarket.MainActivity.FROM_MAIN;
+
 public class BarcodeReader extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "BarcodeReader";
 

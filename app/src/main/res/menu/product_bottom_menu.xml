@@ -18,4 +18,10 @@
         android:title="@string/compare_bottom_nav_text"
         android:icon="@drawable/ic_compare_arrows_black_24dp"
          />
+
+    <item
+        android:id="@+id/purchase_history_button"
+        android:title="@string/purchase_history_bottom_nav_text"
+        android:icon="@drawable/ic_history_black_24dp"
+        />
 </menu>

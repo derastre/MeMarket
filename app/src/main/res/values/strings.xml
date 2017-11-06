@@ -29,7 +29,7 @@
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
     <string name="barcode_manual_entry_button">"Enter code manually"</string>
 
-    <string name="search_product">"SCAN PRODUCT"</string>
+    <string name="search_product">"Scan product"</string>
     <string name="select_store">"Select store"</string>
     <string name="register_purchases">"REGISTER YOUR PURCHASES"</string>
     <string name="my_profile">"My profile"</string>
@@ -58,9 +58,19 @@
     <string name="offer_button_dialog_2">"Offer price"</string>
     <string name="no_offer">"No offer today"</string>
 
-    <string name="offer_bottom_nav_text">"Mark offer"</string>
+    <!--Product bottom navigation buttons text -->
+    <string name="offer_bottom_nav_text">"On sale"</string>
     <string name="add_purchase_bottom_nav_text">"Add purchase"</string>
-    <string name="compare_bottom_nav_text">"Compare items"</string>
+    <string name="compare_bottom_nav_text">"Compare"</string>
+    <string name="purchase_history_bottom_nav_text">"History"</string>
+
+    <!--Snackbars text -->
+    <string name="purchase_added_snackbar">"Purchase added"</string>
+    <string name="undo_snackbar_button">"Undo"</string>
+
+    <!--Product Price Card Text -->
+    <string name="price_text">"Price"</string>
+    <string name="offer_text">"Offer price"</string>
 
 
     <string name="companies_list">"COMPANY LIST</string>

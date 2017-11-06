@@ -22,6 +22,7 @@ import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
 import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL;
+import static com.example.android.memarket.SplashActivity.USER_ID;
 import static com.example.android.memarket.SplashActivity.USER_PICTURE;
 import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
@@ -36,6 +37,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
     private String selectedCompanyId;
     private String selectedStoreName;
     private String selectedStoreId;
+    private String mUserId;
     private String mUserEmail;
     private Boolean mEmailVerified;
     private Toolbar mainToolbar;
@@ -83,6 +85,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
         }
 
         //Get user name and picture then show it on Navigation drawer.
+        mUserId = getIntent().getStringExtra(USER_ID);
         mUserEmail = getIntent().getStringExtra(USER_EMAIL);
         mEmailVerified = getIntent().getBooleanExtra(USER_EMAIL_VERIFICATION,true);
         String pictureUri = getIntent().getStringExtra(USER_PICTURE);
@@ -115,7 +118,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
                     .putExtra(COMPANY_ID, selectedCompanyId)
                     .putExtra(COMPANY_NAME, selectedCompanyName)
                     .putExtra(STORE_ID, selectedStoreId)
-                    .putExtra(STORE_NAME, selectedStoreName);
+                    .putExtra(STORE_NAME, selectedStoreName)
+                    .putExtra(USER_ID, mUserId);
 
             startActivity(intent);
         }else{

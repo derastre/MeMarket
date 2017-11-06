@@ -35,6 +35,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import static com.example.android.memarket.SplashActivity.USER_EMAIL;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
+import static com.example.android.memarket.SplashActivity.USER_ID;
 import static com.example.android.memarket.SplashActivity.USER_PICTURE;
 
 public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
@@ -118,11 +119,13 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
+            String userId = user.getUid();
             String email = user.getEmail();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
             String stringUri = pictureUri.toString();
             startActivity(new Intent(this, MainActivity.class)
+                    .putExtra(USER_ID,userId)
                     .putExtra(USER_EMAIL,email)
                     .putExtra(USER_EMAIL_VERIFICATION,emailVerification)
                     .putExtra(USER_PICTURE,stringUri)

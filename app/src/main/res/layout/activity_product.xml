@@ -118,7 +118,7 @@ android:gravity="center"
             </LinearLayout>
 
             <TextView
-                android:id="@+id/offer_text"
+                android:id="@+id/offer_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
