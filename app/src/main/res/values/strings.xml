@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MeMarket</string>
+    
     <string-array name="units_array">
         <item>Gramos</item>
         <item>Kilogramos</item>
@@ -9,12 +10,14 @@
         <item>Mililitros</item>
         <item>Galones</item>
     </string-array>
+    
     <string-array name="companyTypesList">
         <item>Supermercado</item>
         <item>Farmacia</item>
         <item>Almacen</item>
         <item>Variedades</item>
     </string-array>
+    
     <string name="ok">OK</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -31,7 +34,7 @@
 
     <string name="search_product">"Scan product"</string>
     <string name="select_store">"Select store"</string>
-    <string name="register_purchases">"REGISTER YOUR PURCHASES"</string>
+    <string name="register_purchases">"Register your purchase"</string>
     <string name="my_profile">"My profile"</string>
     <string name="welcome_card">"Welcome! \nUse this app to track all your favorite products and share the offers you find."</string>
 
@@ -51,8 +54,8 @@
     <string name="compare_button">"Compare"</string>
     <string name="select_button">"Select"</string>
     <string name="add_purchase_button">"Add purchase"</string>
-    <string name="end_register_button">"END REGISTER"</string>
-    <string name="mark_as_offer_dialog">"MARK THIS PRODUCT AS OFFER"</string>
+    <string name="end_register_button">"End register"</string>
+    <string name="mark_as_offer_dialog">"Mark this product as offer"</string>
     <string name="offer_price_text">"Offer Price"</string>
     <string name="offer_button_dialog_1">"Mark as offer!"</string>
     <string name="offer_button_dialog_2">"Offer price"</string>
@@ -73,21 +76,21 @@
     <string name="offer_text">"Offer price"</string>
 
 
-    <string name="companies_list">"COMPANY LIST</string>
-    <string name="company_data_input_instructions">"ENTER THE INFO OF THE COMPANY"</string>
-    <string name="company_name_input">"NAME:</string>
-    <string name="company_type_input">"TYPE:</string>
-    <string name="product_price_input">"PRICE:"</string>
-    <string name="product_unit_input">"UNIT:"</string>
-    <string name="product_quantity_input">"QUANTITY:"</string>
-    <string name="product_type_input">"PRODUCT TYPE:"</string>
-    <string name="product_brand_input">"BRAND:"</string>
-    <string name="product_name_input">"NAME:"</string>
+    <string name="companies_list">"Companies list</string>
+    <string name="company_data_input_instructions">"Enter the info of the company"</string>
+    <string name="company_name_input">"Name</string>
+    <string name="company_type_input">"Type</string>
+    <string name="product_price_input">"Price"</string>
+    <string name="product_unit_input">"Unit"</string>
+    <string name="product_quantity_input">"Quantity"</string>
+    <string name="product_type_input">"Type"</string>
+    <string name="product_brand_input">"Brand"</string>
+    <string name="product_name_input">"Name"</string>
     <string name="product_image_input">"Click to add a product photo&#8230;"</string>
-    <string name="product_code_input">"CODE:"</string>
-    <string name="store_name_input">"STORE NAME:</string>
-    <string name="store_address_input">"ADDRESS:</string>
-    <string name="store_phone_input">"PHONE:</string>
+    <string name="product_code_input">"Code"</string>
+    <string name="store_name_input">"Store name</string>
+    <string name="store_address_input">"Address</string>
+    <string name="store_phone_input">"Phone</string>
 
 
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
