@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -231,7 +232,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     for (DataSnapshot offerSnapshot:dataSnapshot.getChildren()) {
                         findViewById(R.id.offers_layout).setVisibility(View.VISIBLE);
                         productOfferPrice = offerSnapshot.getValue().toString();
-                        String text = productOfferPrice;
+                        String text = NumberFormat.getCurrencyInstance().format(productOfferPrice);
                         offer_text.setText(text);
                         //textButton.setEnabled(false);
                     }
