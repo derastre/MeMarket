@@ -229,15 +229,15 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 //Check if product exist in database
                 if (dataSnapshot.getChildren() != null) {
                     for (DataSnapshot offerSnapshot:dataSnapshot.getChildren()) {
-                        offer_text.setVisibility(View.VISIBLE);
+                        findViewById(R.id.offers_layout).setVisibility(View.VISIBLE);
                         productOfferPrice = offerSnapshot.getValue().toString();
-                        String text = getResources().getString(R.string.offer_button_dialog_2) + " " + productOfferPrice;
+                        String text = productOfferPrice;
                         offer_text.setText(text);
                         //textButton.setEnabled(false);
                     }
                 } else {
                     //if price  does'nt exist in database
-                    offer_text.setVisibility(View.GONE);
+                    findViewById(R.id.offers_layout).setVisibility(View.GONE);
                     productOfferPrice = getResources().getString(R.string.no_offer);
                 }
             }

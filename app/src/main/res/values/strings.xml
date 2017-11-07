@@ -42,7 +42,7 @@
     <string name="no_store_selected">"No store selected"</string>
     <string name="product_price_text">"Price"</string>
     <string name="no_price">"No Price"</string>
-    <string name="update_price">"Update price"</string>
+    <string name="update_price">"Update"</string>
     <string name="purchase_history_button">"Purchases history"</string>
     <string name="last_purchase_price_text">"Last Purchase Price"</string>
 
