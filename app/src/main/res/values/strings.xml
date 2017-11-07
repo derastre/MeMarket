@@ -75,6 +75,9 @@
     <string name="price_text">"Price"</string>
     <string name="offer_text">"Offer price"</string>
 
+    <!--Dialogs Text -->
+    <string name="select_store_instruction">"Please select a store first"</string>
+
 
     <string name="companies_list">"Companies list</string>
     <string name="company_data_input_instructions">"Enter the info of the company"</string>
