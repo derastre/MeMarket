@@ -95,9 +95,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         //Buttons Listeners
         findViewById(R.id.scan_button).setOnClickListener(this);
         findViewById(R.id.update_price_button).setOnClickListener(this);
+        findViewById(R.id.compare_price_button).setOnClickListener(this);
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -341,7 +341,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
             myRef.child("purchases").child(mUserId).child(productId).child(date.toString()).setValue(register_product);
-            Snackbar.make(findViewById(R.id.scroll_group_view),getString(R.string.purchase_added_snackbar),Snackbar.LENGTH_LONG)
+            Snackbar.make(findViewById(R.id.cards_layout),getString(R.string.purchase_added_snackbar),Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -485,9 +485,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             case R.id.update_price_button:
                 updatePriceFirebase();
                 break;
-            case R.id.purchase_history_button:
-                purchasesHistoryFirebase();
+            case R.id.compare_price_button:
+                comparePricesFirebase();
                 break;
+
         }
 
     }
@@ -522,11 +523,11 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             case R.id.offer_button:
                 markAsOfferFirebase();
                 break;
-            case R.id.compare_price_button:
-                comparePricesFirebase();
-                break;
             case R.id.add_purchase_button:
                 addPurchaseFirebase();
+                break;
+            case R.id.purchase_history_button:
+                purchasesHistoryFirebase();
                 break;
         }
         return true;
