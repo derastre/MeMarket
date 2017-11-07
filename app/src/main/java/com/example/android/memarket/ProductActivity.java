@@ -196,7 +196,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 //Check if product exist in database
                 if (dataSnapshot.getValue() != null) {
                     productPrice = dataSnapshot.getValue().toString();
-                    textView.setText(productPrice);
+                    textView.setText(NumberFormat.getCurrencyInstance().format(productPrice));
                 } else {
                     //if price  does'nt exist in database
                     textView.setText(R.string.no_price);
