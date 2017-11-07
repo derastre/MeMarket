@@ -226,7 +226,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 TextView offer_text = (TextView) findViewById(R.id.offer_price);
-
+                TextView price_text = (TextView) findViewById(R.id.productPrice);
+                
                 //Check if product exist in database
                 if (dataSnapshot.getChildren() != null) {
                     for (DataSnapshot offerSnapshot:dataSnapshot.getChildren()) {
@@ -234,11 +235,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         productOfferPrice = offerSnapshot.getValue().toString();
                         String text = NumberFormat.getCurrencyInstance().format(productOfferPrice);
                         offer_text.setText(text);
+                        price_text.setPaintFlags(price_text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         //textButton.setEnabled(false);
                     }
                 } else {
                     //if price  does'nt exist in database
                     findViewById(R.id.offers_layout).setVisibility(View.GONE);
+                    price_text.setPaintFlags(price_text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     productOfferPrice = getResources().getString(R.string.no_offer);
                 }
             }
