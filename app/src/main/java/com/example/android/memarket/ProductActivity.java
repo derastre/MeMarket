@@ -177,7 +177,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 hideProgressDialog();
-                Snackbar.make(findViewById(R.id.scroll_group_view),databaseError.getMessage(),Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.placeSnackBar),databaseError.getMessage(),Snackbar.LENGTH_SHORT).show();
             }
         };
 
@@ -341,7 +341,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
             myRef.child("purchases").child(mUserId).child(productId).child(date.toString()).setValue(register_product);
-            Snackbar.make(findViewById(R.id.cards_layout),getString(R.string.purchase_added_snackbar),Snackbar.LENGTH_LONG)
+            Snackbar.make(findViewById(R.id.placeSnackBar),getString(R.string.purchase_added_snackbar),Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
