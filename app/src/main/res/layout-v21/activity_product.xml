@@ -38,7 +38,12 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:visibility="visible">
-
+            
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/placeSnackBar">
+            
             <LinearLayout
                 android:id="@+id/cards_layout"
                 android:layout_width="match_parent"
@@ -190,6 +195,8 @@
 
             </LinearLayout>
 
+        </android.support.design.widget.CoordinatorLayout>
+            
         </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.BottomNavigationView
