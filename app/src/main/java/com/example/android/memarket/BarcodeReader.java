@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -24,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.memarket.components.BaseActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -31,14 +31,8 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.example.android.memarket.MainActivity.FROM_MAIN;
 
 public class BarcodeReader extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "BarcodeReader";
@@ -58,31 +52,34 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     private TextView barcodeInfo;
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
+    private boolean autoFocus;
+    private boolean useFlash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_reader);
 
-        cameraView = (SurfaceView)findViewById(R.id.camera_view);
-        barcodeInfo = (TextView)findViewById(R.id.code_info);
+        cameraView = (SurfaceView) findViewById(R.id.camera_view);
+        barcodeInfo = (TextView) findViewById(R.id.code_info);
         findViewById(R.id.enter_code_button).setOnClickListener(this);
 
         // read parameters from the intent used to launch the activity.
-        boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
-        boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+        autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
+        useFlash = getIntent().getBooleanExtra(UseFlash, false);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource(autoFocus, useFlash);
+            accessCamera();
         } else {
             requestCameraPermission();
         }
+    }
 
-
-
+    private void accessCamera() {
+        createCameraSource(autoFocus, useFlash);
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -117,10 +114,10 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                         }
                     });
 
-                        Intent data = new Intent();
-                        data.putExtra(BarcodeObject, barcodes.valueAt(0).rawValue);
-                        setResult(CommonStatusCodes.SUCCESS, data);
-                        finish();
+                    Intent data = new Intent();
+                    data.putExtra(BarcodeObject, barcodes.valueAt(0).rawValue);
+                    setResult(CommonStatusCodes.SUCCESS, data);
+                    finish();
 
 
                 }
@@ -156,7 +153,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
 
 
         // Creates and starts the camera.
-        cameraSource =  new CameraSource
+        cameraSource = new CameraSource
                 .Builder(context, barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setAutoFocusEnabled(true)
@@ -202,8 +199,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityCompat.requestPermissions(thisActivity, permissions,
-                        RC_HANDLE_CAMERA_PERM);
+                ActivityCompat.requestPermissions(thisActivity, permissions,RC_HANDLE_CAMERA_PERM);
             }
         };
 

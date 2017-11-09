@@ -12,12 +12,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.example.android.memarket.components.BaseActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -74,6 +71,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
 
+
+        /*
         // [START initialize_fblogin]
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
@@ -103,7 +102,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             }
         });
         // [END initialize_fblogin]
-
+        */
     }
 
     // [START on_start_check_user]

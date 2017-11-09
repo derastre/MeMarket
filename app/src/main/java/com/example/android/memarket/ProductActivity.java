@@ -5,23 +5,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
 import com.example.android.memarket.models.Purchase;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -48,7 +49,7 @@ import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
 
 
-public class ProductActivity extends BaseActivity implements View.OnClickListener,BottomNavigationView.OnNavigationItemSelectedListener {
+public class ProductActivity extends BaseActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     public static final String PRODUCT_CODE = "com.example.android.memarket.PRODUCT_CODE";
     private static final int RC_BARCODE_CAPTURE = 9001;
@@ -56,6 +57,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
 
     private TextView scannedCode;
+    private FloatingActionButton scan_fab;
     private String mProductPrice;
     private String mProductOfferPrice;
     private String mStoreId;
@@ -90,7 +92,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         //Getting widgets ids
         scannedCode = (TextView) findViewById(R.id.productCode);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.product_toolbar);
+        scan_fab = (FloatingActionButton) findViewById(R.id.scan_fab);
 
         //Setting Toolbar
         setSupportActionBar(toolbar);
@@ -98,7 +101,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         ab.setDisplayHomeAsUpEnabled(true);
 
         //Buttons Listeners
-        findViewById(R.id.scan_button).setOnClickListener(this);
+        scan_fab.setOnClickListener(this);
         findViewById(R.id.update_price_button).setOnClickListener(this);
         findViewById(R.id.compare_price_button).setOnClickListener(this);
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -111,10 +114,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         mCompanyId = intent.getStringExtra(COMPANY_ID);
         mCompanyName = intent.getStringExtra(COMPANY_NAME);
         mUserId = intent.getStringExtra(USER_ID);
-        fromMain = intent.getBooleanExtra(FROM_MAIN,false);
+        fromMain = intent.getBooleanExtra(FROM_MAIN, false);
 
         // If there is no store selected
-        if (mStoreId==null) {
+        if (mStoreId == null) {
             startSelectStore();
         }
 
@@ -123,8 +126,22 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         TextView textView = (TextView) findViewById(R.id.selectedStoreName);
         textView.setText(storename);
 
+        //Hide the FAB Button when scrolling
+        NestedScrollView nsv = (NestedScrollView) findViewById(R.id.scroll_group_view);
+        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+                    scan_fab.hide();
+                } else {
+                    scan_fab.show();
+                }
+            }
+        });
+
+
         //If the call came from Main activity
-        if (fromMain ){
+        if (fromMain) {
             scan_barcode();
         }
     }
@@ -136,7 +153,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         builder.setPositiveButton(R.string.select_store, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(ProductActivity.this,CompaniesActivity.class));
+                startActivity(new Intent(ProductActivity.this, CompaniesActivity.class));
             }
         });
         builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
@@ -150,70 +167,72 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         builder.show();
     }
 
-    public void scan_barcode(){
+    public void scan_barcode() {
 
         // launch barcode activity.
         Intent intent = new Intent(ProductActivity.this, BarcodeReader.class);
-        intent.putExtra(BarcodeReader.AutoFocus,true);
+        intent.putExtra(BarcodeReader.AutoFocus, true);
         intent.putExtra(BarcodeReader.UseFlash, false);
-        intent.putExtra(FROM_MAIN,fromMain);
+        intent.putExtra(FROM_MAIN, fromMain);
 
         startActivityForResult(intent, RC_BARCODE_CAPTURE);
 
     }
 
     public void readProductFromFirebase() {
-        showProgressDialog(getString(R.string.loading));
 
-        myRef = mDatabase.getReference().child("products").child(mProductCode);
+        if (mProductCode != null && mStoreId != null) {
+            showProgressDialog(getString(R.string.loading));
 
-        //Storage for product picture
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        final StorageReference storageRef = storage.getReference().child("images").child(mProductCode);
+            myRef = mDatabase.getReference().child("products").child(mProductCode);
 
-        myProductListener = new ValueEventListener() {
-            @Override
+            //Storage for product picture
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            final StorageReference storageRef = storage.getReference().child("images").child(mProductCode);
 
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Context context = getApplicationContext();
-                mProduct = dataSnapshot.getValue(Product.class);
-                //Check if mProduct exist in database
-                if (mProduct != null) {
-                    TextView textViewName = (TextView) findViewById(R.id.productName);
-                    textViewName.setText(mProduct.Name);
-                    TextView textViewType = (TextView) findViewById(R.id.productType);
-                    textViewType.setText(mProduct.Type);
-                    TextView textViewBrand = (TextView) findViewById(R.id.productBrand);
-                    textViewBrand.setText(mProduct.Brand);
-                    TextView textViewQty = (TextView) findViewById(R.id.productQuantity);
-                    String Qty = mProduct.Quantity + " " + mProduct.Units;
-                    textViewQty.setText(Qty);
-                    ImageView productImage = (ImageView) findViewById(R.id.productImage);
-                    Glide.with(context)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .into(productImage);
-                    findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
-                } else {
-                    //if mProduct code doesn't exist in database go to activity add new mProduct
-                    startActivity(new Intent(ProductActivity.this, NewProduct.class).putExtra(PRODUCT_CODE,mProductCode));
+            myProductListener = new ValueEventListener() {
+                @Override
+
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Context context = getApplicationContext();
+                    mProduct = dataSnapshot.getValue(Product.class);
+                    //Check if mProduct exist in database
+                    if (mProduct != null) {
+                        TextView textViewName = (TextView) findViewById(R.id.productName);
+                        textViewName.setText(mProduct.Name);
+                        TextView textViewType = (TextView) findViewById(R.id.productType);
+                        textViewType.setText(mProduct.Type);
+                        TextView textViewBrand = (TextView) findViewById(R.id.productBrand);
+                        textViewBrand.setText(mProduct.Brand);
+                        TextView textViewQty = (TextView) findViewById(R.id.productQuantity);
+                        String Qty = mProduct.Quantity + " " + mProduct.Units;
+                        textViewQty.setText(Qty);
+                        ImageView productImage = (ImageView) findViewById(R.id.productImage);
+                        Glide.with(context)
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .into(productImage);
+                        findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
+                    } else {
+                        //if mProduct code doesn't exist in database go to activity add new mProduct
+                        startActivity(new Intent(ProductActivity.this, NewProduct.class).putExtra(PRODUCT_CODE, mProductCode));
+                    }
+                    hideProgressDialog();
                 }
-                hideProgressDialog();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                hideProgressDialog();
-                Snackbar.make(findViewById(R.id.placeSnackBar),databaseError.getMessage(),Snackbar.LENGTH_SHORT).show();
-            }
-        };
-        myRef.addValueEventListener(myProductListener);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    hideProgressDialog();
+                    Snackbar.make(findViewById(R.id.placeSnackBar), databaseError.getMessage(), Snackbar.LENGTH_SHORT).show();
+                }
+            };
+            myRef.addValueEventListener(myProductListener);
 
-        //Reading extra product data
-        readProductPriceFromFirebase();
-        readProductOfferFromFirebase();
-        readLastPurchaseFromFirebase();
-
+            //Reading extra product data
+            readProductPriceFromFirebase();
+            readProductOfferFromFirebase();
+            readLastPurchaseFromFirebase();
+        }
 
     }
 
@@ -250,8 +269,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readProductOfferFromFirebase() {
         //Check for offer in the selected store
         Calendar dateToday = Calendar.getInstance();
-        dateToday.set(Calendar.HOUR_OF_DAY,0);
-        dateToday.set(Calendar.MINUTE,0);
+        dateToday.set(Calendar.HOUR_OF_DAY, 0);
+        dateToday.set(Calendar.MINUTE, 0);
         Long dateStart = dateToday.getTimeInMillis();
 
         myOfferRef = mDatabase.getReference().child("offers").child(mProductCode).child(mStoreId);
@@ -266,7 +285,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
                 //Check if mProduct exist in database
                 if (dataSnapshot.getChildren() != null) {
-                    for (DataSnapshot offerSnapshot:dataSnapshot.getChildren()) {
+                    for (DataSnapshot offerSnapshot : dataSnapshot.getChildren()) {
                         findViewById(R.id.offers_layout).setVisibility(View.VISIBLE);
                         mProductOfferPrice = offerSnapshot.getValue().toString();
                         Float number = Float.parseFloat(mProductOfferPrice);
@@ -291,41 +310,41 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         myOfferQuery.addValueEventListener(myOfferListener);
     }
 
-    public void readLastPurchaseFromFirebase(){
+    public void readLastPurchaseFromFirebase() {
         //Check for last user purchase on database
-        myPurchasesRef = mDatabase.getReference().child("purchases").child(mProductCode);
-        myPurchasesQuery = myPurchasesRef.orderByKey().limitToLast(1);
-        myPurchasesListener = new ValueEventListener() {
-            @Override
+        if (mUserId!=null) {
+            myPurchasesRef = mDatabase.getReference().child(mUserId).child("purchases").child(mProductCode);
+            myPurchasesQuery = myPurchasesRef.orderByKey().limitToLast(1);
+            myPurchasesListener = new ValueEventListener() {
+                @Override
 
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-
-                //Check if mProduct exist in database
-                if (dataSnapshot.getChildren() != null) {
-                    for (DataSnapshot purchasesSnapshot:dataSnapshot.getChildren()) {
-                        Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
-                        lastPurchasePrice = purchase.price;
-                        lastPurchaseDate = purchasesSnapshot.getKey();
+                    //Check if mProduct exist in database
+                    if (dataSnapshot.getChildren() != null) {
+                        for (DataSnapshot purchasesSnapshot : dataSnapshot.getChildren()) {
+                            Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
+                            lastPurchasePrice = purchase.price;
+                            lastPurchaseDate = purchasesSnapshot.getKey();
+                        }
+                    } else {
+                        lastPurchasePrice = null;
+                        lastPurchaseDate = null;
                     }
-                } else {
-                    lastPurchasePrice = null;
-                    lastPurchaseDate=null;
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            };
 
-        myPurchasesQuery.addValueEventListener(myPurchasesListener);
-
+            myPurchasesQuery.addValueEventListener(myPurchasesListener);
+        }
     }
 
-    public void updatePriceFirebase(){
+    public void updatePriceFirebase() {
 
-        if (mCompanyName !=null && mStoreName != null && mStoreId != null && mProduct !=null && mUserId!=null) {
+        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.update_price);
             builder.setMessage(mCompanyName + " " + mStoreName + "\n" + mProduct.Name);
@@ -347,9 +366,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     Map<String, Object> childUpdates = new HashMap<>();
                     Map<String, Object> updateHistory = new HashMap<>();
                     updateHistory.put("price", mProductPrice);
-                    updateHistory.put("user",mUserId);
+                    updateHistory.put("user", mUserId);
                     childUpdates.put("/prices/" + mProductCode + "/" + mStoreId, mProductPrice);
-                    childUpdates.put("/prices_history/" + mProductCode + "/" + mStoreId + date , updateHistory);
+                    childUpdates.put("/prices_history/" + mProductCode + "/" + mStoreId + date, updateHistory);
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -369,12 +388,12 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    public void comparePricesFirebase(){
-        startActivity(new Intent(ProductActivity.this,PricesActivity.class).putExtra(PRODUCT_CODE, mProductCode));
+    public void comparePricesFirebase() {
+        startActivity(new Intent(ProductActivity.this, PricesActivity.class).putExtra(PRODUCT_CODE, mProductCode));
     }
 
-    public void addPurchaseFirebase(){
-        if (mStoreId != null && mProductPrice !=null && mUserId!=null) {
+    public void addPurchaseFirebase() {
+        if (mStoreId != null && mProductPrice != null && mUserId != null) {
             Purchase register_product = new Purchase(mProductPrice, mStoreId);
             final Long date = System.currentTimeMillis();
 
@@ -382,7 +401,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
             myRef.child("purchases").child(mUserId).child(mProductCode).child(date.toString()).setValue(register_product);
-            Snackbar.make(findViewById(R.id.placeSnackBar),getString(R.string.purchase_added_snackbar),Snackbar.LENGTH_LONG)
+            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -393,14 +412,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    public void purchasesHistoryFirebase(){
-        startActivity(new Intent(ProductActivity.this,purchaseHistory.class)
+    public void purchasesHistoryFirebase() {
+        startActivity(new Intent(ProductActivity.this, purchaseHistory.class)
                 .putExtra(PRODUCT_CODE, mProductCode)
         );
     }
 
-    public void markAsOfferFirebase(){
-        if (mCompanyName !=null && mStoreName != null && mStoreId != null && mProduct !=null && mUserId!=null ) {
+    public void markAsOfferFirebase() {
+        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.mark_as_offer_dialog);
@@ -424,9 +443,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     Map<String, Object> childUpdates = new HashMap<>();
                     Map<String, Object> updateHistory = new HashMap<>();
                     updateHistory.put("price", mProductOfferPrice);
-                    updateHistory.put("user",mUserId);
-                    childUpdates.put("/offers/" + mProductCode + "/" + mStoreId + "/" +  timestamp, mProductOfferPrice);
-                    childUpdates.put("/offers_history/" + mProductCode + "/" + mStoreId + timestamp , updateHistory);
+                    updateHistory.put("user", mUserId);
+                    childUpdates.put("/offers/" + mProductCode + "/" + mStoreId + "/" + timestamp, mProductOfferPrice);
+                    childUpdates.put("/offers_history/" + mProductCode + "/" + mStoreId + timestamp, updateHistory);
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -440,34 +459,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     dialog.cancel();
                 }
             });
-
-            builder.show();
-        }
-    }
-
-   private void showProductPriceOptions() {
-        if (mCompanyName !=null && mStoreName != null && mCompanyId !=null && mStoreId != null && mProductCode !=null) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.product_price_dialog,null);
-            builder.setView(dialogView);
-            builder.setTitle(R.string.product_price_text);
-
-            Button update =  dialogView.findViewById(R.id.update_price_button);
-            Button compare = dialogView.findViewById(R.id.compare_price_button);
-            Button purchases = dialogView.findViewById(R.id.purchase_history_button);
-            TextView price = dialogView.findViewById(R.id.actual_price_text);
-            TextView offer = dialogView.findViewById(R.id.offer_price_text);
-            TextView last_purchase = dialogView.findViewById(R.id.last_purchase__price_text);
-            String last_purchase_text = lastPurchaseDate + " " + lastPurchasePrice;
-            price.setText(mProductPrice);
-            offer.setText(mProductOfferPrice);
-            last_purchase.setText(last_purchase_text);
-
-            update.setOnClickListener(this);
-            compare.setOnClickListener(this);
-            purchases.setOnClickListener(this);
 
             builder.show();
         }
@@ -493,25 +484,24 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 scannedCode.setText(String.format(getString(R.string.barcode_error),
                         CommonStatusCodes.getStatusCodeString(resultCode)));
             }
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Override
-    public void  onStop(){
+    public void onStop() {
         super.onStop();
-        if (myProductListener !=null) {
+        if (myProductListener != null) {
             myRef.removeEventListener(myProductListener);
         }
-        if (myPriceListener !=null) {
+        if (myPriceListener != null) {
             myPriceRef.removeEventListener(myPriceListener);
         }
-        if (myOfferListener !=null) {
+        if (myOfferListener != null) {
             myOfferQuery.removeEventListener(myOfferListener);
         }
-        if (myPurchasesListener !=null) {
+        if (myPurchasesListener != null) {
             myPurchasesQuery.removeEventListener(myPurchasesListener);
         }
     }
@@ -519,8 +509,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        switch (i){
-            case R.id.scan_button:
+        switch (i) {
+            case R.id.scan_fab:
                 scan_barcode();
                 break;
             case R.id.update_price_button:
@@ -535,8 +525,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public boolean onCreateOptionsMenu (Menu menu){
-        getMenuInflater().inflate(R.menu.product_toolbar_menu,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.product_toolbar_menu, menu);
         return true;
     }
 
@@ -558,9 +548,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    public boolean onNavigationItemSelected(MenuItem item){
+    public boolean onNavigationItemSelected(MenuItem item) {
         int i = item.getItemId();
-        switch (i){
+        switch (i) {
             case R.id.offer_button:
                 markAsOfferFirebase();
                 break;
@@ -573,4 +563,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
         return true;
     }
+
+
 }

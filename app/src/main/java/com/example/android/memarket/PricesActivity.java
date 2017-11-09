@@ -1,11 +1,11 @@
 package com.example.android.memarket;
 
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Company;
 import com.example.android.memarket.models.Store;
 import com.google.firebase.database.DataSnapshot;
@@ -15,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import static com.example.android.memarket.ProductActivity.PRODUCT_CODE;
 

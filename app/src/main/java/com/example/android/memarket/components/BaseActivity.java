@@ -1,19 +1,13 @@
-package com.example.android.memarket;
+package com.example.android.memarket.components;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-
 /**
  * Created by Arturo Deras on 23/9/2017.
+ * BaseActivity
+ * Includes progress dialog
  */
 
 public class BaseActivity extends AppCompatActivity {
@@ -43,8 +37,4 @@ public class BaseActivity extends AppCompatActivity {
             super.onStop();
             hideProgressDialog();
         }
-
-
-
-
 }

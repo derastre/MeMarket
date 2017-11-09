@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.android.memarket.components.BaseActivity;
 
 import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
 import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
@@ -110,7 +111,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
 
     public void searchProducts(){
 
-        if (selectedCompanyId != null && selectedStoreId !=null) {
+        //if (selectedCompanyId != null && selectedStoreId !=null) {
             Intent intent = new Intent(this, ProductActivity.class);
 
             //FROM_MAIN para indicarle que la actividad se inicio desde MainActivity.
@@ -122,9 +123,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
                     .putExtra(USER_ID, mUserId);
 
             startActivity(intent);
-        }else{
-            Toast.makeText(this,getString(R.string.no_store_selected),Toast.LENGTH_LONG).show();
-        }
+        //}else{
+        //    Toast.makeText(this,getString(R.string.no_store_selected),Toast.LENGTH_LONG).show();
+        //}
     }
 
     public void gotoStores (){

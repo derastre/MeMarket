@@ -19,6 +19,7 @@
     </string-array>
     
     <string name="ok">OK</string>
+    <string name="dismiss">Dismiss</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
@@ -74,6 +75,9 @@
     <!--Product Price Card Text -->
     <string name="price_text">"Price"</string>
     <string name="offer_text">"Offer price"</string>
+
+    <!--Product Last purchase Card Text -->
+    <string name="last_purchase_text">"Last purchase"</string>
 
     <!--Dialogs Text -->
     <string name="select_store_instruction">"Please select a store first"</string>

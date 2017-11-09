@@ -1,10 +1,9 @@
 package com.example.android.memarket;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Company;
 import com.example.android.memarket.models.Purchase;
 import com.example.android.memarket.models.Store;
