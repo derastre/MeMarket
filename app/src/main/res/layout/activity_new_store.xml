@@ -7,6 +7,12 @@
     android:orientation="vertical"
     tools:context="com.example.android.memarket.NewStore">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/new_store_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
     <TextView
@@ -14,8 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="COMPANIA"
-        android:textAlignment="center" />
-
+        android:textAlignment="center"
+        style="@style/Base.TextAppearance.AppCompat.Large"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -30,7 +36,6 @@
         android:text="" />
 
     <TextView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/store_address_input" />
@@ -44,11 +49,9 @@
         android:text="" />
 
     <TextView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/store_phone_input" />
-
 
     <EditText
         android:id="@+id/storePhone"

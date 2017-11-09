@@ -1,7 +1,9 @@
 package com.example.android.memarket;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -20,15 +22,22 @@ public class NewCompany extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_company);
+
+        //Getting widgets ids
         companyName=(EditText) findViewById(R.id.companyName);
         companyType= (Spinner) findViewById(R.id.companyType);
 
-
-        //Configurando spinner
+        //Setting spinner
         String[] Types = getResources().getStringArray(R.array.companyTypesList);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,Types);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         companyType.setAdapter(adapter);
+
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.new_company_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
 
     }

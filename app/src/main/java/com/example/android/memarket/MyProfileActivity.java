@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,15 +45,23 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
+        //Getting widgets ids
         mUserNameTexView = (TextView) findViewById(R.id.profileUserName);
         mEmailTexView = (TextView) findViewById(R.id.profileEmail);
         mEmailVerifiedButton = (Button) findViewById(R.id.verify_email_button);
 
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_profile_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        //Firebase authentication
         mAuth = FirebaseAuth.getInstance();
 
+        //Setting listeners
         findViewById(R.id.sign_out_button).setOnClickListener(this);
         mEmailVerifiedButton.setOnClickListener(this);
-
     }
 
     // [START on_start_check_user]

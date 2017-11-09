@@ -42,23 +42,59 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-        <activity android:name=".NewProduct" />
+        <activity android:name=".NewProduct">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity"/>
+        </activity>
         <activity android:name=".BarcodeReader" android:theme="@style/ThemeOverlay.MyNoTitleActivity" />
-        <activity android:name=".CompaniesActivity" />
-        <activity android:name=".NewStore" />
-        <activity android:name=".StoresActivity" />
-        <activity android:name=".NewCompany" />
-        <activity android:name=".StoreActivity" />
-        <activity android:name=".PricesActivity" />
+        <activity android:name=".CompaniesActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity"/>
+        </activity>
+        <activity android:name=".NewStore">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".StoreActivity"/>
+        </activity>
+        <activity android:name=".StoresActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".CompaniesActivity"/>
+        </activity>
+        <activity android:name=".NewCompany">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".CompaniesActivity"/>
+        </activity>
+        <activity android:name=".StoreActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StoresActivity"/>
+        </activity>
+        <activity android:name=".PricesActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".ProductActivity"/>
+        </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MyProfileActivity" />
+        <activity android:name=".MyProfileActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity"/>
+        </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".purchaseHistory" />
+        <activity android:name=".purchaseHistory">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".ProductActivity"/>
+        </activity>
 
     </application>
 

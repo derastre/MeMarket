@@ -3,6 +3,8 @@ package com.example.android.memarket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,6 +48,11 @@ public class StoresActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stores);
 
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.stores_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         companyId = getIntent().getStringExtra(COMPANY_ID);
         companyName = getIntent().getStringExtra(COMPANY_NAME);

@@ -7,6 +7,13 @@
     tools:context="com.example.android.memarket.PricesActivity"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/prices_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <TextView
         android:id="@+id/pricesText"
         android:layout_width="match_parent"

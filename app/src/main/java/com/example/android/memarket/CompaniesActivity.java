@@ -3,6 +3,9 @@ package com.example.android.memarket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class CompaniesActivity extends BaseActivity {
+public class CompaniesActivity extends BaseActivity implements View.OnClickListener{
 
     public static final String COMPANY_ID = "com.example.android.memarket.COMPANY_ID";
     public static final String COMPANY_NAME = "com.example.android.memarket.COMPANY_NAME";
@@ -36,13 +39,23 @@ public class CompaniesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_companies);
 
+
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.companies_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        //Floating action button
+        FloatingActionButton companies_fab = (FloatingActionButton) findViewById(R.id.add_company_fab);
+        companies_fab.setOnClickListener(this);
+
         listView = (ListView) findViewById(R.id.companyList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
                 startActivity(new Intent(
                         CompaniesActivity.this, StoresActivity.class)
                         .putExtra(COMPANY_ID, companyArrayList.get(position).Id)
@@ -67,9 +80,8 @@ public class CompaniesActivity extends BaseActivity {
         removeFirebaseListener();
     }
 
-    public void newCompany(View view) {
-        Intent intent = new Intent(this, NewCompany.class);
-        startActivity(intent);
+    public void newCompany() {
+        startActivity(new Intent(this, NewCompany.class));
     }
 
     private void removeFirebaseListener(){
@@ -77,7 +89,6 @@ public class CompaniesActivity extends BaseActivity {
             myRef.removeEventListener(companiesListener);
         }
     }
-
 
     public void getCompaniesListFromFirebase() {
         //Obtener lista de companias de la base de datos
@@ -113,7 +124,6 @@ public class CompaniesActivity extends BaseActivity {
 
     }
 
-
     private void setCompaniesNameListView() {
         //Colocar los nombres de las companias en la lista.
 
@@ -126,6 +136,17 @@ public class CompaniesActivity extends BaseActivity {
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, companiesNameList);
         listView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        switch (i) {
+            case R.id.add_company_fab:
+                newCompany();
+                break;
+        }
 
     }
 }

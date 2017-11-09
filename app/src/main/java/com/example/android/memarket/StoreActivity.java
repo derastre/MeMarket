@@ -2,8 +2,10 @@ package com.example.android.memarket;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,6 +28,12 @@ public class StoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
+
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.store_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         companyName = getIntent().getStringExtra(COMPANY_NAME);
         storeName = getIntent().getStringExtra(STORE_NAME);

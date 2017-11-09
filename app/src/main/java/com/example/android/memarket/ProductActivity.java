@@ -92,7 +92,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         //Getting widgets ids
         scannedCode = (TextView) findViewById(R.id.productCode);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.product_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_profile_toolbar);
         scan_fab = (FloatingActionButton) findViewById(R.id.scan_fab);
 
         //Setting Toolbar

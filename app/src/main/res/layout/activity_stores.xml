@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context="com.example.android.memarket.StoresActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/stores_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <TextView
         android:id="@+id/companyName"
         android:layout_width="match_parent"

@@ -7,13 +7,19 @@
     android:orientation="vertical"
     tools:context="com.example.android.memarket.NewCompany">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/new_company_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/company_data_input_instructions"
+        style="@style/Base.TextAppearance.AppCompat.Large"
        />
-
 
     <TextView
         android:layout_width="match_parent"

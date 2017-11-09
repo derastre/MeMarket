@@ -1,7 +1,9 @@
 package com.example.android.memarket;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,10 +25,17 @@ public class NewStore extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_store);
 
-
+        //Getting reference ids
         storeName = (EditText) findViewById(R.id.storeName);
         storeAddress = (EditText) findViewById(R.id.storeAddress);
         storePhone = (EditText) findViewById(R.id.storePhone);
+
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.new_store_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+
 
         companyId = getIntent().getStringExtra(CompaniesActivity.COMPANY_ID);
         companyName = getIntent().getStringExtra(CompaniesActivity.COMPANY_NAME);

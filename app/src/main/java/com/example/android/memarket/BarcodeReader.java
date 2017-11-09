@@ -191,6 +191,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
+            this.recreate();
             return;
         }
 

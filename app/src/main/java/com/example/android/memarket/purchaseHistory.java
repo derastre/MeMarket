@@ -1,6 +1,8 @@
 package com.example.android.memarket;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.example.android.memarket.components.BaseActivity;
@@ -32,7 +34,12 @@ public class purchaseHistory extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase_history);
-        //1getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.purchase_history_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         // Get the Intent that started this activity and extract the string
 

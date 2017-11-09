@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -60,12 +62,17 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         // Capture the layout's EditText and set the string as its text
         productCode.setText(message);
 
-        // Get the string array for the spinner
+        //Setting the spinner
         String[] units = getResources().getStringArray(R.array.units_array);
-        // Create the adapter and set it to the Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productUnits.setAdapter(adapter);
+
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.new_product_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
 
     }
