@@ -52,7 +52,6 @@
 
     <!-- Tool bar -->
     <style name="ThemeOverlay.AppCompat.ActionBar" parent="AppTheme">
-        <item name="android:elevation">4dp</item>
         <item name="android:background">@color/primaryColor</item>
     </style>
 

@@ -45,6 +45,7 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayShowHomeEnabled(true);
 
         //Floating action button
         FloatingActionButton companies_fab = (FloatingActionButton) findViewById(R.id.add_company_fab);
