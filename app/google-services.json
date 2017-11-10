@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "906279912165",
+    "firebase_url": "https://memarket-a9274.firebaseio.com",
+    "project_id": "memarket-a9274",
+    "storage_bucket": "memarket-a9274.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906279912165:android:b4f37c3d32e6e628",
+        "android_client_info": {
+          "package_name": "com.example.android.memarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906279912165-h3pdlnjiigdee4ol1h7t2dmugc8mn9jr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.memarket",
+            "certificate_hash": "661c3be28f452c661333ad946a18161cdd5b1a48"
+          }
+        },
+        {
+          "client_id": "906279912165-4e6rlh5pp62ps59ugumlmsdbd9q770fg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzcMS7IhEssXz8vOVS98Vi-N0N-70lvRo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906279912165-4e6rlh5pp62ps59ugumlmsdbd9q770fg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
