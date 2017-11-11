@@ -33,6 +33,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
 import static com.example.android.memarket.SplashActivity.USER_ID;
+import static com.example.android.memarket.SplashActivity.USER_NAME;
 import static com.example.android.memarket.SplashActivity.USER_PICTURE;
 
 public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
@@ -120,6 +121,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         if (user != null) {
             String userId = user.getUid();
             String email = user.getEmail();
+            String name = user.getDisplayName();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
             String stringUri = pictureUri.toString();
@@ -128,6 +130,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                     .putExtra(USER_EMAIL,email)
                     .putExtra(USER_EMAIL_VERIFICATION,emailVerification)
                     .putExtra(USER_PICTURE,stringUri)
+                    .putExtra(USER_NAME,name)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
         } else {
             findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);

@@ -34,10 +34,15 @@
     <string name="barcode_manual_entry_button">"Enter code manually"</string>
 
     <string name="search_product">"Scan product"</string>
+    <string name="select_company">"Select company"</string>
     <string name="select_store">"Select store"</string>
     <string name="register_purchases">"Register your purchase"</string>
     <string name="my_profile">"My profile"</string>
-    <string name="welcome_card">"Welcome! \nUse this app to track all your favorite products and share the offers you find."</string>
+
+    <!-- Welcome Card-->
+    <string name="welcome_card_tittle">"Welcome!"</string>
+    <string name="welcome_card_text">"Use this app to track all your favorite products and share the offers you find."</string>
+    <string name="got_it_button">"Got it"</string>
 
     <string name="no_company_selected">"No company selected"</string>
     <string name="no_store_selected">"No store selected"</string>

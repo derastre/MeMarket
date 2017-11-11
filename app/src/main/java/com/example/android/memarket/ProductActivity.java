@@ -536,10 +536,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         int i = item.getItemId();
 
         switch (i) {
-            case R.id.action_scan:
-                scan_barcode();
-                return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

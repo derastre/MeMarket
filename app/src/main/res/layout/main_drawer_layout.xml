@@ -2,19 +2,30 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background1"
+        tools:ignore="contentDescription"/>
 
     <ImageView
         android:id="@+id/profilePicture"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/default_avatar"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:layout_gravity="bottom"
+        android:src="@drawable/default_avatar"
+        tools:ignore="contentDescription"/>
+
     <TextView
         android:id="@+id/userName"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="20dp"
         android:ems="10"
         android:layout_gravity="bottom"
-        android:gravity="center"
-        android:text="@string/hint_email"/>
+        android:text="@string/hint_user_name"/>
 </FrameLayout>

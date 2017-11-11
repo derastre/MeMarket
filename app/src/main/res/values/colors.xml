@@ -6,9 +6,11 @@
     <color name="primaryDarkColor">#0064b7</color>
     <color name="secondaryColor">#ffff00</color>
     <color name="secondaryLightColor">#ffff5a</color>
-    <color name="secondaryDarkColor">#c7cc00</color>
+    <color name="secondaryDarkColor">#f7a900</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
+
+    <color name="flatButtonColorText">#f7a900</color>
 
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>

@@ -55,6 +55,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/sign_in"
+            style="@style/ThemeOverlay.MyDarkButton"
             />
 
         <Button
@@ -63,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/create_account"
+            style="@style/ThemeOverlay.MyDarkButton"
             />
     </LinearLayout>
 
@@ -82,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/create_account"
+            style="@style/ThemeOverlay.MyDarkButton"
             />
 
         <Button
@@ -90,6 +93,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel_button"
+            style="@style/ThemeOverlay.MyDarkButton"
+            android:visibility="gone"
             />
     </LinearLayout>
 
@@ -104,6 +109,7 @@
 
         <View style="@style/VerticalDivider"
             />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,6 +117,7 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"/>
+
         <View style="@style/VerticalDivider" />
 
         <com.google.android.gms.common.SignInButton
@@ -120,12 +127,14 @@
             android:paddingBottom="10dp"
 
             />
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/facebook_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
 
-            />
+        <!--        <com.facebook.login.widget.LoginButton
+                    android:id="@+id/facebook_login_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    />
+                    -->
 
     </LinearLayout>
 

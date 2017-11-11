@@ -19,29 +19,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="NOMBRE EMPRESA"
-        android:gravity="center"/>
+        android:layout_margin="8dp"
+        style="@style/Base.TextAppearance.AppCompat.Large"
+        />
 
     <TextView
         android:id="@+id/companyType"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/storeList"
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_margin="8dp">
 
     </ListView>
 
-    <Button
-        android:id="@+id/NewStore"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_store_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/add_button"
-        android:onClick="newStore"
-        android:theme="@style/ThemeOverlay.MyDarkButton"/>
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:elevation="6dp"
+        android:src="@drawable/ic_add_black_24dp"
+        app:borderWidth="2dp"
+        app:fabSize="normal"
+        app:rippleColor="#222" />
 
+    <!--TODO: Add a FAB Button-->
 </LinearLayout>

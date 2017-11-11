@@ -3,6 +3,7 @@ package com.example.android.memarket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -26,7 +27,7 @@ import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
 import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
 import static com.example.android.memarket.CompaniesActivity.COMPANY_TYPE;
 
-public class StoresActivity extends BaseActivity {
+public class StoresActivity extends BaseActivity implements View.OnClickListener{
 
     public static final String STORE_ID = "com.example.android.memarket.STORE_ID";
     public static final String STORE_NAME = "com.example.android.memarket.STORE_NAME";
@@ -52,7 +53,12 @@ public class StoresActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.stores_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
+        ab.setTitle(R.string.select_store);
         ab.setDisplayHomeAsUpEnabled(true);
+
+        //Floating action button
+        FloatingActionButton stores_fab = (FloatingActionButton) findViewById(R.id.add_store_fab);
+        stores_fab.setOnClickListener(this);
 
         companyId = getIntent().getStringExtra(COMPANY_ID);
         companyName = getIntent().getStringExtra(COMPANY_NAME);
@@ -153,12 +159,29 @@ public class StoresActivity extends BaseActivity {
         listView.setAdapter(adapter);
     }
 
-    public void newStore(View view) {
+    public void newStore() {
         startActivity(new Intent(
                 StoresActivity.this, NewStore.class)
                 .putExtra(COMPANY_ID,companyId)
                 .putExtra(COMPANY_NAME,companyName)
                 .putExtra(COMPANY_TYPE,companyType)
         );
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        switch (i) {
+            case R.id.add_store_fab:
+                newStore();
+                break;
+        }
+
     }
 }

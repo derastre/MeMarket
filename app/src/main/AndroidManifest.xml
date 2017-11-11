@@ -56,27 +56,27 @@
         <activity android:name=".NewStore">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".StoreActivity"/>
+            android:value=".MainActivity"/>
         </activity>
         <activity android:name=".StoresActivity">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".CompaniesActivity"/>
+            android:value=".MainActivity"/>
         </activity>
         <activity android:name=".NewCompany">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".CompaniesActivity"/>
+            android:value=".MainActivity"/>
         </activity>
         <activity android:name=".StoreActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoresActivity"/>
+                android:value=".MainActivity"/>
         </activity>
         <activity android:name=".PricesActivity">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".ProductActivity"/>
+            android:value=".MainActivity"/>
         </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -93,7 +93,7 @@
         <activity android:name=".purchaseHistory">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".ProductActivity"/>
+            android:value=".MainActivity"/>
         </activity>
 
     </application>
