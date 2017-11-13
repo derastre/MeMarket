@@ -147,7 +147,7 @@ public class NewCompany extends BaseActivity {
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference();
-                myRef.child("companies_types").setValue(type);
+                myRef.child("companies_types").push().setValue(type);
 
             }
         });
