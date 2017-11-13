@@ -85,6 +85,7 @@ public class NewCompany extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 companyTypesArrayList = new ArrayList<>();
+                companyTypesArrayList.add("");
                 for (DataSnapshot companySnapshop : dataSnapshot.getChildren()) {
                     String companyType = companySnapshop.getValue().toString();
                     if (companyType != null) {
