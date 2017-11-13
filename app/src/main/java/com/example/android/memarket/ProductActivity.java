@@ -48,7 +48,7 @@ import static com.example.android.memarket.SplashActivity.USER_ID;
 import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
 
-
+//TODO Erase BottomNavigationView.OnNavigationItemSelectedListener if not used.
 public class ProductActivity extends BaseActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     public static final String PRODUCT_CODE = "com.example.android.memarket.PRODUCT_CODE";
@@ -58,6 +58,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     private TextView scannedCode;
     private FloatingActionButton scan_fab;
+    private FloatingActionButton add_purchase_fab;
     private String mProductPrice;
     private String mProductOfferPrice;
     private String mStoreId;
@@ -94,6 +95,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         scannedCode = (TextView) findViewById(R.id.productCode);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_profile_toolbar);
         scan_fab = (FloatingActionButton) findViewById(R.id.scan_fab);
+        add_purchase_fab = (FloatingActionButton) findViewById(R.id.add_purchase_fab);
 
         //Setting Toolbar
         setSupportActionBar(toolbar);
@@ -102,10 +104,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         //Buttons Listeners
         scan_fab.setOnClickListener(this);
+        add_purchase_fab.setOnClickListener(this);
         findViewById(R.id.update_price_button).setOnClickListener(this);
         findViewById(R.id.compare_price_button).setOnClickListener(this);
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        findViewById(R.id.view_history_button).setOnClickListener(this);
+        findViewById(R.id.on_sale_button).setOnClickListener(this);
+//        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+//        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
@@ -177,6 +182,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         startActivityForResult(intent, RC_BARCODE_CAPTURE);
 
+    }
+
+    public void comparePrices() {
+        startActivity(new Intent(ProductActivity.this, PricesActivity.class).putExtra(PRODUCT_CODE, mProductCode));
     }
 
     public void readProductFromFirebase() {
@@ -312,7 +321,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void readLastPurchaseFromFirebase() {
         //Check for last user purchase on database
-        if (mUserId!=null) {
+        if (mUserId != null) {
             myPurchasesRef = mDatabase.getReference().child(mUserId).child("purchases").child(mProductCode);
             myPurchasesQuery = myPurchasesRef.orderByKey().limitToLast(1);
             myPurchasesListener = new ValueEventListener() {
@@ -386,10 +395,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             builder.show();
         }
 
-    }
-
-    public void comparePricesFirebase() {
-        startActivity(new Intent(ProductActivity.this, PricesActivity.class).putExtra(PRODUCT_CODE, mProductCode));
     }
 
     public void addPurchaseFirebase() {
@@ -513,13 +518,21 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             case R.id.scan_fab:
                 scan_barcode();
                 break;
+            case R.id.add_purchase_fab:
+                addPurchaseFirebase();
+                break;
             case R.id.update_price_button:
                 updatePriceFirebase();
                 break;
             case R.id.compare_price_button:
-                comparePricesFirebase();
+                comparePrices();
                 break;
-
+            case R.id.view_history_button:
+                purchasesHistoryFirebase();
+                break;
+            case R.id.on_sale_button:
+                markAsOfferFirebase();
+                break;
         }
 
     }
@@ -545,6 +558,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
+        //TODO Erase this method if bottom navigation not used.
         int i = item.getItemId();
         switch (i) {
             case R.id.offer_button:

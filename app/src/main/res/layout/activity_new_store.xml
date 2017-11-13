@@ -14,80 +14,60 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-
     <TextView
         android:id="@+id/companyName"
+        style="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:text="COMPANIA"
-        android:textAlignment="center"
-        style="@style/Base.TextAppearance.AppCompat.Large"/>
+        android:textAlignment="center" />
 
-    <TextView
+    <View style="@style/VerticalDivider"
+        android:layout_margin="8dp"
+        />
+
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/store_name_input" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/storeName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:text="" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/store_address_input" />
-
-
-    <EditText
-        android:id="@+id/storeAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:text="" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/store_phone_input" />
-
-    <EditText
-        android:id="@+id/storePhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:text="" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/addStore"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_button"
-            android:onClick="addStore"
-            android:theme="@style/ThemeOverlay.MyDarkButton"/>
+            android:layout_margin="8dp"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel_button"
-            android:onClick="cancelButton"
-            android:theme="@style/ThemeOverlay.MyDarkButton"/>
 
-    </LinearLayout>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/storeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/store_name_input"
+                app:hintEnabled="true"
+                android:inputType="text" />
 
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/storeAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/store_address_input"
+                app:hintEnabled="true"
+                android:inputType="textMultiLine" />
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/storePhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/store_phone_input"
+                app:hintEnabled="true"
+                android:inputType="phone" />
+
+        </LinearLayout>
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>
+
+
+

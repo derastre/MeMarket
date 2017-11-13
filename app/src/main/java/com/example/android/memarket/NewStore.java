@@ -4,6 +4,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,7 +49,7 @@ public class NewStore extends AppCompatActivity {
         textView.setText(companyName);
     }
 
-    public void addStore(View view){
+    public void addStore(){
         String name = storeName.getText().toString();
         String address = storeAddress.getText().toString();
         String phone = storePhone.getText().toString();
@@ -75,5 +77,30 @@ public class NewStore extends AppCompatActivity {
     public void cancelButton(View view){
         finish();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_item_toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //AppBar onClick method
+        int i = item.getItemId();
+
+        switch (i) {
+            case R.id.select_button:
+                addStore();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
 }
 

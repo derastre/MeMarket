@@ -7,8 +7,11 @@ import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -39,6 +42,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
     private EditText productQty;
     private EditText productName;
     private Spinner productUnits;
+    private Button addPhoto;
 
 
     @Override
@@ -58,6 +62,11 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         productQty = (EditText) findViewById(R.id.productQuantityInput);
         productUnits = (Spinner) findViewById(R.id.spinner_unit);
         productImage = (ImageView) findViewById(R.id.productImageInput);
+        addPhoto = (Button) findViewById(R.id.add_photo_button);
+
+        //Listeners
+        addPhoto.setOnClickListener(this);
+        productImage.setOnClickListener(this);
 
         // Capture the layout's EditText and set the string as its text
         productCode.setText(message);
@@ -77,7 +86,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
     }
 
-    public void addProductButton(View view){
+    public void addProduct(){
         //Add button OnClick event
         String code = productCode.getText().toString();
         String name = productName.getText().toString();
@@ -95,10 +104,6 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
         writeNewProductOnFirebase(code,name,type,brand,quantity,units,imageData);
 
-        finish();
-    }
-
-    public void cancelButton(View view){
         finish();
     }
 
@@ -132,7 +137,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
     }
 
-    public void takePicture(View view){
+    public void takePicture(){
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
@@ -141,12 +146,46 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             productImage.setImageBitmap(photo);
+            productImage.setVisibility(View.VISIBLE);
+            addPhoto.setVisibility(View.GONE);
         }
     }
-    @Override
 
+    @Override
     public void onClick(View v) {
         int i = v.getId();
+        switch (i) {
+            case R.id.add_photo_button:
+                takePicture();
+                break;
+            case R.id.productImageInput:
+                takePicture();
+                break;
+        }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_item_toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //AppBar onClick method
+        int i = item.getItemId();
+
+        switch (i) {
+            case R.id.select_button:
+                addProduct();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

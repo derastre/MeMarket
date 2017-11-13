@@ -2,5 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/view_purchase_button"
+        android:title="@string/view_purchases_text"
+        android:icon="@drawable/ic_shopping_cart_black_24dp"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/edit_product_button"
+        android:title="@string/edit"
+        android:icon="@drawable/ic_edit_black_24dp"
+        app:showAsAction="never"
+        />
 
 </menu>

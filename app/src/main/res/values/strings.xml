@@ -2,6 +2,7 @@
     <string name="app_name">MeMarket</string>
     
     <string-array name="units_array">
+        <item>Units</item>
         <item>Gramos</item>
         <item>Kilogramos</item>
         <item>Libras</item>
@@ -18,10 +19,14 @@
         <item>Variedades</item>
     </string-array>
     
+    <!--General Text-->
     <string name="ok">OK</string>
     <string name="dismiss">Dismiss</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="edit">Edit</string>
+
+    <!--Camera and barcode related text-->
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Scan detector dependencies cannot be downloaded due to low device storage</string>
@@ -67,9 +72,10 @@
     <string name="offer_button_dialog_2">"Offer price"</string>
     <string name="no_offer">"No offer today"</string>
 
-    <!--Product bottom navigation buttons text -->
+    <!--Product layout text -->
     <string name="offer_bottom_nav_text">"On sale"</string>
     <string name="add_purchase_bottom_nav_text">"Add purchase"</string>
+    <string name="view_purchases_text">"View purchases"</string>
     <string name="compare_bottom_nav_text">"Compare"</string>
     <string name="purchase_history_bottom_nav_text">"History"</string>
 
@@ -89,7 +95,7 @@
 
 
     <string name="companies_list">"Companies list</string>
-    <string name="company_data_input_instructions">"Enter the info of the company"</string>
+    <string name="company_data_input_instructions">"New company"</string>
     <string name="company_name_input">"Name</string>
     <string name="company_type_input">"Type</string>
     <string name="product_price_input">"Price"</string>
@@ -98,7 +104,7 @@
     <string name="product_type_input">"Type"</string>
     <string name="product_brand_input">"Brand"</string>
     <string name="product_name_input">"Name"</string>
-    <string name="product_image_input">"Click to add a product photo&#8230;"</string>
+    <string name="product_image_input">"Add a photo"</string>
     <string name="product_code_input">"Code"</string>
     <string name="store_name_input">"Store name</string>
     <string name="store_address_input">"Address</string>
@@ -171,5 +177,6 @@
 
     <string name="action_favorite">Favorite</string>
     <string name="action_settings">Settings</string>
+    <string name="add_new_company_type">Add new type&#8230;"</string>
 
 </resources>

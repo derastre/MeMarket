@@ -3,14 +3,11 @@ package com.example.android.memarket;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.memarket.components.BaseActivity;
 
@@ -81,7 +78,7 @@ public class StoreActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.select_store_toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.add_item_toolbar_menu, menu);
         return true;
     }
 
@@ -91,7 +88,7 @@ public class StoreActivity extends BaseActivity {
         int i = item.getItemId();
 
         switch (i) {
-            case R.id.select_store_button:
+            case R.id.select_button:
                 selectStore();
                 return true;
 

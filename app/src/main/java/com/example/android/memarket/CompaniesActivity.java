@@ -52,6 +52,7 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
         FloatingActionButton companies_fab = (FloatingActionButton) findViewById(R.id.add_company_fab);
         companies_fab.setOnClickListener(this);
 
+        //Setting ListView
         listView = (ListView) findViewById(R.id.companyList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

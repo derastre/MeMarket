@@ -70,7 +70,7 @@ public class StoresActivity extends BaseActivity implements View.OnClickListener
 
         TextView textView = (TextView) findViewById(R.id.companyName);
         textView.setText(companyName);
-        TextView textView2 = (TextView) findViewById(R.id.companyType);
+        TextView textView2 = (TextView) findViewById(R.id.companyTypeSpinner);
         textView2.setText(companyType);
 
 
