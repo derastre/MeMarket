@@ -113,7 +113,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         Product Product= new Product(name,type,brand,quantity,units);
-        myRef.child("products").child(ProductCode).setValue(Product);
+        myRef.child("products").child(ProductCode).push().setValue(Product);
 
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();

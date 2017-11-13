@@ -49,6 +49,7 @@
     <string name="welcome_card_text">"Use this app to track all your favorite products and share the offers you find."</string>
     <string name="got_it_button">"Got it"</string>
 
+    <!--Product activity-->
     <string name="no_company_selected">"No company selected"</string>
     <string name="no_store_selected">"No store selected"</string>
     <string name="product_price_text">"Price"</string>
@@ -56,6 +57,8 @@
     <string name="update_price">"Update"</string>
     <string name="purchase_history_button">"Purchases history"</string>
     <string name="last_purchase_price_text">"Last Purchase Price"</string>
+    <string name="select_product">"Select product"</string>
+    <string name="select_product_instructions">"There is more than one product with this code|"</string>
 
     <string name="update_button">"Update"</string>
     <string name="cancel_button">"Cancel"</string>

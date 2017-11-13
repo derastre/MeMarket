@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class NewCompany extends BaseActivity {
 
     private EditText companyName;
-    private Spinner companytypespinner;
+    private Spinner companyTypeSpinner;
 
     private DatabaseReference myRef;
     private ValueEventListener companiesTypesListener;
@@ -40,7 +40,7 @@ public class NewCompany extends BaseActivity {
 
         //Getting widgets ids
         companyName=(EditText) findViewById(R.id.companyName);
-        companytypespinner = (Spinner) findViewById(R.id.companyTypeSpinner);
+        companyTypeSpinner = (Spinner) findViewById(R.id.companyTypeSpinner);
 
         //Setting spinner
         getCompaniesTypesListFromFirebase();
@@ -55,9 +55,15 @@ public class NewCompany extends BaseActivity {
 
     }
 
+    @Override
+    public void onStop(){
+        super.onStop();
+        myRef.removeEventListener(companiesTypesListener);
+    }
+
     public void addCompany(){
         String name = companyName.getText().toString();
-        String type = companytypespinner.getSelectedItem().toString();
+        String type = companyTypeSpinner.getSelectedItem().toString();
 
         writeNewCompanyOnFirebase(name,type);
 
@@ -94,11 +100,11 @@ public class NewCompany extends BaseActivity {
                 }
                 companyTypesArrayList.add(getString(R.string.add_new_company_type));
                 setCompaniesTypeSpinner();
-                companytypespinner.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener() {
+                companyTypeSpinner.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener() {
 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        int j = companytypespinner.getAdapter().getCount()-1;
+                        int j = companyTypeSpinner.getAdapter().getCount()-1;
                         if (i==j) addNewCompanyType();
                     }
 
@@ -123,7 +129,7 @@ public class NewCompany extends BaseActivity {
     private void setCompaniesTypeSpinner() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,companyTypesArrayList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        companytypespinner.setAdapter(adapter);
+        companyTypeSpinner.setAdapter(adapter);
     }
 
     private void addNewCompanyType() {
@@ -148,6 +154,7 @@ public class NewCompany extends BaseActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference();
                 myRef.child("companies_types").push().setValue(type);
+                getCompaniesTypesListFromFirebase();
 
             }
         });
