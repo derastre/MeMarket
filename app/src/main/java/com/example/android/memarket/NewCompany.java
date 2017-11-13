@@ -51,27 +51,7 @@ public class NewCompany extends BaseActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        //Spinner click item listener
-//companytypespinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//    @Override
-//    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//        int j = companytypespinner.getAdapter().getCount()-1;
-//        if (i==j) addNewCompanyType();
-//    }
-//});
-        companytypespinner.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener() {
 
-        @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int j = companytypespinner.getAdapter().getCount()-1;
-                if (i==j) addNewCompanyType();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
     }
 
@@ -113,6 +93,19 @@ public class NewCompany extends BaseActivity {
                 }
                 companyTypesArrayList.add(getString(R.string.add_new_company_type));
                 setCompaniesTypeSpinner();
+                companytypespinner.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        int j = companytypespinner.getAdapter().getCount()-1;
+                        if (i==j) addNewCompanyType();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
                 hideProgressDialog();
             }
 
