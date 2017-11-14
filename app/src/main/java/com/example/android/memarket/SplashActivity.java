@@ -47,6 +47,7 @@ public class SplashActivity extends Activity  {
             String name = user.getDisplayName();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
+//            TODO:Check if uri is null
             String stringUri = pictureUri.toString();
             startActivity(new Intent(this, MainActivity.class)
                     .putExtra(USER_ID,userId)

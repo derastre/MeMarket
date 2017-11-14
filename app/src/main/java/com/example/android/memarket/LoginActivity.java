@@ -110,7 +110,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-..
+        // null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
