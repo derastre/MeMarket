@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
 import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
+import static com.example.android.memarket.SplashActivity.USER_EMAIL;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
 import static com.example.android.memarket.SplashActivity.USER_ID;
 import static com.example.android.memarket.SplashActivity.USER_PICTURE;
@@ -43,6 +44,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private String selectedStoreId;
     private String mUserId;
     private String mUserName;
+    private String mUserEmail;
     private Boolean mEmailVerified;
     private Toolbar mainToolbar;
     private ActionBarDrawerToggle mainActionBarDrawerToggle;
@@ -83,6 +85,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //Get user name and picture then show it on Navigation drawer.
         mUserId = getIntent().getStringExtra(USER_ID);
         mUserName = getIntent().getStringExtra(USER_NAME);
+        mUserEmail= getIntent().getStringExtra(USER_EMAIL);
         mEmailVerified = getIntent().getBooleanExtra(USER_EMAIL_VERIFICATION, true);
         pictureUri = getIntent().getStringExtra(USER_PICTURE);
 
@@ -90,20 +93,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         View header = mainNavigationView.getHeaderView(0);
         textView = header.findViewById(R.id.userName);
         ImageView profileAvatar = header.findViewById(R.id.profilePicture);
-        Glide.with(this)
-                .load(pictureUri)
-                .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.error)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .animate(R.anim.fade_in)
-                .centerCrop()
-                .transform(new CircleTransform(this))
-                .into(profileAvatar);
+        if (pictureUri!=null) {
+            Glide.with(this)
+                    .load(pictureUri)
+                    .placeholder(R.drawable.default_avatar)
+                    .error(R.drawable.error)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .animate(R.anim.fade_in)
+                    .centerCrop()
+                    .transform(new CircleTransform(this))
+                    .into(profileAvatar);
+        }else profileAvatar.setVisibility(View.GONE);
 
+        //Setting name on navigation side panel
+        String displayName;
+        if(mUserName!=null) displayName = mUserName; else displayName=mUserEmail;
         if (mEmailVerified) {
-            textView.setText(mUserName);
+            textView.setText(displayName);
         } else {
-            textView.setText(mUserName + "\n" + getString(R.string.verify_email));
+            textView.setText(displayName + "\n" + getString(R.string.verify_email));
         }
 
     }
@@ -196,9 +204,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (currentUser != null) {
             mUserId = currentUser.getUid();
             mUserName = currentUser.getDisplayName();
+            mUserEmail = currentUser.getEmail();
             mEmailVerified = currentUser.isEmailVerified();
             Uri uri = currentUser.getPhotoUrl();
-            pictureUri = uri.toString();
+            if (uri!=null) pictureUri = uri.toString();
         } else {
             startActivity(new Intent(this, LoginActivity.class));
         }

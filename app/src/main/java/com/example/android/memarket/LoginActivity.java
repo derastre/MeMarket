@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-
 
 import com.example.android.memarket.components.BaseActivity;
 import com.facebook.AccessToken;
@@ -36,7 +35,7 @@ import static com.example.android.memarket.SplashActivity.USER_ID;
 import static com.example.android.memarket.SplashActivity.USER_NAME;
 import static com.example.android.memarket.SplashActivity.USER_PICTURE;
 
-public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
+public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final String TAG = "Login";
     private static final int RC_GOOGLE_SIGN_IN = 9001;
@@ -125,23 +124,22 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             String name = user.getDisplayName();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
-            if (pictureUri!=null) {
-                String stringUri = pictureUri.toString();
-                startActivity(new Intent(this, MainActivity.class)
-                        .putExtra(USER_ID, userId)
-                        .putExtra(USER_EMAIL, email)
-                        .putExtra(USER_EMAIL_VERIFICATION, emailVerification)
-                        .putExtra(USER_PICTURE, stringUri)
-                        .putExtra(USER_NAME, name)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-            }
+            String stringUri;
+            if (pictureUri != null) stringUri = pictureUri.toString();
+            else stringUri = null;
+            startActivity(new Intent(this, MainActivity.class)
+                    .putExtra(USER_ID, userId)
+                    .putExtra(USER_EMAIL, email)
+                    .putExtra(USER_EMAIL_VERIFICATION, emailVerification)
+                    .putExtra(USER_PICTURE, stringUri)
+                    .putExtra(USER_NAME, name)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         } else {
             findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
             findViewById(R.id.providers_login).setVisibility(View.VISIBLE);
             findViewById(R.id.create_account_buttons).setVisibility(View.GONE);
             findViewById(R.id.field_user_name).setVisibility(View.GONE);
-
         }
     }
 
@@ -164,26 +162,24 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                             Log.d(TAG, "createUserWithEmail:success");
 
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d(TAG, "User account created.");
-                            Toast.makeText(LoginActivity.this, "Account created!. " + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(user);
+                            if (user!=null) {
+                                Log.d(TAG, "User account created.");
+                                String text = getString(R.string.account_created) + user.getEmail();
+                                Snackbar.make(findViewById(R.id.login_layout), text, Snackbar.LENGTH_SHORT).show();
+                                updateUI(user);
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             try {
-                                Toast.makeText(LoginActivity.this, "Authentication failed. \n" + task.getException().getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-                            }catch (Exception ie){
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(R.id.login_layout), "Authentication failed. \n" + task.getException().getMessage(),
+                                        Snackbar.LENGTH_SHORT).show();
+                            } catch (Exception ie) {
+                                Snackbar.make(findViewById(R.id.login_layout), "Authentication failed.",
+                                        Snackbar.LENGTH_SHORT).show();
                             }
                             updateUI(null);
                         }
-
-                        // [START_EXCLUDE]
-                        //hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
         // [END create_user_with_email]
@@ -210,18 +206,11 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
-                                    Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.login_layout), R.string.auth_failed,
+                                    Snackbar.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
-                        // [START_EXCLUDE]
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "FIREBASE Sign in Error.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
         // [END sign_in_with_email]
@@ -259,7 +248,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         return valid;
     }
 
-    private void showCreateAccountFields(Boolean show){
+    private void showCreateAccountFields(Boolean show) {
 
         EditText editText;
         if (show) {
@@ -329,14 +318,12 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.login_layout), "Google sign in failed.",
+                                    Snackbar.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
-                        // [START_EXCLUDE]
-                        hideProgressDialog();
-                        // [END_EXCLUDE]
+
                     }
                 });
     }
@@ -346,7 +333,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "Google onConnectionFailed:" + connectionResult);
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(R.id.login_layout), "Google Play Services error.", Snackbar.LENGTH_SHORT).show();
     }
     // [END GOOGLE AUTHENTICATION]
 
@@ -370,8 +357,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.login_layout), "Facebook Authentication failed.",
+                                    Snackbar.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
@@ -399,7 +386,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
                 updateUI(null);
-                Toast.makeText(this,"Login failed.",Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.login_layout), "Google Login failed.", Snackbar.LENGTH_SHORT).show();
                 // [END_EXCLUDE]
             }
         } else {
@@ -417,11 +404,11 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             showCreateAccountFields(true);
         } else if (i == R.id.email_sign_in_button) {
             emailSignIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i == R.id.create_account_button){
-            createAccount(mUserNameField.getText().toString(),mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i==R.id.cancel_button){
+        } else if (i == R.id.create_account_button) {
+            createAccount(mUserNameField.getText().toString(), mEmailField.getText().toString(), mPasswordField.getText().toString());
+        } else if (i == R.id.cancel_button) {
             showCreateAccountFields(false);
-        } else if (i==R.id.google_sign_in_button){
+        } else if (i == R.id.google_sign_in_button) {
             googleSignIn();
         }
     }

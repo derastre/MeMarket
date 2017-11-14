@@ -153,9 +153,8 @@ public class StoresActivity extends BaseActivity implements View.OnClickListener
         for (int i = 0; i < storesArrayList.size(); i++) {
             storesNameList.add(storesArrayList.get(i).Name);
         }
-
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, storesNameList);
+                new ArrayAdapter<>(context, R.layout.listview_layout, R.id.list_content, storesNameList);
         listView.setAdapter(adapter);
     }
 

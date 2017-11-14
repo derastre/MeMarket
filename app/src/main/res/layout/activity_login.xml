@@ -2,43 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
     tools:context="com.example.android.memarket.LoginActivity">
 
-    <LinearLayout
-        android:id="@+id/email_password_fields"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/field_user_name"
+        <LinearLayout
+            android:id="@+id/email_password_fields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_user_name"
-            android:inputType="textPersonName"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-        <EditText
-            android:id="@+id/field_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_email"
-            android:inputType="textEmailAddress" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/field_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_user_name"
+                android:inputType="textPersonName"
+                android:visibility="gone"
+                app:hintEnabled="true" />
 
-        <EditText
-            android:id="@+id/field_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_password"
-            android:inputType="textPassword"
-            />
-    </LinearLayout>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/field_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                app:hintEnabled="true" />
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/field_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                app:hintEnabled="true" />
+
+        </LinearLayout>
+
+    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:id="@+id/email_password_buttons"
@@ -51,21 +61,19 @@
 
         <Button
             android:id="@+id/email_sign_in_button"
+            style="@style/ThemeOverlay.MyDarkButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/sign_in"
-            style="@style/ThemeOverlay.MyDarkButton"
-            />
+            android:text="@string/sign_in" />
 
         <Button
             android:id="@+id/email_create_account_button"
+            style="@style/ThemeOverlay.MyDarkButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/create_account"
-            style="@style/ThemeOverlay.MyDarkButton"
-            />
+            android:text="@string/create_account" />
     </LinearLayout>
 
     <LinearLayout
@@ -75,48 +83,44 @@
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <Button
             android:id="@+id/create_account_button"
+            style="@style/ThemeOverlay.MyDarkButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/create_account"
-            style="@style/ThemeOverlay.MyDarkButton"
-            />
+            android:text="@string/create_account" />
 
         <Button
             android:id="@+id/cancel_button"
+            style="@style/ThemeOverlay.MyDarkButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel_button"
-            style="@style/ThemeOverlay.MyDarkButton"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/providers_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:gravity="center_horizontal">
+        android:paddingRight="16dp">
 
-        <View style="@style/VerticalDivider"
-            />
+        <View style="@style/VerticalDivider" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/use_providers_text"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:paddingTop="10dp"/>
+            android:paddingTop="10dp"
+            android:text="@string/use_providers_text" />
 
         <View style="@style/VerticalDivider" />
 

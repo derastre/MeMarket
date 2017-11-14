@@ -137,7 +137,7 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
         }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, companiesNameList);
+                new ArrayAdapter<>(context, R.layout.listview_layout, R.id.list_content, companiesNameList);
         listView.setAdapter(adapter);
 
     }

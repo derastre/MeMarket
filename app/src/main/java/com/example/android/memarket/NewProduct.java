@@ -1,15 +1,19 @@
 package com.example.android.memarket;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,8 +25,11 @@ import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -30,6 +37,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 
 public class NewProduct extends BaseActivity implements View.OnClickListener {
@@ -41,8 +49,12 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
     private EditText productBrand;
     private EditText productQty;
     private EditText productName;
-    private Spinner productUnits;
+    private Spinner productUnitsSpinner;
     private Button addPhoto;
+
+   private DatabaseReference myRef;
+    private ValueEventListener unitsListener;
+    private ArrayList<String> unitsArrayList;
 
 
     @Override
@@ -60,7 +72,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         productType = (EditText) findViewById(R.id.productTypeInput);
         productBrand = (EditText) findViewById(R.id.productBrandInput);
         productQty = (EditText) findViewById(R.id.productQuantityInput);
-        productUnits = (Spinner) findViewById(R.id.spinner_unit);
+        productUnitsSpinner = (Spinner) findViewById(R.id.spinner_unit);
         productImage = (ImageView) findViewById(R.id.productImageInput);
         addPhoto = (Button) findViewById(R.id.add_photo_button);
 
@@ -72,10 +84,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         productCode.setText(message);
 
         //Setting the spinner
-        String[] units = getResources().getStringArray(R.array.units_array);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, units);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        productUnits.setAdapter(adapter);
+        getProductUnitsListFromFirebase();
 
         //Setting Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.new_product_toolbar);
@@ -93,7 +102,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         String type = productType.getText().toString();
         String brand = productBrand.getText().toString();
         String quantity = productQty.getText().toString();
-        String units = productUnits.getSelectedItem().toString();
+        String units = productUnitsSpinner.getSelectedItem().toString();
 
         productImage.setDrawingCacheEnabled(true);
         productImage.buildDrawingCache();
@@ -113,12 +122,13 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         Product Product= new Product(name,type,brand,quantity,units);
-        myRef.child("products").child(ProductCode).push().setValue(Product);
+        String key= myRef.child("products").child(ProductCode).push().getKey();
+        myRef.child("products").child(ProductCode).child(key).setValue(Product);
 
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference productImagesRef = storageRef.child("images/"+ProductCode);
+        StorageReference productImagesRef = storageRef.child("images/"+key);
 
         InputStream stream = new ByteArrayInputStream(image);
         UploadTask uploadTask = productImagesRef.putStream(stream);
@@ -149,6 +159,93 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
             productImage.setVisibility(View.VISIBLE);
             addPhoto.setVisibility(View.GONE);
         }
+    }
+
+    public void getProductUnitsListFromFirebase() {
+        //Obtener lista de unidades de la base de datos
+        showProgressDialog(getString(R.string.loading));
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference().child("product_units");
+
+        unitsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                unitsArrayList = new ArrayList<>();
+                unitsArrayList.add("");
+                for (DataSnapshot unitsSnapshop : dataSnapshot.getChildren()) {
+                    String companyType = unitsSnapshop.getValue().toString();
+                    if (companyType != null) {
+                        unitsArrayList.add(companyType);
+                    }
+                }
+                unitsArrayList.add(getString(R.string.add_new_unit_type));
+                setUnitsTypesSpinner();
+                productUnitsSpinner.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        int j = productUnitsSpinner.getAdapter().getCount()-1;
+                        if (i==j) addNewProductUnit();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                hideProgressDialog();
+            }
+
+        };
+        myRef.addValueEventListener(unitsListener);
+
+    }
+
+    private void setUnitsTypesSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,unitsArrayList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        productUnitsSpinner.setAdapter(adapter);
+    }
+
+    private void addNewProductUnit() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.add_new_unit_type);
+
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String type = input.getText().toString();
+
+                // Write to the database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference();
+                myRef.child("product_units").push().setValue(type);
+                getProductUnitsListFromFirebase();
+
+            }
+        });
+        builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     @Override

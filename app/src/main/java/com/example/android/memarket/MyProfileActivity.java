@@ -82,65 +82,69 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
         // Send verification email
         // [START send_email_verification]
         final FirebaseUser user = mAuth.getCurrentUser();
-        user.sendEmailVerification()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // [START_EXCLUDE]
-                        // Re-enable button
-                        findViewById(R.id.verify_email_button).setEnabled(true);
+        if (user!=null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // [START_EXCLUDE]
+                            // Re-enable button
+                            findViewById(R.id.verify_email_button).setEnabled(true);
 
-                        if (task.isSuccessful()) {
-                            Toast.makeText(MyProfileActivity.this,
-                                    "Verification email sent to " + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.e(TAG, "sendEmailVerification", task.getException());
-                            Toast.makeText(MyProfileActivity.this,
-                                    "Failed to send verification email.",
-                                    Toast.LENGTH_SHORT).show();
+                            if (task.isSuccessful()) {
+                                Toast.makeText(MyProfileActivity.this,
+                                        "Verification email sent to " + user.getEmail(),
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e(TAG, "sendEmailVerification", task.getException());
+                                Toast.makeText(MyProfileActivity.this,
+                                        "Failed to send verification email.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            // [END_EXCLUDE]
                         }
-                        // [END_EXCLUDE]
-                    }
-                });
-        // [END send_email_verification]
+                    });
+            // [END send_email_verification]
+        }
     }
 
     private void signOut() {
-        List providers = mAuth.getCurrentUser().getProviders();
-        if (providers!=null){
-            String provider = providers.get(0).toString();
-            String google = "google.com";
-            String facebook = "facebook.com";
-            if (google.equals(provider)){
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user!=null) {
+            List providers = user.getProviders();
+            if (providers != null) {
+                String provider = providers.get(0).toString();
+                String google = "google.com";
+                String facebook = "facebook.com";
+                if (google.equals(provider)) {
 
-                // [START config_signin]
-                // Configure Google Sign In
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-                // [END config_signin]
-                GoogleApiClient mGoogleApiClient;
-                mGoogleApiClient =
-                        new GoogleApiClient.Builder(this)
-                        .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                       .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                        .build();
+                    // [START config_signin]
+                    // Configure Google Sign In
+                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(getString(R.string.default_web_client_id))
+                            .requestEmail()
+                            .build();
+                    // [END config_signin]
+                    GoogleApiClient mGoogleApiClient;
+                    mGoogleApiClient =
+                            new GoogleApiClient.Builder(this)
+                                    .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                                    .build();
 
-                mGoogleApiClient.connect();
-                // Google sign out
-                if (mGoogleApiClient.isConnected())
-                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-            }else if (facebook.equals(provider)){
-                LoginManager.getInstance().logOut();
+                    mGoogleApiClient.connect();
+                    // Google sign out
+                    if (mGoogleApiClient.isConnected())
+                        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                } else if (facebook.equals(provider)) {
+                    LoginManager.getInstance().logOut();
+                }
             }
+            mAuth.signOut();
+
+
+            goToLogin();
         }
-        mAuth.signOut();
-
-
-
-        goToLogin();
     }
 
     private void updateUI(FirebaseUser user){
@@ -151,17 +155,21 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
             Boolean vemail = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
             ImageView profileAvatar = (ImageView) findViewById(R.id.profilePicture);
-            Glide.with(this)
-                    .load(pictureUri)
-                    .placeholder(R.drawable.default_avatar)
-                    .error(R.drawable.error)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .animate(R.anim.fade_in)
-                    .centerCrop()
-                    .into(profileAvatar);
+            if (pictureUri!=null) {
+                profileAvatar.setVisibility(View.VISIBLE);
+                Glide.with(this)
+                        .load(pictureUri)
+                        .placeholder(R.drawable.default_avatar)
+                        .error(R.drawable.error)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .animate(R.anim.fade_in)
+                        .centerCrop()
+                        .into(profileAvatar);
+            }else profileAvatar.setVisibility(View.GONE);
             Boolean emailVerification = user.isEmailVerified();
 
             if(name!=null) mUserNameTexView.setText(name);
+
             mEmailTexView.setText(email);
             if (vemail){
                 mEmailVerifiedButton.setVisibility(View.GONE);

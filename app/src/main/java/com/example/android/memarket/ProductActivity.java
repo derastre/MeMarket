@@ -1,26 +1,24 @@
 package com.example.android.memarket;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -44,15 +42,15 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
+//import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
 import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
 import static com.example.android.memarket.MainActivity.FROM_MAIN;
 import static com.example.android.memarket.SplashActivity.USER_ID;
 import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
 
-//TODO Erase BottomNavigationView.OnNavigationItemSelectedListener if not used.
-public class ProductActivity extends BaseActivity implements View.OnClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
+
+public class ProductActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String PRODUCT_CODE = "com.example.android.memarket.PRODUCT_CODE";
     private static final int RC_BARCODE_CAPTURE = 9001;
@@ -65,7 +63,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private String mProductPrice;
     private String mProductOfferPrice;
     private String mStoreId;
-    private String mCompanyId;
+    //private String mCompanyId;
     private String mStoreName;
     private String mCompanyName;
     private String mProductCode;
@@ -113,14 +111,12 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.compare_price_button).setOnClickListener(this);
         findViewById(R.id.view_history_button).setOnClickListener(this);
         findViewById(R.id.on_sale_button).setOnClickListener(this);
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-//        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         mStoreId = intent.getStringExtra(STORE_ID);
         mStoreName = intent.getStringExtra(STORE_NAME);
-        mCompanyId = intent.getStringExtra(COMPANY_ID);
+        //mCompanyId = intent.getStringExtra(COMPANY_ID);
         mCompanyName = intent.getStringExtra(COMPANY_NAME);
         mUserId = intent.getStringExtra(USER_ID);
         fromMain = intent.getBooleanExtra(FROM_MAIN, false);
@@ -142,8 +138,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY > oldScrollY) {
                     scan_fab.hide();
+                    add_purchase_fab.hide();
                 } else {
                     scan_fab.show();
+                    add_purchase_fab.show();
                 }
             }
         });
@@ -199,37 +197,36 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
             myRef = mDatabase.getReference().child("products").child(mProductCode);
 
-
             myProductListener = new ValueEventListener() {
                 @Override
 
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    ArrayList<Product> productArrayList= new ArrayList<>();
+                    ArrayList<Product> productArrayList = new ArrayList<>();
                     ArrayList<String> productKeyArrayList = new ArrayList<>();
-                   if (dataSnapshot.getChildrenCount()==1) {
-                       for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
-                           mProduct = productSnapshop.getValue(Product.class);
-                           //Check if mProduct exist in database
-                           if (mProduct != null) {
-                               mProductId = productSnapshop.getKey();
-                               updateProductUI();
-                           }
-                       }
-                   }else if (dataSnapshot.getChildrenCount()==0) {
-                       //if mProduct code doesn't exist in database go to activity add new mProduct
-                       startActivity(new Intent(ProductActivity.this, NewProduct.class).putExtra(PRODUCT_CODE, mProductCode));
-                   }else if(dataSnapshot.getChildrenCount()>1){
-                       for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
-                           mProduct = productSnapshop.getValue(Product.class);
-                           String key = productSnapshop.getKey();
-                           productArrayList.add(mProduct);
-                           productKeyArrayList.add(key);
-                       }
-                       selectProductDialog(productArrayList,productKeyArrayList);
+                    if (dataSnapshot.getChildrenCount() == 1) {
+                        for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
+                            mProduct = productSnapshop.getValue(Product.class);
+                            //Check if mProduct exist in database
+                            if (mProduct != null) {
+                                mProductId = productSnapshop.getKey();
+                                updateProductUI();
+                            }
+                        }
+                    } else if (dataSnapshot.getChildrenCount() == 0) {
+                        //if mProduct code doesn't exist in database go to activity add new mProduct
+                        startActivity(new Intent(ProductActivity.this, NewProduct.class).putExtra(PRODUCT_CODE, mProductCode));
+                    } else if (dataSnapshot.getChildrenCount() > 1) {
+                        for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
+                            mProduct = productSnapshop.getValue(Product.class);
+                            String key = productSnapshop.getKey();
+                            productArrayList.add(mProduct);
+                            productKeyArrayList.add(key);
+                        }
+                        selectProductDialog(productArrayList, productKeyArrayList);
 
 
-                   }
+                    }
                     hideProgressDialog();
                 }
 
@@ -241,14 +238,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             };
             myRef.addValueEventListener(myProductListener);
 
-            //Reading extra product data
-            if (mProductId!=null) {
-                readProductPriceFromFirebase();
-                readProductOfferFromFirebase();
-                readLastPurchaseFromFirebase();
-            }
         }
-
     }
 
     private void selectProductDialog(final ArrayList<Product> productArrayList, final ArrayList<String> productKeyArrayList) {
@@ -272,26 +262,33 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         builder.show();
     }
 
-    public void updateProductUI(){
+    public void updateProductUI() {
         //Storage for product picture
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        final StorageReference storageRef = storage.getReference().child("images").child(mProductId);
+        if (mProductId != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            final StorageReference storageRef = storage.getReference().child("images").child(mProductId);
 
-        TextView textViewName = (TextView) findViewById(R.id.productName);
-        textViewName.setText(mProduct.Name);
-        TextView textViewType = (TextView) findViewById(R.id.productType);
-        textViewType.setText(mProduct.Type);
-        TextView textViewBrand = (TextView) findViewById(R.id.productBrand);
-        textViewBrand.setText(mProduct.Brand);
-        TextView textViewQty = (TextView) findViewById(R.id.productQuantity);
-        String Qty = mProduct.Quantity + " " + mProduct.Units;
-        textViewQty.setText(Qty);
-        ImageView productImage = (ImageView) findViewById(R.id.productImage);
-        Glide.with(this)
-                .using(new FirebaseImageLoader())
-                .load(storageRef)
-                .into(productImage);
-        findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
+            TextView textViewName = (TextView) findViewById(R.id.productName);
+            textViewName.setText(mProduct.Name);
+            TextView textViewType = (TextView) findViewById(R.id.productType);
+            textViewType.setText(mProduct.Type);
+            TextView textViewBrand = (TextView) findViewById(R.id.productBrand);
+            textViewBrand.setText(mProduct.Brand);
+            TextView textViewQty = (TextView) findViewById(R.id.productQuantity);
+            String Qty = mProduct.Quantity + " " + mProduct.Units;
+            textViewQty.setText(Qty);
+            ImageView productImage = (ImageView) findViewById(R.id.productImage);
+            Glide.with(this)
+                    .using(new FirebaseImageLoader())
+                    .load(storageRef)
+                    .into(productImage);
+            findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
+
+            //Reading extra product data
+            readProductPriceFromFirebase();
+            readProductOfferFromFirebase();
+            readLastPurchaseFromFirebase();
+        }
     }
 
     public void readProductPriceFromFirebase() {
@@ -340,11 +337,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
                 TextView offer_text = (TextView) findViewById(R.id.offer_price);
                 TextView price_text = (TextView) findViewById(R.id.productPrice);
+                Button update = (Button) findViewById(R.id.update_price_button);
 
                 //Check if mProduct exist in database
                 if (dataSnapshot.getChildren() != null) {
                     for (DataSnapshot offerSnapshot : dataSnapshot.getChildren()) {
                         findViewById(R.id.offers_layout).setVisibility(View.VISIBLE);
+                        findViewById(R.id.on_sale_button).setVisibility(View.GONE);
+                        update.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
                         mProductOfferPrice = offerSnapshot.getValue().toString();
                         Float number = Float.parseFloat(mProductOfferPrice);
                         String text = NumberFormat.getCurrencyInstance().format(number);
@@ -353,8 +353,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         //textButton.setEnabled(false);
                     }
                 } else {
-                    //if price  does'nt exist in database
+                    //if offer  does'nt exist in database
                     findViewById(R.id.offers_layout).setVisibility(View.GONE);
+                    findViewById(R.id.offer_button).setVisibility(View.VISIBLE);
+                    update.setTextColor(getResources().getColor(R.color.primaryTextColor));
                     price_text.setPaintFlags(price_text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                     mProductOfferPrice = getResources().getString(R.string.no_offer);
                 }
@@ -371,20 +373,26 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readLastPurchaseFromFirebase() {
         //Check for last user purchase on database
         if (mUserId != null) {
-            myPurchasesRef = mDatabase.getReference().child(mUserId).child("purchases").child(mProductId);
+            myPurchasesRef = mDatabase.getReference().child("purchases").child(mUserId).child(mProductId);
             myPurchasesQuery = myPurchasesRef.orderByKey().limitToLast(1);
             myPurchasesListener = new ValueEventListener() {
                 @Override
 
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
+                    CardView cardView = (CardView) findViewById(R.id.cardview_purchase_history);
+                    TextView price = (TextView) findViewById(R.id.last_purchase_price);
+                    TextView date = (TextView) findViewById(R.id.last_purchase_date);
+                    cardView.setVisibility(View.GONE);
                     //Check if mProduct exist in database
                     if (dataSnapshot.getChildren() != null) {
                         for (DataSnapshot purchasesSnapshot : dataSnapshot.getChildren()) {
                             Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
                             lastPurchasePrice = purchase.price;
                             lastPurchaseDate = purchasesSnapshot.getKey();
+                            cardView.setVisibility(View.VISIBLE);
                         }
+                        price.setText(lastPurchasePrice);
+                        date.setText(lastPurchaseDate);
                     } else {
                         lastPurchasePrice = null;
                         lastPurchaseDate = null;
@@ -402,7 +410,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void updatePriceFirebase() {
 
-        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null && mProductId!=null) {
+        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null && mProductId != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.update_price);
             builder.setMessage(mCompanyName + " " + mStoreName + "\n" + mProduct.Name);
@@ -431,6 +439,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
                     myRef.updateChildren(childUpdates);
+                    readProductPriceFromFirebase();
 
                 }
             });
@@ -442,12 +451,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             });
 
             builder.show();
-        }
+        } else
+            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.update_error), Snackbar.LENGTH_SHORT).show();
 
     }
 
     public void addPurchaseFirebase() {
-        if (mStoreId != null && mProductPrice != null && mUserId != null && mProductId!=null) {
+        if (mStoreId != null && mProductPrice != null && mUserId != null && mProductId != null) {
             Purchase register_product = new Purchase(mProductPrice, mStoreId);
             final Long date = System.currentTimeMillis();
 
@@ -463,7 +473,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         }
                     })
                     .show();
-        }
+        } else
+            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
     }
 
     public void purchasesHistoryFirebase() {
@@ -473,7 +484,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void markAsOfferFirebase() {
-        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null && mProductId!=null) {
+        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null && mProductId != null) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.mark_as_offer_dialog);
@@ -504,6 +515,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
                     myRef.updateChildren(childUpdates);
+                    readProductOfferFromFirebase();
 
                 }
             });
@@ -571,7 +583,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 addPurchaseFirebase();
                 break;
             case R.id.update_price_button:
-                updatePriceFirebase();
+                if (findViewById(R.id.on_sale_button).getVisibility()==View.VISIBLE){
+                    updatePriceFirebase();
+                }else markAsOfferFirebase();
                 break;
             case R.id.compare_price_button:
                 comparePrices();
@@ -605,23 +619,5 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         }
     }
-
-    public boolean onNavigationItemSelected(MenuItem item) {
-        //TODO Erase this method if bottom navigation not used.
-        int i = item.getItemId();
-        switch (i) {
-            case R.id.offer_button:
-                markAsOfferFirebase();
-                break;
-            case R.id.add_purchase_button:
-                addPurchaseFirebase();
-                break;
-            case R.id.purchase_history_button:
-                purchasesHistoryFirebase();
-                break;
-        }
-        return true;
-    }
-
 
 }
