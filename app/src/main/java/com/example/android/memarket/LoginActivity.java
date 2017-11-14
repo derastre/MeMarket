@@ -125,14 +125,16 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             String name = user.getDisplayName();
             Boolean emailVerification = user.isEmailVerified();
             Uri pictureUri = user.getPhotoUrl();
-            String stringUri = pictureUri.toString();
-            startActivity(new Intent(this, MainActivity.class)
-                    .putExtra(USER_ID,userId)
-                    .putExtra(USER_EMAIL,email)
-                    .putExtra(USER_EMAIL_VERIFICATION,emailVerification)
-                    .putExtra(USER_PICTURE,stringUri)
-                    .putExtra(USER_NAME,name)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            if (pictureUri!=null) {
+                String stringUri = pictureUri.toString();
+                startActivity(new Intent(this, MainActivity.class)
+                        .putExtra(USER_ID, userId)
+                        .putExtra(USER_EMAIL, email)
+                        .putExtra(USER_EMAIL_VERIFICATION, emailVerification)
+                        .putExtra(USER_PICTURE, stringUri)
+                        .putExtra(USER_NAME, name)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            }
         } else {
             findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
