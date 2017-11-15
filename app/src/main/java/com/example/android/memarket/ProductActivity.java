@@ -114,13 +114,19 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.on_sale_button).setOnClickListener(this);
 
         // Get the Intent that started this activity and extract the string
-        Intent intent = getIntent();
-        mStoreId = intent.getStringExtra(STORE_ID);
-        mStoreName = intent.getStringExtra(STORE_NAME);
-        //mCompanyId = intent.getStringExtra(COMPANY_ID);
-        mCompanyName = intent.getStringExtra(COMPANY_NAME);
-        mUserId = intent.getStringExtra(USER_ID);
-        fromMain = intent.getBooleanExtra(FROM_MAIN, false);
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            mStoreId = intent.getStringExtra(STORE_ID);
+            mStoreName = intent.getStringExtra(STORE_NAME);
+            mCompanyName = intent.getStringExtra(COMPANY_NAME);
+            mUserId = intent.getStringExtra(USER_ID);
+            fromMain = intent.getBooleanExtra(FROM_MAIN, false);
+        } else {
+            mStoreId = savedInstanceState.getString("mStoreId");
+            mStoreName = savedInstanceState.getString("mStoreName");
+            mCompanyName = savedInstanceState.getString("mCompanyName");
+            mUserId = savedInstanceState.getString("mUserId");
+        }
 
         // If there is no store selected
         if (mStoreId == null) {
@@ -395,7 +401,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         Float number = Float.parseFloat(lastPurchasePrice);
                         price.setText(NumberFormat.getCurrencyInstance().format(number));
                         Long ndate = Long.parseLong(lastPurchaseDate);
-                        String sdate = getDate(ndate,"dd/MM/yyyy hh:mm");
+                        String sdate = getDate(ndate, "dd/MM/yyyy hh:mm");
                         date.setText(sdate);
                     } else {
                         lastPurchasePrice = null;
@@ -456,8 +462,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             });
             dialog = builder.create();
             dialog.show();
-            dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);;
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            ;
         } else
             Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.update_error), Snackbar.LENGTH_SHORT).show();
 
@@ -485,12 +492,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void purchasesHistoryFirebase() {
-        if(mProductId!=null && mUserId!=null) {
+        if (mProductId != null && mUserId != null) {
             startActivity(new Intent(ProductActivity.this, purchaseHistory.class)
                     .putExtra(PRODUCT_CODE, mProductId)
                     .putExtra(USER_ID, mUserId)
             );
-        }else Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
+        } else
+            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
     }
 
     public void markAsOfferFirebase() {
@@ -537,9 +545,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             });
             dialog = builder.create();
             dialog.show();
-            dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }else Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
+        } else
+            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -595,9 +604,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 addPurchaseFirebase();
                 break;
             case R.id.update_price_button:
-                if (findViewById(R.id.on_sale_button).getVisibility()==View.VISIBLE){
+                if (findViewById(R.id.on_sale_button).getVisibility() == View.VISIBLE) {
                     updatePriceFirebase();
-                }else markAsOfferFirebase();
+                } else markAsOfferFirebase();
                 break;
             case R.id.compare_price_button:
                 comparePrices();
@@ -632,4 +641,15 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        savedInstanceState.putString("mStoreId", mStoreId);
+        savedInstanceState.putString("mStoreName", mStoreName);
+        savedInstanceState.putString("mCompanyName", mCompanyName);
+        savedInstanceState.putString("mUserId", mUserId);
+
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
 }

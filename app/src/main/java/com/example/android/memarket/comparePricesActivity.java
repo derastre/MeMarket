@@ -171,8 +171,6 @@ public class comparePricesActivity extends BaseActivity {
             param.rowSpec = GridLayout.spec(r);
             if (r == 0) {
                 titleText.setTextColor(getResources().getColor(R.color.secondaryTextColor));
-                titleText.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
-                titleText.setTextColor(getResources().getColor(android.R.color.white));
                 titleText.setAllCaps(true);
                 titleText.setTypeface(Typeface.DEFAULT_BOLD);
             }

@@ -8,7 +8,7 @@
     <color name="secondaryLightColor">#ffff5a</color>
     <color name="secondaryDarkColor">#f7a900</color>
     <color name="primaryTextColor">#000000</color>
-    <color name="secondaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
 
     <color name="flatButtonColorText">#f7a900</color>
 

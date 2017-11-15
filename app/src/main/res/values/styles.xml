@@ -13,7 +13,10 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
+        <item name="colorButtonNormal">@color/secondaryColor</item>
         <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:navigationBarColor">@color/primaryLightColor</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
     <!-- Activity with no Title -->
@@ -42,9 +45,24 @@
 
     <!-- Bottom navigation bar -->
     <style name="BottomNavigationStyle" parent="AppTheme">
+        <item name="android:background">@android:color/white</item>
         <item name="itemIconTint">@android:color/black</item>
         <item name="itemTextColor">@android:color/black</item>
     </style>
 
+    <!-- Tool bar -->
+    <style name="ThemeOverlay.AppCompat.ActionBar" parent="AppTheme">
+        <item name="android:background">@color/primaryColor</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+
+    </style>
+
+
+    <!-- Dialog theme -->
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#FFCC00</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:background">#5fa3d0</item>
+    </style>
 
 </resources>

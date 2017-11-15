@@ -133,7 +133,6 @@ public class purchaseHistory extends BaseActivity {
 
     private void allDataRead() {
 
-
         GridLayout gridLayout = (GridLayout) findViewById(R.id.purchase_history_gridlayout);
         int column = 4;
         int row = timeStamp.size();
@@ -142,7 +141,6 @@ public class purchaseHistory extends BaseActivity {
         gridLayout.setColumnCount(column);
         gridLayout.setRowCount(row + 1);
         TextView titleText;
-
 
         for (int r = 0, c = 0, i = 0; i < total; r++, i++) {
             if (r == row) {
@@ -186,9 +184,7 @@ public class purchaseHistory extends BaseActivity {
             param.columnSpec = GridLayout.spec(c);
             param.rowSpec = GridLayout.spec(r);
             if (r == 0) {
-                titleText.setTextColor(getResources().getColor(R.color.secondaryTextColor));
-                titleText.setBackgroundColor(getResources().getColor(R.color.primaryLightColor));
-                titleText.setTextColor(getResources().getColor(android.R.color.white));
+                titleText.setTextColor(getResources().getColor(R.color.primaryTextColor));
                 titleText.setAllCaps(true);
                 titleText.setTypeface(Typeface.DEFAULT_BOLD);
             }
