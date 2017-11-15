@@ -154,5 +154,8 @@
     <string name="add_new_unit_type">Add new unit...</string>
     <string name="missing_info">Cannot add missing information.</string>
     <string name="update_error">Update error</string>
+    <string name="company_label">Company</string>
+    <string name="store_label">Store</string>
+    <string name="date_label">Date</string>
 
 </resources>

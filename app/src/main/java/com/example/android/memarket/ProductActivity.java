@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -187,7 +188,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void comparePrices() {
-        startActivity(new Intent(ProductActivity.this, PricesActivity.class).putExtra(PRODUCT_CODE, mProductId));
+        startActivity(new Intent(ProductActivity.this, comparePricesActivity.class).putExtra(PRODUCT_CODE, mProductId));
     }
 
     public void readProductFromFirebase() {
@@ -391,8 +392,11 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                             lastPurchaseDate = purchasesSnapshot.getKey();
                             cardView.setVisibility(View.VISIBLE);
                         }
-                        price.setText(lastPurchasePrice);
-                        date.setText(lastPurchaseDate);
+                        Float number = Float.parseFloat(lastPurchasePrice);
+                        price.setText(NumberFormat.getCurrencyInstance().format(number));
+                        Long ndate = Long.parseLong(lastPurchaseDate);
+                        String sdate = getDate(ndate,"dd/MM/yyyy hh:mm");
+                        date.setText(sdate);
                     } else {
                         lastPurchasePrice = null;
                         lastPurchaseDate = null;
@@ -411,6 +415,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void updatePriceFirebase() {
 
         if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null && mProductId != null) {
+            AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.update_price);
             builder.setMessage(mCompanyName + " " + mStoreName + "\n" + mProduct.Name);
@@ -418,7 +423,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             // Set up the input
             final EditText input = new EditText(this);
             // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             builder.setView(input);
 
             // Set up the buttons
@@ -449,8 +454,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     dialog.cancel();
                 }
             });
-
-            builder.show();
+            dialog = builder.create();
+            dialog.show();
+            dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);;
         } else
             Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.update_error), Snackbar.LENGTH_SHORT).show();
 
@@ -478,14 +485,17 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void purchasesHistoryFirebase() {
-        startActivity(new Intent(ProductActivity.this, purchaseHistory.class)
-                .putExtra(PRODUCT_CODE, mProductId)
-        );
+        if(mProductId!=null && mUserId!=null) {
+            startActivity(new Intent(ProductActivity.this, purchaseHistory.class)
+                    .putExtra(PRODUCT_CODE, mProductId)
+                    .putExtra(USER_ID, mUserId)
+            );
+        }else Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
     }
 
     public void markAsOfferFirebase() {
         if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null && mProductId != null) {
-
+            AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.mark_as_offer_dialog);
             builder.setMessage(mCompanyName + " " + mStoreName + "\n" + mProduct.Name + "\n\n" + getResources().getString(R.string.offer_price_text));
@@ -493,7 +503,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             // Set up the input
             final EditText input = new EditText(this);
             // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             builder.setView(input);
 
             // Set up the buttons
@@ -525,9 +535,11 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     dialog.cancel();
                 }
             });
-
-            builder.show();
-        }
+            dialog = builder.create();
+            dialog.show();
+            dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }else Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

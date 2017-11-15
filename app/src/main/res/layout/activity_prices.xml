@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.memarket.PricesActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.example.android.memarket.comparePricesActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/prices_toolbar"
@@ -14,11 +14,11 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <TextView
-        android:id="@+id/pricesText"
+    <GridLayout
+        android:id="@+id/prices_gridlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </TextView>
+    </GridLayout>
 
 </LinearLayout>

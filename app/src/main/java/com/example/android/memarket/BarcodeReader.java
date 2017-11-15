@@ -19,6 +19,7 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -212,7 +213,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     }
 
     private void enterCodeManually() {
-
+        AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.barcode_manual_entry_button);
 
@@ -239,10 +240,10 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                 dialog.cancel();
             }
         });
-
-        builder.show();
-        input.requestFocus();
-
+        dialog = builder.create();
+        dialog.show();
+        dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     @Override
