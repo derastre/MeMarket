@@ -154,7 +154,7 @@ public class StoresActivity extends BaseActivity implements View.OnClickListener
             storesNameList.add(storesArrayList.get(i).Name);
         }
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.listview_layout, R.id.list_content, storesNameList);
+                new ArrayAdapter<>(context, R.layout.companies_listview_layout, R.id.list_content, storesNameList);
         listView.setAdapter(adapter);
     }
 

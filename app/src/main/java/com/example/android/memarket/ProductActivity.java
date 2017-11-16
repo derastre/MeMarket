@@ -365,7 +365,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     findViewById(R.id.offer_button).setVisibility(View.VISIBLE);
                     update.setTextColor(getResources().getColor(R.color.primaryTextColor));
                     price_text.setPaintFlags(price_text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    mProductOfferPrice = getResources().getString(R.string.no_offer);
+                    mProductOfferPrice = null;
                 }
             }
 
@@ -472,18 +472,30 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void addPurchaseFirebase() {
         if (mStoreId != null && mProductPrice != null && mUserId != null && mProductId != null) {
-            Purchase register_product = new Purchase(mProductPrice, mStoreId);
             final Long date = System.currentTimeMillis();
+            Purchase register_product;
+
+            if (mProductOfferPrice != null) {
+                register_product = new Purchase(mProductPrice, mStoreId, date, false);
+            } else {
+                register_product = new Purchase(mProductOfferPrice, mStoreId, date, true);
+            }
+
 
             // Write to the database
+            Map<String, Object> childUpdates = new HashMap<>();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
-            myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).setValue(register_product);
+            childUpdates.put("/purchases/" + mUserId + "/" + mProductId + "/" + date.toString(), register_product);
+            childUpdates.put("/current_purchase/" + mUserId + "/" + date.toString() + "/" + mProductId, register_product);
+//            myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).setValue(register_product);
+            myRef.updateChildren(childUpdates);
             Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).removeValue();
+                            myRef.child("purchases").child(mUserId).child(date.toString()).child(mProductId).removeValue();
                         }
                     })
                     .show();
@@ -633,6 +645,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         int i = item.getItemId();
 
         switch (i) {
+            case R.id.my_cart_button:
+                startActivity(new Intent(this, MyCart.class));
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

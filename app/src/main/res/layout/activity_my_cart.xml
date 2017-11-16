@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.memarket.MyCart">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_cart_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <ListView
+            android:id="@+id/my_cart_listview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        </ListView>
+
+
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/my_cart_gridlayout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/cardview_light_background"
+        android:columnCount="2"
+        android:rowCount="3"
+        android:elevation="6dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        app:behavior_peekHeight="48dp">
+
+
+        <TextView
+            android:id="@+id/subtotal_text"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:gravity="start"
+            android:text="Subtotal"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/discount_text"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginStart="16dp"
+            android:gravity="start"
+            android:text="Descuento"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/total_text"
+            style="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:text="TOTAL" />
+
+        <TextView
+            android:id="@+id/subtotal_number"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_row="0"
+            android:gravity="start"
+            android:text="$15.00"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/discount_number"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_row="1"
+            android:gravity="start"
+            android:text="$5.00"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/total_number"
+            style="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_row="2"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:text="$10.00" />
+
+    </GridLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/my_cart_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:elevation="6dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:visibility="gone"
+        app:borderWidth="2dp"
+        app:fabSize="normal"
+        app:rippleColor="#222" />
+
+</android.support.design.widget.CoordinatorLayout>

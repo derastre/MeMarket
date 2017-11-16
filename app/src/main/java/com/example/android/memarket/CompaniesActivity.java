@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -137,7 +136,7 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
         }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.listview_layout, R.id.list_content, companiesNameList);
+                new ArrayAdapter<>(context, R.layout.companies_listview_layout, R.id.list_content, companiesNameList);
         listView.setAdapter(adapter);
 
     }

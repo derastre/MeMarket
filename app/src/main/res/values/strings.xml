@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MeMarket</string>
-    
+
     <string-array name="units_array">
         <item>Units</item>
         <item>Gramos</item>
@@ -11,14 +11,14 @@
         <item>Mililitros</item>
         <item>Galones</item>
     </string-array>
-    
+
     <string-array name="companyTypesList">
         <item>Supermercado</item>
         <item>Farmacia</item>
         <item>Almacen</item>
         <item>Variedades</item>
     </string-array>
-    
+
     <!--General Text-->
     <string name="ok">OK</string>
     <string name="dismiss">Dismiss</string>
@@ -37,7 +37,6 @@
     <string name="barcode_failure">No barcode captured</string>
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
     <string name="barcode_manual_entry_button">"Enter code manually"</string>
-
 
 
     <string name="search_product">"Scan product"</string>
@@ -157,5 +156,7 @@
     <string name="company_label">Company</string>
     <string name="store_label">Store</string>
     <string name="date_label">Date</string>
+    <string name="action_shopping_list">Shoping list</string>
+    <string name="my_cart_label">My cart</string>
 
 </resources>
