@@ -10,6 +10,12 @@ import android.view.View;
 import android.widget.GridLayout;
 
 import com.example.android.memarket.components.BaseActivity;
+import com.example.android.memarket.models.Purchase;
+
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 
 public class MyCart extends BaseActivity implements View.OnClickListener {
 
@@ -93,4 +99,28 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
     private void expandBottomSheet() {
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
-}
+
+    private void readRegisterProductLocally() {
+        FileInputStream fi = new FileInputStream(new File("myObjects.txt"));
+        ObjectInputStream oi = new ObjectInputStream(fi);
+
+        // Read objects
+        while (true) {
+            try {
+                Purchase pr1 = (Purchase) oi.readObject();
+            } catch (EOFException e) {
+                // If there are no more objects to read, return what we have.
+                return contactMap;
+            } finally {
+                // Close the stream.
+                oi.close();
+            }
+        }
+
+            System.out.println(pr1.toString());
+
+
+            oi.close();
+            fi.close();
+        }
+    }

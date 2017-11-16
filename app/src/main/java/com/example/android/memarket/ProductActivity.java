@@ -37,6 +37,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -483,6 +490,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
 
             // Write to the database
+            saveRegisterProdcutLocally(register_product);
+
             Map<String, Object> childUpdates = new HashMap<>();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
@@ -501,6 +510,26 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     .show();
         } else
             Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void saveRegisterProdcutLocally(Purchase register_product) {
+        try {
+            FileOutputStream f = new FileOutputStream(new File("myObjects.txt"));
+            ObjectOutputStream o = new ObjectOutputStream(f);
+
+            // Write objects to file
+            o.writeObject(register_product);
+
+            o.close();
+            f.close();
+
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        }
     }
 
     public void purchasesHistoryFirebase() {
