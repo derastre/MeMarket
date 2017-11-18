@@ -3,6 +3,7 @@ package com.example.android.memarket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
@@ -239,7 +240,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         }
                         selectProductDialog(productArrayList, productKeyArrayList);
 
-
                     }
                     hideProgressDialog();
                 }
@@ -252,6 +252,133 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             };
             myRef.addValueEventListener(myProductListener);
 
+        }
+    }
+
+    public void readProductPriceFromFirebase() {
+        //Check for the mProduct price in the selected store
+        myPriceRef = mDatabase.getReference().child("prices").child(mProductId).child(mStoreId);
+        myPriceListener = new ValueEventListener() {
+            @Override
+
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                TextView textView = (TextView) findViewById(R.id.productPrice);
+
+                //Check if mProduct exist in database
+                if (dataSnapshot.getValue() != null) {
+                    mProductPrice = dataSnapshot.getValue().toString();
+                    Float number = Float.parseFloat(mProductPrice);
+                    mProduct.setCurrentPrice(number);
+                    mProduct.setOffer(false);
+                    textView.setText(NumberFormat.getCurrencyInstance().format(number));
+                } else {
+                    //if price  does'nt exist in database
+                    textView.setText(R.string.no_price);
+                    mProductPrice = null;
+                    mProduct.setCurrentPrice(null);
+                    mProduct.setOffer(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+
+        myPriceRef.addValueEventListener(myPriceListener);
+    }
+
+    public void readProductOfferFromFirebase() {
+        //Check for offer in the selected store
+        Calendar dateToday = Calendar.getInstance();
+        dateToday.set(Calendar.HOUR_OF_DAY, 0);
+        dateToday.set(Calendar.MINUTE, 0);
+        Long dateStart = dateToday.getTimeInMillis();
+
+        myOfferRef = mDatabase.getReference().child("offers").child(mProductId).child(mStoreId);
+        myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
+        myOfferListener = new ValueEventListener() {
+            @Override
+
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                TextView offer_text = (TextView) findViewById(R.id.offer_price);
+                TextView price_text = (TextView) findViewById(R.id.productPrice);
+                Button update = (Button) findViewById(R.id.update_price_button);
+
+                //Check if mProduct exist in database
+                if (dataSnapshot.getChildren() != null) {
+                    for (DataSnapshot offerSnapshot : dataSnapshot.getChildren()) {
+                        findViewById(R.id.offers_layout).setVisibility(View.VISIBLE);
+                        findViewById(R.id.on_sale_button).setVisibility(View.GONE);
+                        update.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                        mProductOfferPrice = offerSnapshot.getValue().toString();
+                        Float number = Float.parseFloat(mProductOfferPrice);
+                        mProduct.setCurrentPrice(number);
+                        mProduct.setOffer(true);
+                        String text = NumberFormat.getCurrencyInstance().format(number);
+                        offer_text.setText(text);
+                        price_text.setPaintFlags(price_text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        //textButton.setEnabled(false);
+                    }
+                } else {
+                    //if offer  does'nt exist in database
+                    findViewById(R.id.offers_layout).setVisibility(View.GONE);
+                    findViewById(R.id.offer_button).setVisibility(View.VISIBLE);
+                    update.setTextColor(getResources().getColor(R.color.primaryTextColor));
+                    price_text.setPaintFlags(price_text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    mProductOfferPrice = null;
+                    mProduct.setOffer(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+
+        myOfferQuery.addValueEventListener(myOfferListener);
+    }
+
+    public void readLastPurchaseFromFirebase() {
+        //Check for last user purchase on database
+        if (mUserId != null) {
+            myPurchasesRef = mDatabase.getReference().child("purchases").child(mUserId).child(mProductId);
+            myPurchasesQuery = myPurchasesRef.orderByKey().limitToLast(1);
+            myPurchasesListener = new ValueEventListener() {
+                @Override
+
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    CardView cardView = (CardView) findViewById(R.id.cardview_purchase_history);
+                    TextView price = (TextView) findViewById(R.id.last_purchase_price);
+                    TextView date = (TextView) findViewById(R.id.last_purchase_date);
+                    cardView.setVisibility(View.GONE);
+                    //Check if mProduct exist in database
+                    if (dataSnapshot.getChildren() != null) {
+                        for (DataSnapshot purchasesSnapshot : dataSnapshot.getChildren()) {
+                            Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
+                            lastPurchasePrice = purchase.price;
+                            lastPurchaseDate = purchasesSnapshot.getKey();
+                            cardView.setVisibility(View.VISIBLE);
+                        }
+                        Float number = Float.parseFloat(lastPurchasePrice);
+                        price.setText(NumberFormat.getCurrencyInstance().format(number));
+                        Long ndate = Long.parseLong(lastPurchaseDate);
+                        String sdate = getDate(ndate, "dd/MM/yyyy hh:mm");
+                        date.setText(sdate);
+                    } else {
+                        lastPurchasePrice = null;
+                        lastPurchaseDate = null;
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            };
+
+            myPurchasesQuery.addValueEventListener(myPurchasesListener);
         }
     }
 
@@ -302,126 +429,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             readProductPriceFromFirebase();
             readProductOfferFromFirebase();
             readLastPurchaseFromFirebase();
-        }
-    }
-
-    public void readProductPriceFromFirebase() {
-        //Check for the mProduct price in the selected store
-        myPriceRef = mDatabase.getReference().child("prices").child(mProductId).child(mStoreId);
-        myPriceListener = new ValueEventListener() {
-            @Override
-
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                TextView textView = (TextView) findViewById(R.id.productPrice);
-
-                //Check if mProduct exist in database
-                if (dataSnapshot.getValue() != null) {
-                    mProductPrice = dataSnapshot.getValue().toString();
-                    Float number = Float.parseFloat(mProductPrice);
-                    textView.setText(NumberFormat.getCurrencyInstance().format(number));
-                } else {
-                    //if price  does'nt exist in database
-                    textView.setText(R.string.no_price);
-                    mProductPrice = null;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-
-        myPriceRef.addValueEventListener(myPriceListener);
-    }
-
-    public void readProductOfferFromFirebase() {
-        //Check for offer in the selected store
-        Calendar dateToday = Calendar.getInstance();
-        dateToday.set(Calendar.HOUR_OF_DAY, 0);
-        dateToday.set(Calendar.MINUTE, 0);
-        Long dateStart = dateToday.getTimeInMillis();
-
-        myOfferRef = mDatabase.getReference().child("offers").child(mProductId).child(mStoreId);
-        myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
-        myOfferListener = new ValueEventListener() {
-            @Override
-
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                TextView offer_text = (TextView) findViewById(R.id.offer_price);
-                TextView price_text = (TextView) findViewById(R.id.productPrice);
-                Button update = (Button) findViewById(R.id.update_price_button);
-
-                //Check if mProduct exist in database
-                if (dataSnapshot.getChildren() != null) {
-                    for (DataSnapshot offerSnapshot : dataSnapshot.getChildren()) {
-                        findViewById(R.id.offers_layout).setVisibility(View.VISIBLE);
-                        findViewById(R.id.on_sale_button).setVisibility(View.GONE);
-                        update.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-                        mProductOfferPrice = offerSnapshot.getValue().toString();
-                        Float number = Float.parseFloat(mProductOfferPrice);
-                        String text = NumberFormat.getCurrencyInstance().format(number);
-                        offer_text.setText(text);
-                        price_text.setPaintFlags(price_text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                        //textButton.setEnabled(false);
-                    }
-                } else {
-                    //if offer  does'nt exist in database
-                    findViewById(R.id.offers_layout).setVisibility(View.GONE);
-                    findViewById(R.id.offer_button).setVisibility(View.VISIBLE);
-                    update.setTextColor(getResources().getColor(R.color.primaryTextColor));
-                    price_text.setPaintFlags(price_text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    mProductOfferPrice = null;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-
-        myOfferQuery.addValueEventListener(myOfferListener);
-    }
-
-    public void readLastPurchaseFromFirebase() {
-        //Check for last user purchase on database
-        if (mUserId != null) {
-            myPurchasesRef = mDatabase.getReference().child("purchases").child(mUserId).child(mProductId);
-            myPurchasesQuery = myPurchasesRef.orderByKey().limitToLast(1);
-            myPurchasesListener = new ValueEventListener() {
-                @Override
-
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    CardView cardView = (CardView) findViewById(R.id.cardview_purchase_history);
-                    TextView price = (TextView) findViewById(R.id.last_purchase_price);
-                    TextView date = (TextView) findViewById(R.id.last_purchase_date);
-                    cardView.setVisibility(View.GONE);
-                    //Check if mProduct exist in database
-                    if (dataSnapshot.getChildren() != null) {
-                        for (DataSnapshot purchasesSnapshot : dataSnapshot.getChildren()) {
-                            Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
-                            lastPurchasePrice = purchase.price;
-                            lastPurchaseDate = purchasesSnapshot.getKey();
-                            cardView.setVisibility(View.VISIBLE);
-                        }
-                        Float number = Float.parseFloat(lastPurchasePrice);
-                        price.setText(NumberFormat.getCurrencyInstance().format(number));
-                        Long ndate = Long.parseLong(lastPurchaseDate);
-                        String sdate = getDate(ndate, "dd/MM/yyyy hh:mm");
-                        date.setText(sdate);
-                    } else {
-                        lastPurchasePrice = null;
-                        lastPurchaseDate = null;
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            };
-
-            myPurchasesQuery.addValueEventListener(myPurchasesListener);
         }
     }
 
@@ -478,7 +485,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void addPurchaseFirebase() {
-        if (mStoreId != null && mProductPrice != null && mUserId != null && mProductId != null) {
+        if (mStoreId != null && mProductPrice != null && mUserId != null && mProductId != null && mProduct != null) {
             final Long date = System.currentTimeMillis();
             Purchase register_product;
 
@@ -489,22 +496,17 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             }
 
 
-            // Write to the database
-            saveRegisterProdcutLocally(register_product);
+            // Write to the local database
+            saveRegisterProductLocally(mProduct);
 
-            Map<String, Object> childUpdates = new HashMap<>();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
-            childUpdates.put("/purchases/" + mUserId + "/" + mProductId + "/" + date.toString(), register_product);
-            childUpdates.put("/current_purchase/" + mUserId + "/" + date.toString() + "/" + mProductId, register_product);
-//            myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).setValue(register_product);
-            myRef.updateChildren(childUpdates);
+            myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).setValue(register_product);
             Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).removeValue();
-                            myRef.child("purchases").child(mUserId).child(date.toString()).child(mProductId).removeValue();
                         }
                     })
                     .show();
@@ -512,17 +514,16 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void saveRegisterProdcutLocally(Purchase register_product) {
+    private void saveRegisterProductLocally(Product product) {
         try {
             FileOutputStream f = new FileOutputStream(new File("myObjects.txt"));
             ObjectOutputStream o = new ObjectOutputStream(f);
 
             // Write objects to file
-            o.writeObject(register_product);
+            o.writeObject(product);
 
             o.close();
             f.close();
-
 
 
         } catch (FileNotFoundException e) {
