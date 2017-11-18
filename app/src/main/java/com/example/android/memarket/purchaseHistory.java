@@ -80,7 +80,7 @@ public class purchaseHistory extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot historySnapshot : dataSnapshot.getChildren()) {
                     Purchase itemPrice = historySnapshot.getValue(Purchase.class);
-                    priceList.add(itemPrice.price);
+                    priceList.add(itemPrice.price.toString());
                     storeIdList.add(itemPrice.storeId);
                     timeStamp.add(historySnapshot.getKey());
                 }

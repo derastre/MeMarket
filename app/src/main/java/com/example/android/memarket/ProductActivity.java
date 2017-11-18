@@ -38,17 +38,20 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
@@ -69,8 +72,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private TextView scannedCode;
     private FloatingActionButton scan_fab;
     private FloatingActionButton add_purchase_fab;
-    private String mProductPrice;
-    private String mProductOfferPrice;
+    private Float mProductPrice;
+    private Float mProductOfferPrice;
     private String mStoreId;
     //private String mCompanyId;
     private String mStoreName;
@@ -78,7 +81,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private String mProductCode;
     private String mProductId;
     private String lastPurchaseDate;
-    private String lastPurchasePrice;
+    private Float lastPurchasePrice;
     private Product mProduct;
     private String mUserId;
     private Boolean fromMain;
@@ -267,11 +270,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
                 //Check if mProduct exist in database
                 if (dataSnapshot.getValue() != null) {
-                    mProductPrice = dataSnapshot.getValue().toString();
-                    Float number = Float.parseFloat(mProductPrice);
-                    mProduct.setCurrentPrice(number);
+                    mProductPrice = Float.parseFloat(dataSnapshot.getValue().toString());
+                    mProduct.setCurrentPrice(mProductPrice);
                     mProduct.setOffer(false);
-                    textView.setText(NumberFormat.getCurrencyInstance().format(number));
+                    textView.setText(NumberFormat.getCurrencyInstance().format(mProductPrice));
                 } else {
                     //if price  does'nt exist in database
                     textView.setText(R.string.no_price);
@@ -313,11 +315,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         findViewById(R.id.offers_layout).setVisibility(View.VISIBLE);
                         findViewById(R.id.on_sale_button).setVisibility(View.GONE);
                         update.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-                        mProductOfferPrice = offerSnapshot.getValue().toString();
-                        Float number = Float.parseFloat(mProductOfferPrice);
-                        mProduct.setCurrentPrice(number);
+                        mProductOfferPrice = Float.parseFloat(offerSnapshot.getValue().toString());
+                        mProduct.setCurrentPrice(mProductOfferPrice);
                         mProduct.setOffer(true);
-                        String text = NumberFormat.getCurrencyInstance().format(number);
+                        String text = NumberFormat.getCurrencyInstance().format(mProductOfferPrice);
                         offer_text.setText(text);
                         price_text.setPaintFlags(price_text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         //textButton.setEnabled(false);
@@ -362,11 +363,12 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                             lastPurchaseDate = purchasesSnapshot.getKey();
                             cardView.setVisibility(View.VISIBLE);
                         }
-                        Float number = Float.parseFloat(lastPurchasePrice);
-                        price.setText(NumberFormat.getCurrencyInstance().format(number));
-                        Long ndate = Long.parseLong(lastPurchaseDate);
-                        String sdate = getDate(ndate, "dd/MM/yyyy hh:mm");
-                        date.setText(sdate);
+                        if (lastPurchaseDate!=null && lastPurchasePrice !=null) {
+                            price.setText(NumberFormat.getCurrencyInstance().format(lastPurchasePrice));
+                            Long ndate = Long.parseLong(lastPurchaseDate);
+                            String sdate = getDate(ndate, "dd/MM/yyyy hh:mm");
+                            date.setText(sdate);
+                        }
                     } else {
                         lastPurchasePrice = null;
                         lastPurchaseDate = null;
@@ -409,6 +411,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             FirebaseStorage storage = FirebaseStorage.getInstance();
             final StorageReference storageRef = storage.getReference().child("images").child(mProductId);
 
+            mProduct.setId(mProductId);
             TextView textViewName = (TextView) findViewById(R.id.productName);
             textViewName.setText(mProduct.Name);
             TextView textViewType = (TextView) findViewById(R.id.productType);
@@ -450,7 +453,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             builder.setPositiveButton(R.string.update_button, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mProductPrice = input.getText().toString();
+                    mProductPrice = Float.parseFloat(input.getText().toString());
                     Long date = System.currentTimeMillis();
 
                     // Write to the database
@@ -489,7 +492,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             final Long date = System.currentTimeMillis();
             Purchase register_product;
 
-            if (mProductOfferPrice != null) {
+            if (mProductOfferPrice == null) {
                 register_product = new Purchase(mProductPrice, mStoreId, date, false);
             } else {
                 register_product = new Purchase(mProductOfferPrice, mStoreId, date, true);
@@ -497,7 +500,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
 
             // Write to the local database
-            saveRegisterProductLocally(mProduct);
+            saveRegisterProductLocally(mProduct,register_product);
 
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             final DatabaseReference myRef = database.getReference();
@@ -507,6 +510,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         @Override
                         public void onClick(View view) {
                             myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).removeValue();
+                            removeLastRegisterLocally();
                         }
                     })
                     .show();
@@ -514,21 +518,47 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void saveRegisterProductLocally(Product product) {
+    private void removeLastRegisterLocally() {
+        ArrayList products = new ArrayList();
         try {
-            FileOutputStream f = new FileOutputStream(new File("myObjects.txt"));
-            ObjectOutputStream o = new ObjectOutputStream(f);
-
-            // Write objects to file
-            o.writeObject(product);
-
-            o.close();
-            f.close();
-
+            products = readObjectsFromFile("myProducts");
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+        }
+        if (products!=null) {
+            if (products.size()>0) {
+                int i = products.size() - 1;
+                products.remove(i);
+                try {
+                    writeObjectsToFile("myProducts", products);
+                } catch (IOException e) {
+                    System.out.println("Error initializing stream");
+                }
+            }
+        }
+    }
+
+    private void saveRegisterProductLocally(Product product, Purchase purchase) {
+        ArrayList products = new ArrayList();
+        try {
+            products = readObjectsFromFile("myProducts");
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+        }
+        products.add(product);
+        try {
+            writeObjectsToFile("myProducts",products);
+        }catch (IOException e) {
             System.out.println("Error initializing stream");
         }
     }
@@ -560,7 +590,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             builder.setPositiveButton(R.string.update_button, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mProductOfferPrice = input.getText().toString();
+                    mProductOfferPrice = Float.parseFloat(input.getText().toString());
                     Long timestamp = System.currentTimeMillis();
 
                     // Write to the database
@@ -696,4 +726,5 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         super.onSaveInstanceState(savedInstanceState);
     }
+
 }

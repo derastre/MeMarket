@@ -101,7 +101,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         String name = productName.getText().toString();
         String type = productType.getText().toString();
         String brand = productBrand.getText().toString();
-        String quantity = productQty.getText().toString();
+        Float quantity = Float.parseFloat(productQty.getText().toString());
         String units = productUnitsSpinner.getSelectedItem().toString();
 
         productImage.setDrawingCacheEnabled(true);
@@ -116,7 +116,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         finish();
     }
 
-    public void writeNewProductOnFirebase(String ProductCode, String name, String type, String brand, String quantity , String units, byte[] image){
+    public void writeNewProductOnFirebase(String ProductCode, String name, String type, String brand, Float quantity , String units, byte[] image){
         // Write to the database
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();

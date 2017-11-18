@@ -2,6 +2,7 @@ package com.example.android.memarket;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -28,12 +29,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyCart extends BaseActivity implements View.OnClickListener {
 
     BottomSheetBehavior behavior;
     GridLayout gridLayout;
-    ArrayList<Product> productsArray;
+    ArrayList<Product> productArrayList;
+    ArrayList<Purchase> purchaseArrayList;
     ListView listView;
 
     @Override
@@ -83,9 +86,10 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
     }
 
     private void setListProducts() {
-        productsArray
+        productArrayList = readRegisterProductLocally();
         listView = (ListView) findViewById(R.id.my_cart_listview);
-        productArrayAdapter adapter=new productArrayAdapter()
+        productArrayAdapter adapter = new productArrayAdapter(this, R.layout.my_cart_listview_layout, productArrayList);
+        listView.setAdapter(adapter);
 
     }
 
@@ -123,16 +127,37 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    private ArrayList<Purchase> readRegisterProductLocally() {
+    @Nullable
+    private ArrayList<Product> readRegisterProductLocally() {
+        ArrayList products = new ArrayList();
         try {
-            FileInputStream fi = new FileInputStream(new File("myObjects.txt"));
+            products = readObjectsFromFile("myProducts");
+            return products;
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+            return null;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+            return null;
+        }
+
+
+    }
+
+    @Nullable
+    private ArrayList<Purchase> readRegisterPurchaseLocally() {
+        try {
+            FileInputStream fi = new FileInputStream(new File("myPurchases.txt"));
             ObjectInputStream oi = new ObjectInputStream(fi);
             ArrayList<Purchase> purchases = new ArrayList<>();
-
+            Purchase purchase;
             // Read objects
             while (true) {
                 try {
-                    Purchase purchase = (Purchase) oi.readObject();
+                    purchase = (Purchase) oi.readObject();
                     purchases.add(purchase);
                 } catch (EOFException e) {
                     // If there are no more objects to read, return what we have.
@@ -149,7 +174,7 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
         } catch (IOException e) {
             System.out.println("Error initializing stream");
             return null;
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             System.out.println("Class not found");
             return null;
         }
@@ -157,19 +182,20 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
 
     }
 
-    class productArrayAdapter extends ArrayAdapter<Product>{
+    class productArrayAdapter extends ArrayAdapter<Product> {
         private Context context;
         private ArrayList<Product> products;
         private ArrayList<Purchase> purchases;
 
-        public productArrayAdapter(Context context,int resource, ArrayList<Product> objects){
-            super(context,resource,objects);
-            this.context=context;
-            this.products=objects;
+        public productArrayAdapter(Context context, int resource, ArrayList<Product> products) {
+            super(context, resource, products);
+            this.context = context;
+            this.products = products;
+
         }
 
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
 
 
             //get the property we are displaying
@@ -182,15 +208,14 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
                 convertView = inflater.inflate(R.layout.my_cart_listview_layout, null, false);
                 holder = new ViewHolder(convertView);
                 convertView.setTag(holder);
-            }
-            else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
             holder.getNameText().setText(product.Name);
             holder.getTypeText().setText(product.Type);
             holder.getPriceText().setText(NumberFormat.getCurrencyInstance().format(product.getCurrentPrice()));
-           // holder.getButton().setOnClickListener(MyCart.this);
+            // holder.getButton().setOnClickListener(MyCart.this);
 
 
             return convertView;
@@ -202,7 +227,7 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
         private View row;
         private TextView name = null, type = null, price = null;
         private ImageView image;
-        private  Button erase_button;
+        private Button erase_button;
 
         ViewHolder(View row) {
             this.row = row;
@@ -236,7 +261,7 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
             return this.image;
         }
 
-        public Button getButton(){
+        public Button getButton() {
             if (this.erase_button == null) {
                 this.erase_button = (Button) row.findViewById(R.id.cart_product_delete_button);
             }

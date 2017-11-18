@@ -6,7 +6,7 @@ package com.example.android.memarket.models;
 
 public class Purchase {
 
-    public String price;
+    public Float price;
     public String storeId;
     public Long timeStamp;
     public Boolean isOffer;
@@ -16,7 +16,7 @@ public class Purchase {
 
     }
 
-    public Purchase(String price, String storeid, Long timestamp, Boolean isoffer) {
+    public Purchase(Float price, String storeid, Long timestamp, Boolean isoffer) {
         this.price = price;
         this.storeId = storeid;
         this.isOffer = isoffer;

@@ -14,7 +14,7 @@ public class Product {
     public String Name;
     public String Type;
     public String Brand;
-    public String Quantity;
+    public Float Quantity;
     public String Units;
     private Float currentPrice;
     private Bitmap Image;
@@ -25,7 +25,7 @@ public class Product {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Product(String ProductName, String ProductType, String ProductBrand, String ProductQuantity, String ProductUnits) {
+    public Product(String ProductName, String ProductType, String ProductBrand, Float ProductQuantity, String ProductUnits) {
 
         this.Name = ProductName;
         this.Type = ProductType;

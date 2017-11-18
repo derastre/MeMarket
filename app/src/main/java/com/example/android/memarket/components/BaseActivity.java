@@ -12,8 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -89,8 +100,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public static String getDate(long milliSeconds, String dateFormat)
-    {
+    public static String getDate(long milliSeconds, String dateFormat) {
         // Create a DateFormatter object for displaying date in specified format.
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.getDefault());
 
@@ -98,5 +108,63 @@ public class BaseActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliSeconds);
         return formatter.format(calendar.getTime());
+    }
+
+    public static ArrayList readObjectsFromFile(String filename) throws IOException, ClassNotFoundException {
+        ArrayList objects = new ArrayList();
+        InputStream is = null;
+        try {
+            is = new FileInputStream(filename);
+            ObjectInputStream ois = new ObjectInputStream(is);
+            while (true) {
+                try {
+                    Object object = ois.readObject();
+                    objects.add(object);
+                } catch (EOFException ex) {
+                    break;
+                }
+            }
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return objects;
+    }
+
+    public static void writeObjectsToFile(String filename, ArrayList objects) throws IOException {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(filename);
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            for (Object object : objects) {
+                oos.writeObject(object);
+            }
+            oos.flush();
+        } finally {
+            if (os != null) {
+                os.close();
+            }
+        }
+    }
+
+    public static void emptyObjectFile(String filename) throws IOException {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(filename);
+        } finally {
+            if (os != null) {
+                os.close();
+            }
+        }
+    }
+
+    public static void deleteObjectFile(String filename) {
+        File f = new File(filename);
+        if (f.delete()) {
+            System.out.println(filename + " deleted sucessfully...");
+        } else {
+            System.out.println(filename + " deletion failed!");
+        }
     }
 }
