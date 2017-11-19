@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.widget.GridLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Company;
@@ -22,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import static com.example.android.memarket.ProductActivity.PRODUCT_CODE;
+import static com.example.android.memarket.ProductActivity.PRODUCT_ID;
 
 public class comparePricesActivity extends BaseActivity {
 
@@ -50,7 +49,7 @@ public class comparePricesActivity extends BaseActivity {
         companiesNameList = new ArrayList<>();
         priceList = new ArrayList<>();
         storeNameList = new ArrayList<>();
-        productId = getIntent().getStringExtra(PRODUCT_CODE);
+        productId = getIntent().getStringExtra(PRODUCT_ID);
 
         readPricesFromFirebase();
 

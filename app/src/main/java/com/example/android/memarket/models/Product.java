@@ -4,11 +4,13 @@ import android.graphics.Bitmap;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by Arturo Deras on 20/8/2017.
  */
 @IgnoreExtraProperties
-public class Product {
+public class Product implements Serializable{
 
     private String Id;
     public String Name;
@@ -17,6 +19,7 @@ public class Product {
     public Float Quantity;
     public String Units;
     private Float currentPrice;
+    private Float currentOffer;
     private Bitmap Image;
     private Boolean isOffer;
 
@@ -76,4 +79,11 @@ public class Product {
         isOffer = offer;
     }
 
+    public Float getCurrentOffer() {
+        return currentOffer;
+    }
+
+    public void setCurrentOffer(Float currentOffer) {
+        this.currentOffer = currentOffer;
+    }
 }

@@ -8,6 +8,7 @@ public class Purchase {
 
     public Float price;
     public String storeId;
+    public Integer quantity;
     public Long timeStamp;
     public Boolean isOffer;
 
@@ -16,11 +17,12 @@ public class Purchase {
 
     }
 
-    public Purchase(Float price, String storeid, Long timestamp, Boolean isoffer) {
+    public Purchase(Float price, String storeid, Long timestamp, Boolean isoffer, Integer quantity) {
         this.price = price;
         this.storeId = storeid;
         this.isOffer = isoffer;
         this.timeStamp = timestamp;
+        this.quantity = quantity;
     }
 }
 

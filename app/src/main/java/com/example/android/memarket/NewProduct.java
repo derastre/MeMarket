@@ -64,7 +64,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        String message = intent.getStringExtra(ProductActivity.PRODUCT_CODE);
+        String message = intent.getStringExtra(ProductActivity.PRODUCT_BARCODE);
 
         //Get references to layout views
         productCode = (TextView) findViewById(R.id.productCode);

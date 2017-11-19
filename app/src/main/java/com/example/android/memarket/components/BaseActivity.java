@@ -110,11 +110,11 @@ public class BaseActivity extends AppCompatActivity {
         return formatter.format(calendar.getTime());
     }
 
-    public static ArrayList readObjectsFromFile(String filename) throws IOException, ClassNotFoundException {
+    public static ArrayList readObjectsFromFile(String filename, Context context) throws IOException, ClassNotFoundException {
         ArrayList objects = new ArrayList();
-        InputStream is = null;
+        FileInputStream is = null;
         try {
-            is = new FileInputStream(filename);
+            is = context.openFileInput(filename);
             ObjectInputStream ois = new ObjectInputStream(is);
             while (true) {
                 try {
@@ -132,11 +132,11 @@ public class BaseActivity extends AppCompatActivity {
         return objects;
     }
 
-    public static void writeObjectsToFile(String filename, ArrayList objects) throws IOException {
+    public static void writeObjectsToFile(String filename, ArrayList objects, Context context) throws IOException {
         FileOutputStream os = null;
 
         try {
-            os = new context.openFileOutput(filename,Context.MODE_PRIVATE);
+            os = context.openFileOutput(filename,Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
             for (Object object : objects) {
                 oos.writeObject(object);

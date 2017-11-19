@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 
-import static com.example.android.memarket.ProductActivity.PRODUCT_CODE;
+import static com.example.android.memarket.ProductActivity.PRODUCT_ID;
 import static com.example.android.memarket.SplashActivity.USER_ID;
 
 public class purchaseHistory extends BaseActivity {
@@ -49,7 +49,7 @@ public class purchaseHistory extends BaseActivity {
 
         // Get the Intent that started this activity and extract the string
 
-        productId = getIntent().getStringExtra(PRODUCT_CODE);
+        productId = getIntent().getStringExtra(PRODUCT_ID);
         mUserId =getIntent().getStringExtra(USER_ID);
         storeIdList = new ArrayList<>();
         companiesIdList = new ArrayList<>();

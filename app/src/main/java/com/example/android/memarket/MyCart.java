@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
 import com.example.android.memarket.models.Purchase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.EOFException;
 import java.io.File;
@@ -87,9 +90,11 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
 
     private void setListProducts() {
         productArrayList = readRegisterProductLocally();
-        listView = (ListView) findViewById(R.id.my_cart_listview);
-        productArrayAdapter adapter = new productArrayAdapter(this, R.layout.my_cart_listview_layout, productArrayList);
-        listView.setAdapter(adapter);
+        if (productArrayList != null) {
+            listView = (ListView) findViewById(R.id.my_cart_listview);
+            productArrayAdapter adapter = new productArrayAdapter(this, R.layout.my_cart_listview_layout, productArrayList);
+            listView.setAdapter(adapter);
+        }
 
     }
 
@@ -131,43 +136,8 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
     private ArrayList<Product> readRegisterProductLocally() {
         ArrayList products = new ArrayList();
         try {
-            products = readObjectsFromFile("myProducts");
+            products = readObjectsFromFile("myProducts.txt", this);
             return products;
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-            return null;
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
-            return null;
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class not found");
-            return null;
-        }
-
-
-    }
-
-    @Nullable
-    private ArrayList<Purchase> readRegisterPurchaseLocally() {
-        try {
-            FileInputStream fi = new FileInputStream(new File("myPurchases.txt"));
-            ObjectInputStream oi = new ObjectInputStream(fi);
-            ArrayList<Purchase> purchases = new ArrayList<>();
-            Purchase purchase;
-            // Read objects
-            while (true) {
-                try {
-                    purchase = (Purchase) oi.readObject();
-                    purchases.add(purchase);
-                } catch (EOFException e) {
-                    // If there are no more objects to read, return what we have.
-                    return purchases;
-                } finally {
-                    // Close the stream.
-                    oi.close();
-                    fi.close();
-                }
-            }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
             return null;
@@ -270,4 +240,30 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
 
     }
 
+//    public void addPurchase() {
+//        if (mStoreId != null && mProductPrice != null && mUserId != null && mProductId != null && mProduct != null) {
+//            final Long date = System.currentTimeMillis();
+//            Purchase register_product;
+//
+//            if (mProductOfferPrice == null) {
+//                register_product = new Purchase(mProductPrice, mStoreId, date, false);
+//            } else {
+//                register_product = new Purchase(mProductOfferPrice, mStoreId, date, true);
+//            }
+//
+//            FirebaseDatabase database = FirebaseDatabase.getInstance();
+//            final DatabaseReference myRef = database.getReference();
+//            myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).setValue(register_product);
+//            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
+//                    .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            myRef.child("purchases").child(mUserId).child(mProductId).child(date.toString()).removeValue();
+//                            removeLastRegisterLocally();
+//                        }
+//                    })
+//                    .show();
+//        } else
+//            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
+//    }
 }
