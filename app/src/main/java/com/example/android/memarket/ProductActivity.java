@@ -535,7 +535,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 int i = products.size() - 1;
                 products.remove(i);
                 try {
-                    writeObjectsToFile("myProducts", products);
+                    writeObjectsToFile("myProducts", products, this);
                 } catch (IOException e) {
                     System.out.println("Error initializing stream");
                 }

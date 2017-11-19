@@ -102,6 +102,8 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".MyCart"></activity>
+        <activity android:name=".components.BaseActivity"/>
+
     </application>
 
 </manifest>

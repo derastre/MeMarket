@@ -133,9 +133,10 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public static void writeObjectsToFile(String filename, ArrayList objects) throws IOException {
-        OutputStream os = null;
+        FileOutputStream os = null;
+
         try {
-            os = new FileOutputStream(filename);
+            os = new context.openFileOutput(filename,Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
             for (Object object : objects) {
                 oos.writeObject(object);
