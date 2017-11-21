@@ -386,7 +386,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
                 updateUI(null);
+                mGoogleApiClient = null;
                 Snackbar.make(findViewById(R.id.login_layout), "Google Login failed.", Snackbar.LENGTH_SHORT).show();
+
                 // [END_EXCLUDE]
             }
         } else {

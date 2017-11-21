@@ -37,16 +37,6 @@ public class Product implements Serializable{
         this.Units = ProductUnits;
     }
 
-//    public Product(String ProductId, String ProductName, String ProductType, String ProductBrand, String ProductQuantity, String ProductUnits) {
-//
-//        this.Id = ProductId;
-//        this.Name = ProductName;
-//        this.Type = ProductType;
-//        this.Brand = ProductBrand;
-//        this.Quantity = ProductQuantity;
-//        this.Units = ProductUnits;
-//    }
-
     public Float getCurrentPrice() {
         return currentPrice;
     }
