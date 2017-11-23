@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -51,6 +52,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private DrawerLayout mainDrawerLayout;
     private NavigationView mainNavigationView;
     private String pictureUri;
+    private FloatingActionButton mainFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mainNavigationView = (NavigationView) findViewById(R.id.main_navigation);
         mainNavigationView.setNavigationItemSelectedListener(this);
 
+        //Setting FAB Button
+        mainFab = (FloatingActionButton) findViewById(R.id.main_floating_button);
+        mainFab.setOnClickListener(this);
+        mainFab.show();
+
         //Setting button listeners
-        findViewById(R.id.main_floating_button).setOnClickListener(this);
         findViewById(R.id.got_it_button).setOnClickListener(this);
 
         // Restore preferences from file
@@ -85,7 +91,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //Get user name and picture then show it on Navigation drawer.
         mUserId = getIntent().getStringExtra(USER_ID);
         mUserName = getIntent().getStringExtra(USER_NAME);
-        mUserEmail= getIntent().getStringExtra(USER_EMAIL);
+        mUserEmail = getIntent().getStringExtra(USER_EMAIL);
         mEmailVerified = getIntent().getBooleanExtra(USER_EMAIL_VERIFICATION, true);
         pictureUri = getIntent().getStringExtra(USER_PICTURE);
 
@@ -93,7 +99,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         View header = mainNavigationView.getHeaderView(0);
         textView = header.findViewById(R.id.userName);
         ImageView profileAvatar = header.findViewById(R.id.profilePicture);
-        if (pictureUri!=null) {
+        if (pictureUri != null) {
             Glide.with(this)
                     .load(pictureUri)
                     .placeholder(R.drawable.default_avatar)
@@ -103,11 +109,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     .centerCrop()
                     .transform(new CircleTransform(this))
                     .into(profileAvatar);
-        }else profileAvatar.setVisibility(View.GONE);
+        } else profileAvatar.setVisibility(View.GONE);
 
         //Setting name on navigation side panel
         String displayName;
-        if(mUserName!=null) displayName = mUserName; else displayName=mUserEmail;
+        if (mUserName != null) displayName = mUserName;
+        else displayName = mUserEmail;
         if (mEmailVerified) {
             textView.setText(displayName);
         } else {
@@ -130,9 +137,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 .putExtra(USER_ID, mUserId);
 
         startActivity(intent);
-        //}else{
-        //    Toast.makeText(this,getString(R.string.no_store_selected),Toast.LENGTH_LONG).show();
-        //}
     }
 
     public void gotoStores() {
@@ -141,6 +145,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void gotoMyProfile() {
         startActivity(new Intent(this, MyProfileActivity.class));
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mainFab.hide();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mainFab.show();
     }
 
     @Override
@@ -207,7 +223,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mUserEmail = currentUser.getEmail();
             mEmailVerified = currentUser.isEmailVerified();
             Uri uri = currentUser.getPhotoUrl();
-            if (uri!=null) pictureUri = uri.toString();
+            if (uri != null) pictureUri = uri.toString();
         } else {
             startActivity(new Intent(this, LoginActivity.class));
         }

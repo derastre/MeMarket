@@ -168,7 +168,7 @@ public class purchaseHistory extends BaseActivity {
                     if (r == 0) {
                         titleText.setText(priceList.get(r));
                     } else {
-                        Long number = Long.parseLong(priceList.get(r));
+                        Float number = Float.parseFloat(priceList.get(r));
                         titleText.setText(NumberFormat.getCurrencyInstance().format(number));
                     }
                     break;
@@ -178,13 +178,13 @@ public class purchaseHistory extends BaseActivity {
             GridLayout.LayoutParams param = new GridLayout.LayoutParams();
             param.height = GridLayout.LayoutParams.WRAP_CONTENT;
             param.width = GridLayout.LayoutParams.WRAP_CONTENT;
-            param.rightMargin = 15;
+            param.rightMargin = 45;
             param.topMargin = 10;
             param.setGravity(Gravity.CENTER);
             param.columnSpec = GridLayout.spec(c);
             param.rowSpec = GridLayout.spec(r);
             if (r == 0) {
-                titleText.setTextColor(getResources().getColor(R.color.primaryTextColor));
+                titleText.setTextColor(getResources().getColor(android.R.color.black));
                 titleText.setAllCaps(true);
                 titleText.setTypeface(Typeface.DEFAULT_BOLD);
             }

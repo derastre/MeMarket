@@ -101,6 +101,7 @@
             android:src="@drawable/barcode_scan"
             app:borderWidth="2dp"
             app:fabSize="normal"
+            android:visibility="gone"
             app:rippleColor="#222" />
     </android.support.design.widget.CoordinatorLayout>
 

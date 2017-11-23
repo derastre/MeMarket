@@ -140,6 +140,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         textView.setText(storename);
 
         //Hide the FAB Button when scrolling
+        scan_fab.show();
+        add_purchase_fab.show();
         NestedScrollView nsv = (NestedScrollView) findViewById(R.id.scroll_group_view);
         nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -713,9 +715,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+
+
     @Override
     public void onStop() {
         super.onStop();
+        scan_fab.hide();
+        add_purchase_fab.hide();
         if (myProductListener != null) {
             myRef.removeEventListener(myProductListener);
         }
@@ -729,6 +735,22 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             myPurchasesQuery.removeEventListener(myPurchasesListener);
         }
     }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        scan_fab.hide();
+        add_purchase_fab.hide();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        scan_fab.show();
+        add_purchase_fab.show();
+    }
+
+
 
     @Override
     public void onClick(View v) {

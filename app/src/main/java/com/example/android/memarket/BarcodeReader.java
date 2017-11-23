@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -53,6 +54,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     private TextView barcodeInfo;
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
+    private FloatingActionButton enter_code_fab;
     private boolean autoFocus;
     private boolean useFlash;
 
@@ -63,7 +65,8 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
 
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         barcodeInfo = (TextView) findViewById(R.id.code_info);
-        findViewById(R.id.enter_code_button).setOnClickListener(this);
+        enter_code_fab = (FloatingActionButton) findViewById(R.id.enter_code_button);
+        enter_code_fab.setOnClickListener(this);
 
         // read parameters from the intent used to launch the activity.
         autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
@@ -245,6 +248,19 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        enter_code_fab.hide();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        enter_code_fab.show();
+    }
+
 
     @Override
     public void onClick(View v) {

@@ -70,6 +70,7 @@
                 android:layout_marginRight="20dp"
                 android:elevation="6dp"
                 android:src="@drawable/barcode_scan"
+                android:visibility="gone"
                 app:borderWidth="2dp"
                 app:fabSize="normal"
                 app:rippleColor="#222" />
@@ -85,6 +86,7 @@
                 android:elevation="6dp"
                 android:backgroundTint="@android:color/white"
                 android:src="@drawable/ic_add_shopping_cart_black_24dp"
+                android:visibility="gone"
                 app:borderWidth="0dp"
                 app:fabSize="normal"
                 app:rippleColor="#222" />

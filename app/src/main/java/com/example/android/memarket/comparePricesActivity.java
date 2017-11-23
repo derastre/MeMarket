@@ -153,7 +153,7 @@ public class comparePricesActivity extends BaseActivity {
                     if (r == 0) {
                         titleText.setText(priceList.get(r));
                     } else {
-                        Long number = Long.parseLong(priceList.get(r));
+                        Float number = Float.parseFloat(priceList.get(r));
                         titleText.setText(NumberFormat.getCurrencyInstance().format(number));
                     }
                     break;
@@ -163,73 +163,19 @@ public class comparePricesActivity extends BaseActivity {
             GridLayout.LayoutParams param = new GridLayout.LayoutParams();
             param.height = GridLayout.LayoutParams.WRAP_CONTENT;
             param.width = GridLayout.LayoutParams.WRAP_CONTENT;
-            param.rightMargin = 15;
-            param.topMargin = 10;
+            param.rightMargin = 100;
+            param.topMargin = 20;
             param.setGravity(Gravity.CENTER);
             param.columnSpec = GridLayout.spec(c);
             param.rowSpec = GridLayout.spec(r);
             if (r == 0) {
-                titleText.setTextColor(getResources().getColor(R.color.secondaryTextColor));
+                titleText.setTextColor(getResources().getColor(android.R.color.black));
                 titleText.setAllCaps(true);
                 titleText.setTypeface(Typeface.DEFAULT_BOLD);
+
             }
             titleText.setLayoutParams(param);
         }
-
-//        for (int r = 0; r < row; r++) {
-//            int c = 0;
-//            titleText = new TextView(this);
-//            titleText.setText(companiesNameList.get(r));
-//            gridLayout.addView(titleText, r);
-//
-//            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-//            param.height = GridLayout.LayoutParams.WRAP_CONTENT;
-//            param.width = GridLayout.LayoutParams.WRAP_CONTENT;
-//            param.rightMargin = 5;
-//            param.topMargin = 5;
-//            param.setGravity(Gravity.CENTER);
-//            param.columnSpec = GridLayout.spec(c);
-//            param.rowSpec = GridLayout.spec(r);
-//            titleText.setLayoutParams(param);
-//        }
-//
-//        for (int r = 0; r < row; r++) {
-//            int c = 1;
-//            int j = r + row * c;
-//            titleText = new TextView(this);
-//            titleText.setText(storeNameList.get(r));
-//            gridLayout.addView(titleText, j);
-//
-//            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-//            param.height = GridLayout.LayoutParams.WRAP_CONTENT;
-//            param.width = GridLayout.LayoutParams.WRAP_CONTENT;
-//            param.rightMargin = 5;
-//            param.topMargin = 5;
-//            param.setGravity(Gravity.CENTER);
-//            param.columnSpec = GridLayout.spec(c);
-//            param.rowSpec = GridLayout.spec(r);
-//            titleText.setLayoutParams(param);
-//        }
-//
-//        for (int r = 0; r < row; r++) {
-//            int c = 2;
-//            int j = r + row * c;
-//            titleText = new TextView(this);
-//            Long number = Long.parseLong(priceList.get(r));
-//            titleText.setText(NumberFormat.getCurrencyInstance().format(number));
-//            gridLayout.addView(titleText, j);
-//
-//            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-//            param.height = GridLayout.LayoutParams.WRAP_CONTENT;
-//            param.width = GridLayout.LayoutParams.WRAP_CONTENT;
-//            param.rightMargin = 5;
-//            param.topMargin = 5;
-//            param.setGravity(Gravity.CENTER);
-//            param.columnSpec = GridLayout.spec(c);
-//            param.rowSpec = GridLayout.spec(r);
-//            titleText.setLayoutParams(param);
-//        }
-
         hideProgressDialog();
     }
 }

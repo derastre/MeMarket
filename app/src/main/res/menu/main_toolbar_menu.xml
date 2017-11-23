@@ -12,13 +12,5 @@
         android:title="@string/search_button">
     </item>
 
-    <item
-        android:id="@+id/action_shopping_list"
-        android:title="@string/action_shopping_list"
-        app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
 </menu>

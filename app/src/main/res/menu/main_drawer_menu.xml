@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <item
@@ -10,5 +11,17 @@
         android:id="@+id/select_stores_button"
         android:title="@string/select_store"
         android:icon="@drawable/ic_store_black_24dp"/>
+
+    <item
+        android:icon="@drawable/ic_list_black_24dp"
+        android:id="@+id/action_shopping_list"
+        android:title="@string/action_shopping_list"
+        />
+
+    <item
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        />
 
 </menu>
