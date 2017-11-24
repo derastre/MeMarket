@@ -37,12 +37,7 @@ import static com.example.android.memarket.SplashActivity.USER_NAME;
 public class MainActivity extends BaseActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String FROM_MAIN = "com.example.android.memarket.FROM_MAIN";
-    public static final String PREFS_FILE = "MyPrefsFile";
 
-    private String selectedCompanyName;
-    private String selectedCompanyId;
-    private String selectedStoreName;
-    private String selectedStoreId;
     private String mUserId;
     private String mUserName;
     private String mUserEmail;
@@ -76,13 +71,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         //Setting button listeners
         findViewById(R.id.got_it_button).setOnClickListener(this);
-
-        // Restore preferences from file
-        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
-        selectedCompanyName = settings.getString("selectedCompanyName", null);
-        selectedStoreName = settings.getString("selectedStoreName", null);
-        selectedCompanyId = settings.getString("selectedCompanyId", null);
-        selectedStoreId = settings.getString("selectedStoreId", null);
 
 
         //Check that there is information on the file
@@ -124,19 +112,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void searchProducts() {
-
-        //if (selectedCompanyId != null && selectedStoreId !=null) {
-        Intent intent = new Intent(this, ProductActivity.class);
-
-        //FROM_MAIN para indicarle que la actividad se inicio desde MainActivity.
-        intent.putExtra(FROM_MAIN, true)
-                .putExtra(COMPANY_ID, selectedCompanyId)
-                .putExtra(COMPANY_NAME, selectedCompanyName)
-                .putExtra(STORE_ID, selectedStoreId)
-                .putExtra(STORE_NAME, selectedStoreName)
-                .putExtra(USER_ID, mUserId);
-
-        startActivity(intent);
+        startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
     }
 
     public void gotoStores() {

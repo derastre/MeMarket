@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import static com.example.android.memarket.ProductActivity.PRODUCT_ID;
+import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
 
 public class comparePricesActivity extends BaseActivity {
 

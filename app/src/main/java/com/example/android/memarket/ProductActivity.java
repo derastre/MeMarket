@@ -2,6 +2,7 @@ package com.example.android.memarket;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,11 +13,9 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +27,6 @@ import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
 import com.example.android.memarket.models.Purchase;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,46 +45,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 //import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
-import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
-import static com.example.android.memarket.MainActivity.FROM_MAIN;
+import static com.example.android.memarket.BarcodeReader.PRODUCT_BARCODE;
+import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.example.android.memarket.SplashActivity.USER_ID;
-import static com.example.android.memarket.StoresActivity.STORE_ID;
-import static com.example.android.memarket.StoresActivity.STORE_NAME;
+import static com.example.android.memarket.StoreActivity.PREFS_FILE;
 
 
 public class ProductActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final String PRODUCT_ID = "com.example.android.memarket.PRODUCT_ID";
-    public static final String PRODUCT_BARCODE = "com.example.android.memarket.PRODUCT_BARCODE";
     public static final String filename = "myPurchases.save";
     private static final int RC_BARCODE_CAPTURE = 9001;
-    private static final String TAG = "BarcodeMain";
 
 
-    private TextView scannedCode;
     private FloatingActionButton scan_fab;
     private FloatingActionButton add_purchase_fab;
-    private String mBarcode;
+    private String mProductId;
+    private String mProductBarcode;
     private Product mProduct;
+    private String mUserId;
     private String mStoreId;
     private String mStoreName;
     private String mCompanyName;
     private String lastPurchaseDate;
     private Float lastPurchasePrice;
-    private String mUserId;
-    private Boolean fromMain;
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference myRef;
     private DatabaseReference myPriceRef;
-    private DatabaseReference myOfferRef;
-    private DatabaseReference myPurchasesRef;
     private Query myOfferQuery;
     private Query myPurchasesQuery;
     private ValueEventListener myPriceListener;
     private ValueEventListener myProductListener;
     private ValueEventListener myOfferListener;
     private ValueEventListener myPurchasesListener;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +88,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         mDatabase = FirebaseDatabase.getInstance();
 
         //Getting widgets ids
-        scannedCode = (TextView) findViewById(R.id.productCode);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_profile_toolbar);
         scan_fab = (FloatingActionButton) findViewById(R.id.scan_fab);
         add_purchase_fab = (FloatingActionButton) findViewById(R.id.add_purchase_fab);
@@ -104,7 +95,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         //Setting Toolbar
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Buttons Listeners
         scan_fab.setOnClickListener(this);
@@ -114,20 +107,30 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.view_history_button).setOnClickListener(this);
         findViewById(R.id.on_sale_button).setOnClickListener(this);
 
+
         // Get the Intent that started this activity and extract the string
         if (savedInstanceState == null) {
             Intent intent = getIntent();
-            mStoreId = intent.getStringExtra(STORE_ID);
-            mStoreName = intent.getStringExtra(STORE_NAME);
-            mCompanyName = intent.getStringExtra(COMPANY_NAME);
             mUserId = intent.getStringExtra(USER_ID);
-            fromMain = intent.getBooleanExtra(FROM_MAIN, false);
+            mProductId = intent.getStringExtra(PRODUCT_ID);
+            mProductBarcode = intent.getStringExtra(PRODUCT_BARCODE);
+
         } else {
-            mStoreId = savedInstanceState.getString("mStoreId");
-            mStoreName = savedInstanceState.getString("mStoreName");
-            mCompanyName = savedInstanceState.getString("mCompanyName");
             mUserId = savedInstanceState.getString("mUserId");
+            mProductId = savedInstanceState.getString("mProductId");
+            mProductBarcode = savedInstanceState.getString("mProductBarcode");
         }
+
+        // If for any reason there is no product id.
+        if (mProductId == null) {
+            startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
+        }
+
+        // Restore preferences from file
+        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+        mCompanyName = settings.getString("selectedCompanyName", null);
+        mStoreName = settings.getString("selectedStoreName", null);
+        mStoreId = settings.getString("selectedStoreId", null);
 
         // If there is no store selected
         if (mStoreId == null) {
@@ -138,6 +141,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         String storename = mCompanyName + " " + mStoreName;
         TextView textView = (TextView) findViewById(R.id.selectedStoreName);
         textView.setText(storename);
+
+        //Set product barcode.
+        textView = (TextView) findViewById(R.id.productCode);
+        textView.setText(mProductBarcode);
 
         //Hide the FAB Button when scrolling
         scan_fab.show();
@@ -156,11 +163,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
+        readProductFromFirebase();
 
-        //If the call came from Main activity
-        if (fromMain) {
-            scan_barcode();
-        }
+
     }
 
     private void startSelectStore() {
@@ -190,7 +195,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         Intent intent = new Intent(ProductActivity.this, BarcodeReader.class);
         intent.putExtra(BarcodeReader.AutoFocus, true);
         intent.putExtra(BarcodeReader.UseFlash, false);
-        intent.putExtra(FROM_MAIN, fromMain);
 
         startActivityForResult(intent, RC_BARCODE_CAPTURE);
 
@@ -198,38 +202,20 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void readProductFromFirebase() {
 
-        if (mBarcode != null && mStoreId != null) {
+        if (mProductId != null && mStoreId != null) {
             showProgressDialog(getString(R.string.loading));
 
-            myRef = mDatabase.getReference().child("products").child(mBarcode);
+            myRef = mDatabase.getReference().child("products").child(mProductId);
 
             myProductListener = new ValueEventListener() {
                 @Override
 
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    ArrayList<Product> productArrayList = new ArrayList<>();
-                    ArrayList<String> productKeyArrayList = new ArrayList<>();
-                    if (dataSnapshot.getChildrenCount() == 1) {
-                        for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
-                            mProduct = productSnapshop.getValue(Product.class);
-                            if (mProduct != null) {
-                                mProduct.setId(productSnapshop.getKey());
-                                updateProductUI();
-                            }
-                        }
-                    } else if (dataSnapshot.getChildrenCount() == 0) {
-                        //if mProduct code doesn't exist in database go to activity add new mProduct
-                        startActivity(new Intent(ProductActivity.this, NewProduct.class).putExtra(PRODUCT_BARCODE, mBarcode));
-                    } else if (dataSnapshot.getChildrenCount() > 1) {
-                        for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
-                            mProduct = productSnapshop.getValue(Product.class);
-                            String key = productSnapshop.getKey();
-                            productArrayList.add(mProduct);
-                            productKeyArrayList.add(key);
-                        }
-                        selectProductDialog(productArrayList, productKeyArrayList);
-
+                    mProduct = dataSnapshot.getValue(Product.class);
+                    if (mProduct != null) {
+                        mProduct.setId(dataSnapshot.getKey());
+                        updateProductUI();
                     }
                 }
 
@@ -243,29 +229,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             myRef.addValueEventListener(myProductListener);
 
         }
-    }
-
-    private void selectProductDialog(final ArrayList<Product> productArrayList, final ArrayList<String> productKeyArrayList) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_product);
-        builder.setMessage(R.string.select_product_instructions);
-
-        ArrayList<String> productNameList = new ArrayList<>();
-        for (int i = 0; i < productArrayList.size(); i++) {
-            productNameList.add(productArrayList.get(i).Name);
-        }
-        CharSequence[] cs = productNameList.toArray(new CharSequence[productNameList.size()]);
-        builder.setItems(cs, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mProduct = productArrayList.get(i);
-                //mProductId = productKeyArrayList.get(i);
-                mProduct.setId(productKeyArrayList.get(i));
-                updateProductUI();
-
-            }
-        });
-        builder.show();
     }
 
     public void readProductPriceFromFirebase() {
@@ -287,7 +250,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         mProduct.setCurrentPrice(null);
                         mProduct.setOffer(false);
                     }
-                    updateProducPriceOffertUI();
+                    updateProductPriceOfferUI();
                 }
 
                 @Override
@@ -303,6 +266,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readProductOfferFromFirebase() {
         //Check for offer in the selected store
         String id = mProduct.getId();
+        DatabaseReference myOfferRef;
+
         if (id != null) {
             Calendar dateToday = Calendar.getInstance();
             dateToday.set(Calendar.HOUR_OF_DAY, 0);
@@ -330,7 +295,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         mProduct.setCurrentOffer(null);
                         mProduct.setOffer(false);
                     }
-                    updateProducPriceOffertUI();
+                    updateProductPriceOfferUI();
                 }
 
                 @Override
@@ -346,6 +311,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readLastPurchaseFromFirebase() {
         //Check for last user purchase on database
         String id = mProduct.getId();
+        DatabaseReference myPurchasesRef;
         lastPurchasePrice = null;
         lastPurchaseDate = null;
         if (mUserId != null && id != null) {
@@ -360,8 +326,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     if (dataSnapshot.getChildren() != null) {
                         for (DataSnapshot purchasesSnapshot : dataSnapshot.getChildren()) {
                             Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
-                            lastPurchasePrice = purchase.price;
-                            lastPurchaseDate = purchasesSnapshot.getKey();
+                            if (purchase != null) {
+                                lastPurchasePrice = purchase.price;
+                                lastPurchaseDate = purchasesSnapshot.getKey();
+                            }
                         }
                     }
                     updateProductLastPurchaseUI();
@@ -410,7 +378,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    public void updateProducPriceOffertUI() {
+    public void updateProductPriceOfferUI() {
         String id = mProduct.getId();
         if (id != null) {
             //Reading extra product data
@@ -597,7 +565,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    EditText input = (EditText) view.findViewById(R.id.purchase_quantity);
+                    EditText input = view.findViewById(R.id.purchase_quantity);
                     Float qty;
                     try {
                         qty = Float.parseFloat(input.getText().toString());
@@ -691,37 +659,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Returning from barcode capture activity
-        if (requestCode == RC_BARCODE_CAPTURE) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    String barcode = data.getStringExtra(BarcodeReader.BarcodeObject);
-                    Log.d(TAG, "Barcode read: " + barcode);
-                    mBarcode = barcode;
-                    scannedCode.setText(barcode);
-                    readProductFromFirebase();
-                    fromMain = false;
-                } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
-                    if (fromMain) finish();
-                }
-            } else {
-                scannedCode.setText(String.format(getString(R.string.barcode_error),
-                        CommonStatusCodes.getStatusCodeString(resultCode)));
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-
-
-    @Override
     public void onStop() {
         super.onStop();
-        scan_fab.hide();
-        add_purchase_fab.hide();
         if (myProductListener != null) {
             myRef.removeEventListener(myProductListener);
         }
@@ -737,20 +676,18 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         scan_fab.hide();
         add_purchase_fab.hide();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         scan_fab.show();
         add_purchase_fab.show();
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -805,13 +742,12 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        savedInstanceState.putString("mStoreId", mStoreId);
-        savedInstanceState.putString("mStoreName", mStoreName);
-        savedInstanceState.putString("mCompanyName", mCompanyName);
+        savedInstanceState.putString("mProductBarcode", mProductBarcode);
+        savedInstanceState.putString("mProductId", mProductId);
         savedInstanceState.putString("mUserId", mUserId);
-
 
         super.onSaveInstanceState(savedInstanceState);
     }
 
 }
+

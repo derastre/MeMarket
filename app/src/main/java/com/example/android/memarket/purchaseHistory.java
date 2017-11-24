@@ -22,7 +22,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 
-import static com.example.android.memarket.ProductActivity.PRODUCT_ID;
+import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.example.android.memarket.SplashActivity.USER_ID;
 
 public class purchaseHistory extends BaseActivity {

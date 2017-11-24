@@ -26,15 +26,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.memarket.components.BaseActivity;
+import com.example.android.memarket.models.Product;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
+import static com.example.android.memarket.SplashActivity.USER_ID;
 
 public class BarcodeReader extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "BarcodeReader";
@@ -48,8 +56,10 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     // constants used to pass extra data in the intent
     public static final String AutoFocus = "AutoFocus";
     public static final String UseFlash = "UseFlash";
-    public static final String BarcodeObject = "Barcode";
+    public static final String PRODUCT_ID = "ProductId";
+    public static final String PRODUCT_BARCODE = "ProductBarcode";
 
+    private String mUserId;
     private SurfaceView cameraView;
     private TextView barcodeInfo;
     private BarcodeDetector barcodeDetector;
@@ -71,6 +81,8 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         // read parameters from the intent used to launch the activity.
         autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
         useFlash = getIntent().getBooleanExtra(UseFlash, false);
+        mUserId = getIntent().getStringExtra(USER_ID);
+
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -118,15 +130,18 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                         }
                     });
 
-                    Intent data = new Intent();
-                    data.putExtra(BarcodeObject, barcodes.valueAt(0).rawValue);
-                    setResult(CommonStatusCodes.SUCCESS, data);
-                    finish();
-
+                    readProductFromFirebase(barcodes.valueAt(0).rawValue);
 
                 }
             }
         });
+    }
+
+    private void startProductActivity(String id,String code) {
+        startActivity(new Intent(this, ProductActivity.class)
+                .putExtra(PRODUCT_ID, id)
+                .putExtra(PRODUCT_BARCODE, code)
+                .putExtra(USER_ID,mUserId));
     }
 
     private void createCameraSource(boolean autoFocus, boolean useFlash) {
@@ -204,7 +219,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityCompat.requestPermissions(thisActivity, permissions,RC_HANDLE_CAMERA_PERM);
+                ActivityCompat.requestPermissions(thisActivity, permissions, RC_HANDLE_CAMERA_PERM);
             }
         };
 
@@ -231,10 +246,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String code = input.getText().toString();
-                Intent data = new Intent();
-                data.putExtra(BarcodeObject, code);
-                setResult(CommonStatusCodes.SUCCESS, data);
-                finish();
+                readProductFromFirebase(code);
             }
         });
         builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
@@ -245,22 +257,94 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         });
         dialog = builder.create();
         dialog.show();
-        dialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    public void readProductFromFirebase(final String code) {
+
+        FirebaseDatabase mDatabase;
+        DatabaseReference myRef;
+        ValueEventListener myProductListener;
+
+        showProgressDialog(getString(R.string.loading));
+
+        mDatabase = FirebaseDatabase.getInstance();
+        myRef = mDatabase.getReference().child("products").child(code);
+
+        myProductListener = new ValueEventListener() {
+            @Override
+
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<Product> productArrayList = new ArrayList<>();
+                ArrayList<String> productKeyArrayList = new ArrayList<>();
+                Product mProduct;
+                if (dataSnapshot.getChildrenCount() == 1) {
+                    for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
+                        mProduct = productSnapshop.getValue(Product.class);
+                        if (mProduct != null) {
+                            String id = productSnapshop.getKey();
+                            startProductActivity(id,code);
+                        }
+                    }
+                } else if (dataSnapshot.getChildrenCount() == 0) {
+                    //if mProduct code doesn't exist in database go to activity add new mProduct
+                    startActivity(new Intent(BarcodeReader.this, NewProduct.class).putExtra(PRODUCT_BARCODE, code).putExtra(USER_ID,mUserId));
+                } else if (dataSnapshot.getChildrenCount() > 1) {
+                    for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
+                        mProduct = productSnapshop.getValue(Product.class);
+                        String key = productSnapshop.getKey();
+                        productArrayList.add(mProduct);
+                        productKeyArrayList.add(key);
+                    }
+                    selectProductDialog(productArrayList, productKeyArrayList, code);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                hideProgressDialog();
+                Snackbar.make(findViewById(R.id.camera_view), databaseError.getMessage(), Snackbar.LENGTH_SHORT).show();
+            }
+        };
+
+        myRef.addListenerForSingleValueEvent(myProductListener);
+
+    }
+
+    private void selectProductDialog(final ArrayList<Product> productArrayList, final ArrayList<String> productKeyArrayList, final String code) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_product);
+        builder.setMessage(R.string.select_product_instructions);
+
+        ArrayList<String> productNameList = new ArrayList<>();
+        for (int i = 0; i < productArrayList.size(); i++) {
+            productNameList.add(productArrayList.get(i).Name);
+        }
+        CharSequence[] cs = productNameList.toArray(new CharSequence[productNameList.size()]);
+        builder.setItems(cs, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String id = productKeyArrayList.get(i);
+                startProductActivity(id, code);
+            }
+        });
+        builder.show();
+    }
+
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         enter_code_fab.hide();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         enter_code_fab.show();
     }
-
 
     @Override
     public void onClick(View v) {

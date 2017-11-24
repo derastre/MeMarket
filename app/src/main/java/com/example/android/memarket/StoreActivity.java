@@ -17,14 +17,18 @@ import static com.example.android.memarket.StoresActivity.STORE_ADDRESS;
 import static com.example.android.memarket.StoresActivity.STORE_ID;
 import static com.example.android.memarket.StoresActivity.STORE_NAME;
 import static com.example.android.memarket.StoresActivity.STORE_PHONE;
-import static com.example.android.memarket.MainActivity.PREFS_FILE;
+
 
 public class StoreActivity extends BaseActivity {
+
+    public static final String PREFS_FILE = "MyPrefsFile";
 
     private String companyName;
     private String storeName;
     private String companyId;
     private String storeId;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

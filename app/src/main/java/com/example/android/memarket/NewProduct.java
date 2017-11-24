@@ -23,8 +23,10 @@ import android.widget.TextView;
 
 import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,10 +41,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import static com.example.android.memarket.BarcodeReader.PRODUCT_BARCODE;
+import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.example.android.memarket.SplashActivity.USER_ID;
+
 
 public class NewProduct extends BaseActivity implements View.OnClickListener {
 
     private static final int CAMERA_REQUEST = 1888;
+    private String mUserId;
     private ImageView productImage;
     private TextView productCode;
     private EditText productType;
@@ -52,8 +59,6 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
     private Spinner productUnitsSpinner;
     private Button addPhoto;
 
-   private DatabaseReference myRef;
-    private ValueEventListener unitsListener;
     private ArrayList<String> unitsArrayList;
 
 
@@ -64,7 +69,8 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        String message = intent.getStringExtra(ProductActivity.PRODUCT_BARCODE);
+        String code = intent.getStringExtra(PRODUCT_BARCODE);
+        mUserId = intent.getStringExtra(USER_ID);
 
         //Get references to layout views
         productCode = (TextView) findViewById(R.id.productCode);
@@ -81,7 +87,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         productImage.setOnClickListener(this);
 
         // Capture the layout's EditText and set the string as its text
-        productCode.setText(message);
+        productCode.setText(code);
 
         //Setting the spinner
         getProductUnitsListFromFirebase();
@@ -116,14 +122,19 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         finish();
     }
 
-    public void writeNewProductOnFirebase(String ProductCode, String name, String type, String brand, Float quantity , String units, byte[] image){
+    public void writeNewProductOnFirebase(final String ProductCode, String name, String type, String brand, Float quantity , String units, byte[] image){
         // Write to the database
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         Product Product= new Product(name,type,brand,quantity,units);
-        String key= myRef.child("products").child(ProductCode).push().getKey();
-        myRef.child("products").child(ProductCode).child(key).setValue(Product);
+        final String key= myRef.child("products").child(ProductCode).push().getKey();
+        myRef.child("products").child(ProductCode).child(key).setValue(Product).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                startProductActivity(key,ProductCode);
+            }
+        });
 
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -140,13 +151,18 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
             }
         });
 
     }
 
+    private void startProductActivity(String id,String code) {
+        startActivity(new Intent(this, ProductActivity.class)
+                .putExtra(PRODUCT_ID, id)
+                .putExtra(PRODUCT_BARCODE, code)
+                .putExtra(USER_ID,mUserId));
+    }
     public void takePicture(){
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
@@ -163,6 +179,9 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
     public void getProductUnitsListFromFirebase() {
         //Obtener lista de unidades de la base de datos
+        DatabaseReference myRef;
+        ValueEventListener unitsListener;
+
         showProgressDialog(getString(R.string.loading));
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("product_units");
