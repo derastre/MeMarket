@@ -40,6 +40,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.example.android.memarket.BarcodeReader.PRODUCT_BARCODE;
 import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
@@ -124,12 +125,14 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
     public void writeNewProductOnFirebase(final String ProductCode, String name, String type, String brand, Float quantity , String units, byte[] image){
         // Write to the database
-
+        HashMap<String,Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         Product Product= new Product(name,type,brand,quantity,units);
-        final String key= myRef.child("products").child(ProductCode).push().getKey();
-        myRef.child("products").child(ProductCode).child(key).setValue(Product).addOnCompleteListener(new OnCompleteListener<Void>() {
+        final String key= myRef.child("products_keys").child(ProductCode).push().getKey();
+        childsUpdate.put("/products/" + key,Product);
+        childsUpdate.put("/products_keys/" + ProductCode + "/" + key,name);
+        myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 startProductActivity(key,ProductCode);
