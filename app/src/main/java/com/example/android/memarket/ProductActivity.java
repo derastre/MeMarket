@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
@@ -27,6 +28,8 @@ import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
 import com.example.android.memarket.models.Purchase;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -125,6 +128,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         if (mProductId == null) {
             startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
         }
+        //If we lost the UserID
+        if (mUserId == null) getUserFirebaseData();
 
         // Restore preferences from file
         SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
@@ -333,8 +338,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                                 lastPurchaseDate = purchasesSnapshot.getKey();
                             }
                         }
+                        updateProductLastPurchaseUI();
                     }
-                    updateProductLastPurchaseUI();
+
                 }
 
                 @Override
@@ -556,60 +562,72 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void addPurchase() {
         if (mUserId != null && mProduct != null) {
             if (mStoreId != null) {
-                // Write to the local database
+                if(mProduct.getCurrentPrice()!=null) {
+                    // Write to the local database
 
-                AlertDialog dialog;
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                final View view = getLayoutInflater().inflate(R.layout.add_purchase_dialog, null);
-                builder.setView(view);
+                    AlertDialog dialog;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    final View view = getLayoutInflater().inflate(R.layout.add_purchase_dialog, null);
+                    builder.setView(view);
 
-                // Set up the buttons
-                builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        EditText input = view.findViewById(R.id.purchase_quantity);
-                        Float qty;
-                        try {
-                            qty = Float.parseFloat(input.getText().toString());
-                        } catch (Exception e) {
-                            qty = 0f;
-                            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.update_error), Snackbar.LENGTH_LONG).show();
+                    // Set up the buttons
+                    builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            EditText input = view.findViewById(R.id.purchase_quantity);
+                            Float qty;
+                            try {
+                                qty = Float.parseFloat(input.getText().toString());
+                            } catch (Exception e) {
+                                qty = 0f;
+                                Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.update_error), Snackbar.LENGTH_LONG).show();
+                                dialog.cancel();
+                            }
+
+                            Long date = System.currentTimeMillis();
+                            Purchase purchase =
+                                    new Purchase(mProduct.getId(),
+                                            mProduct.Name, mProduct.Type,
+                                            mStoreId,
+                                            date,
+                                            qty,
+                                            mProduct.getCurrentPrice(),
+                                            mProduct.getCurrentOffer(),
+                                            mProduct.getOffer());
+                            saveRegisterProductLocally(purchase);
+                            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            removeLastRegisterLocally();
+                                        }
+                                    })
+                                    .show();
+
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
                         }
-
-                        Long date = System.currentTimeMillis();
-                        Purchase purchase =
-                                new Purchase(mProduct.getId(),
-                                        mProduct.Name, mProduct.Type,
-                                        mStoreId,
-                                        date,
-                                        qty,
-                                        mProduct.getCurrentPrice(),
-                                        mProduct.getCurrentOffer(),
-                                        mProduct.getOffer());
-                        saveRegisterProductLocally(purchase);
-                        Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
-                                .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        removeLastRegisterLocally();
-                                    }
-                                })
-                                .show();
-
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                dialog = builder.create();
-                dialog.show();
-                dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
+                    });
+                    dialog = builder.create();
+                    dialog.show();
+                    dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }else {
+                    Snackbar.make(findViewById(R.id.placeSnackBar),
+                            getString(R.string.update_price_instruction),
+                            Snackbar.LENGTH_SHORT)
+                            .setAction(R.string.update_button, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    updatePriceFirebase();
+                                }
+                            })
+                            .show();
+                }
             } else {
                 Snackbar.make(findViewById(R.id.placeSnackBar),
                         getString(R.string.select_store_instruction),
@@ -672,6 +690,16 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             writeObjectsToFile(filename, products, getApplicationContext());
         } catch (IOException e) {
             System.out.println("Error initializing stream");
+        }
+    }
+
+    public void getUserFirebaseData() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            mUserId = currentUser.getUid();
+        } else {
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 
@@ -747,7 +775,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         switch (i) {
             case R.id.my_cart_button:
-                startActivity(new Intent(this, MyCart.class));
+                if (mUserId != null) {
+                    startActivity(new Intent(this, MyCart.class).putExtra(USER_ID, mUserId));
+                }
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

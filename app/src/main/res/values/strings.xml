@@ -85,6 +85,7 @@
 
     <!--Snackbars text -->
     <string name="purchase_added_snackbar">"Purchase added"</string>
+    <string name="purchases_added_snackbar">"All purchases added"</string>
     <string name="undo_snackbar_button">"Undo"</string>
 
     <!--Product Price Card Text -->
@@ -96,6 +97,8 @@
 
     <!--Dialogs Text -->
     <string name="select_store_instruction">"Please select a store first"</string>
+    <string name="add_all_purchases_question">"Would you like to register your purchases? The cart will be emptied."</string>
+    <string name="clear_cart_question">"Would you like to clear your cart?"</string>
 
 
     <string name="companies_list">"Companies list</string>
@@ -158,5 +161,8 @@
     <string name="date_label">Date</string>
     <string name="action_shopping_list">Shoping list</string>
     <string name="my_cart_label">My cart</string>
+    <string name="done">Done</string>
+    <string name="clear_cart">Clear cart</string>
+    <string name="update_price_instruction">Please set product price first</string>
 
 </resources>

@@ -135,7 +135,7 @@ public class BaseActivity extends AppCompatActivity {
         FileOutputStream os = null;
 
         try {
-            os = context.openFileOutput(filename,Context.MODE_PRIVATE);
+            os = context.openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(os);
             for (Object object : objects) {
                 oos.writeObject(object);
@@ -148,10 +148,10 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public static void emptyObjectFile(String filename) throws IOException {
-        OutputStream os = null;
+    public static void emptyObjectFile(String filename, Context context) throws IOException {
+        FileOutputStream os = null;
         try {
-            os = new FileOutputStream(filename);
+            os = context.openFileOutput(filename, Context.MODE_PRIVATE);
         } finally {
             if (os != null) {
                 os.close();
