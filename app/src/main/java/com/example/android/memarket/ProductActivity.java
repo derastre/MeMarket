@@ -132,14 +132,16 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         mStoreName = settings.getString("selectedStoreName", null);
         mStoreId = settings.getString("selectedStoreId", null);
 
-        // If there is no store selected
-        if (mStoreId == null) {
-            startSelectStore();
+        // Set store name on price card
+        TextView textView;
+        String storename;
+        if (mStoreId != null) {
+            storename = mCompanyName + " " + mStoreName;
+        } else {
+            storename = getString(R.string.select_store_instruction);
         }
 
-        // Set store name on price card
-        String storename = mCompanyName + " " + mStoreName;
-        TextView textView = (TextView) findViewById(R.id.selectedStoreName);
+        textView = (TextView) findViewById(R.id.selectedStoreName);
         textView.setText(storename);
 
         //Set product barcode.
@@ -202,7 +204,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void readProductFromFirebase() {
 
-        if (mProductId != null && mStoreId != null) {
+        if (mProductId != null) {
             showProgressDialog(getString(R.string.loading));
 
             myRef = mDatabase.getReference().child("products").child(mProductId);
@@ -234,7 +236,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readProductPriceFromFirebase() {
         //Check for the mProduct price in the selected store
         String id = mProduct.getId();
-        if (id != null) {
+        if (id != null && mStoreId != null) {
             myPriceRef = mDatabase.getReference().child("prices").child(id).child(mStoreId);
             myPriceListener = new ValueEventListener() {
 
@@ -268,7 +270,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         String id = mProduct.getId();
         DatabaseReference myOfferRef;
 
-        if (id != null) {
+        if (id != null && mStoreId != null) {
             Calendar dateToday = Calendar.getInstance();
             dateToday.set(Calendar.HOUR_OF_DAY, 0);
             dateToday.set(Calendar.MINUTE, 0);
@@ -380,9 +382,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void updateProductPriceOfferUI() {
         String id = mProduct.getId();
-        if (id != null) {
-            //Reading extra product data
-            //Price
+        if (id != null && mStoreId != null) {
+
             TextView price_text = (TextView) findViewById(R.id.productPrice);
             Float price = mProduct.getCurrentPrice();
             if (price != null) {
@@ -553,64 +554,80 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void addPurchase() {
-        if (mStoreId != null && mUserId != null && mProduct != null) {
-            // Write to the local database
+        if (mUserId != null && mProduct != null) {
+            if (mStoreId != null) {
+                // Write to the local database
 
-            AlertDialog dialog;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            final View view = getLayoutInflater().inflate(R.layout.add_purchase_dialog, null);
-            builder.setView(view);
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                final View view = getLayoutInflater().inflate(R.layout.add_purchase_dialog, null);
+                builder.setView(view);
 
-            // Set up the buttons
-            builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    EditText input = view.findViewById(R.id.purchase_quantity);
-                    Float qty;
-                    try {
-                        qty = Float.parseFloat(input.getText().toString());
-                    } catch (Exception e) {
-                        qty = 0f;
-                        Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.update_error), Snackbar.LENGTH_LONG).show();
+                // Set up the buttons
+                builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText input = view.findViewById(R.id.purchase_quantity);
+                        Float qty;
+                        try {
+                            qty = Float.parseFloat(input.getText().toString());
+                        } catch (Exception e) {
+                            qty = 0f;
+                            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.update_error), Snackbar.LENGTH_LONG).show();
+                            dialog.cancel();
+                        }
+
+                        Long date = System.currentTimeMillis();
+                        Purchase purchase =
+                                new Purchase(mProduct.getId(),
+                                        mProduct.Name, mProduct.Type,
+                                        mStoreId,
+                                        date,
+                                        qty,
+                                        mProduct.getCurrentPrice(),
+                                        mProduct.getCurrentOffer(),
+                                        mProduct.getOffer());
+                        saveRegisterProductLocally(purchase);
+                        Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
+                                .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        removeLastRegisterLocally();
+                                    }
+                                })
+                                .show();
+
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
+                });
+                dialog = builder.create();
+                dialog.show();
+                dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
-                    Long date = System.currentTimeMillis();
-                    Purchase purchase =
-                            new Purchase(mProduct.getId(),
-                                    mProduct.Name, mProduct.Type,
-                                    mStoreId,
-                                    date,
-                                    qty,
-                                    mProduct.getCurrentPrice(),
-                                    mProduct.getCurrentOffer(),
-                                    mProduct.getOffer());
-                    saveRegisterProductLocally(purchase);
-                    Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
-                            .setAction(R.string.undo_snackbar_button, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    removeLastRegisterLocally();
-                                }
-                            })
-                            .show();
-
-                }
-            });
-            builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            dialog = builder.create();
-            dialog.show();
-            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
-
-        } else
-            Snackbar.make(findViewById(R.id.placeSnackBar), getString(R.string.missing_info), Snackbar.LENGTH_SHORT).show();
+            } else {
+                Snackbar.make(findViewById(R.id.placeSnackBar),
+                        getString(R.string.select_store_instruction),
+                        Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.select_button, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startSelectStore();
+                            }
+                        })
+                        .show();
+            }
+        } else {
+            Snackbar.make(findViewById(R.id.placeSnackBar),
+                    getString(R.string.missing_info),
+                    Snackbar.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     private void removeLastRegisterLocally() {

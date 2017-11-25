@@ -52,5 +52,4 @@
         app:fabSize="normal"
         app:rippleColor="#222" />
 
-    <!--TODO: Add a FAB Button-->
 </LinearLayout>

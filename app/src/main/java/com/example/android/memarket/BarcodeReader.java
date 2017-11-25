@@ -137,11 +137,11 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         });
     }
 
-    private void startProductActivity(String id,String code) {
+    private void startProductActivity(String id, String code) {
         startActivity(new Intent(this, ProductActivity.class)
                 .putExtra(PRODUCT_ID, id)
                 .putExtra(PRODUCT_BARCODE, code)
-                .putExtra(USER_ID,mUserId));
+                .putExtra(USER_ID, mUserId));
     }
 
     private void createCameraSource(boolean autoFocus, boolean useFlash) {
@@ -270,35 +270,34 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         showProgressDialog(getString(R.string.loading));
 
         mDatabase = FirebaseDatabase.getInstance();
-        myRef = mDatabase.getReference().child("products").child(code);
+        myRef = mDatabase.getReference().child("products_keys").child(code);
 
         myProductListener = new ValueEventListener() {
             @Override
 
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                ArrayList<Product> productArrayList = new ArrayList<>();
+                ArrayList<String> productNameList = new ArrayList<>();
                 ArrayList<String> productKeyArrayList = new ArrayList<>();
-                Product mProduct;
+                String id, name, key;
                 if (dataSnapshot.getChildrenCount() == 1) {
                     for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
-                        mProduct = productSnapshop.getValue(Product.class);
-                        if (mProduct != null) {
-                            String id = productSnapshop.getKey();
-                            startProductActivity(id,code);
-                        }
+                        id = productSnapshop.getKey();
+                        startProductActivity(id, code);
                     }
                 } else if (dataSnapshot.getChildrenCount() == 0) {
                     //if mProduct code doesn't exist in database go to activity add new mProduct
-                    startActivity(new Intent(BarcodeReader.this, NewProduct.class).putExtra(PRODUCT_BARCODE, code).putExtra(USER_ID,mUserId));
+                    startActivity(new Intent(BarcodeReader.this, NewProduct.class).putExtra(PRODUCT_BARCODE, code).putExtra(USER_ID, mUserId));
                 } else if (dataSnapshot.getChildrenCount() > 1) {
                     for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
-                        mProduct = productSnapshop.getValue(Product.class);
-                        String key = productSnapshop.getKey();
-                        productArrayList.add(mProduct);
-                        productKeyArrayList.add(key);
+                        if (productSnapshop.getValue()!=null) {
+                            name = productSnapshop.getValue().toString();
+                            key = productSnapshop.getKey();
+                            productNameList.add(name);
+                            productKeyArrayList.add(key);
+                        }
                     }
-                    selectProductDialog(productArrayList, productKeyArrayList, code);
+                    selectProductDialog(productNameList, productKeyArrayList, code);
 
                 }
             }
@@ -314,15 +313,12 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
 
     }
 
-    private void selectProductDialog(final ArrayList<Product> productArrayList, final ArrayList<String> productKeyArrayList, final String code) {
+    private void selectProductDialog(final ArrayList<String> productNameList, final ArrayList<String> productKeyArrayList, final String code) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_product);
         builder.setMessage(R.string.select_product_instructions);
 
-        ArrayList<String> productNameList = new ArrayList<>();
-        for (int i = 0; i < productArrayList.size(); i++) {
-            productNameList.add(productArrayList.get(i).Name);
-        }
+
         CharSequence[] cs = productNameList.toArray(new CharSequence[productNameList.size()]);
         builder.setItems(cs, new DialogInterface.OnClickListener() {
             @Override

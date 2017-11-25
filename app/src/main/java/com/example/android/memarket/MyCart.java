@@ -35,7 +35,6 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
 
     BottomSheetBehavior behavior;
     GridLayout gridLayout;
-    ArrayList<Product> productArrayList;
     ArrayList<Purchase> purchaseArrayList;
     ListView listView;
 
@@ -168,7 +167,7 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
 
     @Nullable
     private ArrayList<Purchase> readRegisterProductLocally() {
-        ArrayList purchases = new ArrayList();
+        ArrayList purchases;
         try {
             purchases = readObjectsFromFile(filename, this);
             return purchases;
@@ -182,8 +181,6 @@ public class MyCart extends BaseActivity implements View.OnClickListener {
             System.out.println("Class not found");
             return null;
         }
-
-
     }
 
     class productArrayAdapter extends ArrayAdapter<Purchase> {

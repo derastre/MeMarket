@@ -68,8 +68,10 @@ public class comparePricesActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot pricesSnapshot : dataSnapshot.getChildren()) {
-                    priceList.add(pricesSnapshot.getValue().toString());
-                    storeIdList.add(pricesSnapshot.getKey());
+                    if (pricesSnapshot.getValue() != null) {
+                        priceList.add(pricesSnapshot.getValue().toString());
+                        storeIdList.add(pricesSnapshot.getKey());
+                    }
                 }
                 ValueEventListener storeListener = new ValueEventListener() {
                     @Override
@@ -77,8 +79,10 @@ public class comparePricesActivity extends BaseActivity {
                         Store store;
                         for (int i = 0; i < storeIdList.size(); i++) {
                             store = dataSnapshot.child(storeIdList.get(i)).getValue(Store.class);
-                            storeNameList.add(store.Name);
-                            companiesIdList.add(store.CompanyId);
+                            if (store != null) {
+                                storeNameList.add(store.Name);
+                                companiesIdList.add(store.CompanyId);
+                            }
                         }
                         ValueEventListener companyListener = new ValueEventListener() {
                             @Override
@@ -86,7 +90,9 @@ public class comparePricesActivity extends BaseActivity {
                                 Company company;
                                 for (int i = 0; i < companiesIdList.size(); i++) {
                                     company = dataSnapshot.child(companiesIdList.get(i)).getValue(Company.class);
-                                    companiesNameList.add(company.Name);
+                                    if (company != null) {
+                                        companiesNameList.add(company.Name);
+                                    }
                                 }
                                 allDataRead();
                             }
@@ -119,13 +125,7 @@ public class comparePricesActivity extends BaseActivity {
     }
 
     private void allDataRead() {
-//        Toast.makeText(this,"Success!",Toast.LENGTH_LONG).show();
-//        TextView textView = (TextView) findViewById(R.id.pricesText);
-//        textView.setText(productId + "\n");
-//        for (int i=0;i<companiesNameList.size();i++){
-//            textView.setText(textView.getText() + companiesNameList.get(i) + " " +
-//            storeNameList.get(i) + " " + priceList.get(i) + "\n");
-//        }
+
         GridLayout gridLayout = (GridLayout) findViewById(R.id.prices_gridlayout);
         int column = 3;
         int row = companiesNameList.size();
