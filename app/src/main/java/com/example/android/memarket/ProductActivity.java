@@ -334,7 +334,11 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         for (DataSnapshot purchasesSnapshot : dataSnapshot.getChildren()) {
                             Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
                             if (purchase != null) {
-                                lastPurchasePrice = purchase.price;
+                                if (purchase.isOffer){
+                                    lastPurchasePrice = purchase.offerPrice;
+                                } else {
+                                    lastPurchasePrice = purchase.price;
+                                }
                                 lastPurchaseDate = purchasesSnapshot.getKey();
                             }
                         }

@@ -14,11 +14,17 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <GridLayout
-        android:id="@+id/purchase_history_gridlayout"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-    </GridLayout>
+        <GridLayout
+            android:id="@+id/purchase_history_gridlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
+        </GridLayout>
+
+    </HorizontalScrollView>
 </LinearLayout>
