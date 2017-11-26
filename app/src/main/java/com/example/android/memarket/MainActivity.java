@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
 
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Sale mSale = new Sale();
+                Sale mSale = null;
                 ArrayList<Sale> sales = new ArrayList<>();
                 if (dataSnapshot.getChildren() != null) {
 
@@ -161,6 +161,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                 }
+                Toast.makeText(getApplicationContext(), mSale.userId,Toast.LENGTH_LONG).show();
                 //updateProductPriceOfferUI();
             }
 

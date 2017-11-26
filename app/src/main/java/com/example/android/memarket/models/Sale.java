@@ -1,16 +1,18 @@
 package com.example.android.memarket.models;
 
+import java.io.Serializable;
+
 /**
  * Created by aederas on 25/11/2017.
  */
 
-public class Sale {
+public class Sale implements Serializable{
     public Float onSalePrice;
     public String userId;
     public Store storeData;
     public Product productData;
 
-    public Sale(){
+    public Sale() {
         // Default constructor required for calls to DataSnapshot.getValue(Sale.class)
     }
 
