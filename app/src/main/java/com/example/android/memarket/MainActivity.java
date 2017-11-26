@@ -20,23 +20,29 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.android.memarket.components.BaseActivity;
+import com.example.android.memarket.models.Product;
+import com.example.android.memarket.models.Sale;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
-import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+
 import static com.example.android.memarket.SplashActivity.USER_EMAIL;
 import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
 import static com.example.android.memarket.SplashActivity.USER_ID;
 import static com.example.android.memarket.SplashActivity.USER_PICTURE;
-import static com.example.android.memarket.StoresActivity.STORE_ID;
-import static com.example.android.memarket.StoresActivity.STORE_NAME;
 import static com.example.android.memarket.SplashActivity.USER_NAME;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-
-    public static final String FROM_MAIN = "com.example.android.memarket.FROM_MAIN";
 
     private String mUserId;
     private String mUserName;
@@ -48,6 +54,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private NavigationView mainNavigationView;
     private String pictureUri;
     private FloatingActionButton mainFab;
+    private Query myOfferQuery;
+    private ValueEventListener myOfferListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +117,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } else {
             textView.setText(displayName + "\n" + getString(R.string.verify_email));
         }
-
+        readOffersFromFirebase();
     }
 
     public void searchProducts() {
@@ -123,14 +132,64 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         startActivity(new Intent(this, MyProfileActivity.class));
     }
 
+    public void readOffersFromFirebase() {
+
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myOfferRef;
+
+
+        Calendar dateToday = Calendar.getInstance();
+        dateToday.add(Calendar.DATE, -1); //Yesterday
+        dateToday.set(Calendar.HOUR_OF_DAY, 0);
+        dateToday.set(Calendar.MINUTE, 0);
+        Long dateStart = dateToday.getTimeInMillis();
+
+        myOfferRef = mDatabase.getReference().child("sales_history");
+        myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
+        myOfferListener = new ValueEventListener() {
+            @Override
+
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Sale mSale = new Sale();
+                ArrayList<Sale> sales = new ArrayList<>();
+                if (dataSnapshot.getChildren() != null) {
+
+                    for (DataSnapshot offerSnapshot : dataSnapshot.getChildren()) {
+                        if (offerSnapshot.getValue() != null) {
+                            mSale = offerSnapshot.getValue(Sale.class);
+                            sales.add(mSale);
+                        }
+                    }
+                }
+                //updateProductPriceOfferUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        myOfferQuery.addValueEventListener(myOfferListener);
+
+    }
+
     @Override
-    public void onPause(){
+    public void onStop() {
+        super.onStop();
+        if (myOfferListener != null) {
+            myOfferQuery.removeEventListener(myOfferListener);
+        }
+    }
+
+    @Override
+    public void onPause() {
         super.onPause();
         mainFab.hide();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         mainFab.show();
     }

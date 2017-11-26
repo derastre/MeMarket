@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardview_product_prices"
     android:layout_width="match_parent"
@@ -18,38 +17,36 @@
 
         <TextView
             android:id="@+id/selectedStoreName"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            style="@style/Base.TextAppearance.AppCompat.Medium"
-            android:text="Store name"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/product_no_store_selected" />
 
         <LinearLayout
             android:id="@+id/prices_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
             android:weightSum="2">
 
             <TextView
                 android:id="@+id/productPriceText"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/price_text"
-                style="@style/Base.TextAppearance.AppCompat.Body1"/>
+                android:text="@string/price_text" />
 
             <TextView
                 android:id="@+id/productPrice"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left"
-
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:text="5" />
+                android:gravity="start" />
 
         </LinearLayout>
 
@@ -57,9 +54,9 @@
             android:id="@+id/offers_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal"
             android:visibility="gone"
-            android:layout_marginBottom="16dp"
             android:weightSum="2">
 
             <TextView
@@ -76,8 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left"
-                android:text="5" />
+                android:gravity="start" />
 
         </LinearLayout>
 
@@ -85,6 +81,8 @@
             android:id="@+id/prices_button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <Button
@@ -93,13 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/offer_bottom_nav_text"
-                android:textColor="@android:color/holo_green_dark"
-                />
+                android:textColor="@android:color/holo_green_dark" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/update_price_button"
@@ -107,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/update_price"
-                android:textColor="@color/secondaryDarkColor"/>
+                android:textColor="@color/secondaryDarkColor" />
 
             <Button
                 android:id="@+id/compare_price_button"
@@ -115,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/compare_button"
-                android:textColor="@color/secondaryDarkColor"/>
+                android:textColor="@color/secondaryDarkColor" />
         </LinearLayout>
 
     </LinearLayout>

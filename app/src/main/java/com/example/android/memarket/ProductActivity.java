@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
@@ -27,6 +26,8 @@ import com.bumptech.glide.Glide;
 import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
 import com.example.android.memarket.models.Purchase;
+import com.example.android.memarket.models.Sale;
+import com.example.android.memarket.models.Store;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,7 +48,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-//import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
 import static com.example.android.memarket.BarcodeReader.PRODUCT_BARCODE;
 import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.example.android.memarket.SplashActivity.USER_ID;
@@ -65,10 +65,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private String mProductId;
     private String mProductBarcode;
     private Product mProduct;
+    private Store mStore;
     private String mUserId;
-    private String mStoreId;
-    private String mStoreName;
-    private String mCompanyName;
     private String lastPurchaseDate;
     private Float lastPurchasePrice;
 
@@ -131,17 +129,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         //If we lost the UserID
         if (mUserId == null) getUserFirebaseData();
 
-        // Restore preferences from file
-        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
-        mCompanyName = settings.getString("selectedCompanyName", null);
-        mStoreName = settings.getString("selectedStoreName", null);
-        mStoreId = settings.getString("selectedStoreId", null);
+        // Get selected Store
+        mStore = getSelectedStore();
 
         // Set store name on price card
         TextView textView;
         String storename;
-        if (mStoreId != null) {
-            storename = mCompanyName + " " + mStoreName;
+        if (mStore != null) {
+            storename = mStore.CompanyData.Name + " " + mStore.Name;
         } else {
             storename = getString(R.string.select_store_instruction);
         }
@@ -241,8 +236,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readProductPriceFromFirebase() {
         //Check for the mProduct price in the selected store
         String id = mProduct.getId();
-        if (id != null && mStoreId != null) {
-            myPriceRef = mDatabase.getReference().child("prices").child(id).child(mStoreId);
+        if (id != null && mStore != null) {
+            myPriceRef = mDatabase.getReference().child("prices").child(id).child(mStore.getId());
             myPriceListener = new ValueEventListener() {
 
                 @Override
@@ -270,19 +265,19 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    public void readProductOfferFromFirebase() {
+    public void readProductOnSalePriceFromFirebase() {
         //Check for offer in the selected store
         String id = mProduct.getId();
         DatabaseReference myOfferRef;
 
-        if (id != null && mStoreId != null) {
+        if (id != null && mStore != null) {
             Calendar dateToday = Calendar.getInstance();
             dateToday.set(Calendar.HOUR_OF_DAY, 0);
             dateToday.set(Calendar.MINUTE, 0);
             Long dateStart = dateToday.getTimeInMillis();
             mProduct.setCurrentOffer(null);
             mProduct.setOffer(false);
-            myOfferRef = mDatabase.getReference().child("offers").child(id).child(mStoreId);
+            myOfferRef = mDatabase.getReference().child("sales").child(id).child(mStore.getId());
             myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
             myOfferListener = new ValueEventListener() {
                 @Override
@@ -334,7 +329,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         for (DataSnapshot purchasesSnapshot : dataSnapshot.getChildren()) {
                             Purchase purchase = purchasesSnapshot.getValue(Purchase.class);
                             if (purchase != null) {
-                                if (purchase.isOffer){
+                                if (purchase.isOffer) {
                                     lastPurchasePrice = purchase.offerPrice;
                                 } else {
                                     lastPurchasePrice = purchase.price;
@@ -385,14 +380,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
             //Getting the extra info
             readProductPriceFromFirebase();
-            readProductOfferFromFirebase();
+            readProductOnSalePriceFromFirebase();
             readLastPurchaseFromFirebase();
         }
     }
 
     public void updateProductPriceOfferUI() {
         String id = mProduct.getId();
-        if (id != null && mStoreId != null) {
+        if (id != null && mStore != null) {
 
             TextView price_text = (TextView) findViewById(R.id.productPrice);
             Float price = mProduct.getCurrentPrice();
@@ -461,11 +456,11 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void updatePriceFirebase() {
 
-        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null) {
+        if (mStore != null && mProduct != null && mUserId != null) {
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.update_price);
-            builder.setMessage(mCompanyName + " " + mStoreName + "\n" + mProduct.Name);
+            builder.setMessage(mProduct.Name);
 
             // Set up the input
             final EditText input = new EditText(this);
@@ -486,8 +481,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     Map<String, Object> updateHistory = new HashMap<>();
                     updateHistory.put("price", price);
                     updateHistory.put("user", mUserId);
-                    childUpdates.put("/prices/" + id + "/" + mStoreId, price);
-                    childUpdates.put("/prices_history/" + id + "/" + mStoreId + date, updateHistory);
+                    childUpdates.put("/prices/" + id + "/" + mStore.getId(), price);
+                    childUpdates.put("/prices_history/" + id + "/" + mStore.getId() + "/" + date, updateHistory);
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -512,13 +507,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    public void markAsOfferFirebase() {
+    public void markAsOnSaleFirebase() {
         final String id = mProduct.getId();
-        if (mCompanyName != null && mStoreName != null && mStoreId != null && mProduct != null && mUserId != null && id != null) {
+        if (mStore != null && mProduct != null && mUserId != null && id != null) {
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.mark_as_offer_dialog);
-            builder.setMessage(mCompanyName + " " + mStoreName + "\n" + mProduct.Name + "\n\n" + getResources().getString(R.string.offer_price_text));
+            builder.setTitle(R.string.offer_text);
+            builder.setMessage(mProduct.Name);
 
             // Set up the input
             final EditText input = new EditText(this);
@@ -530,22 +525,21 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             builder.setPositiveButton(R.string.update_button, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Float offerPrice = Float.parseFloat(input.getText().toString());
+                    Float onSalePrice = Float.parseFloat(input.getText().toString());
+                    Sale sale = new Sale(onSalePrice, mUserId, mStore, mProduct);
                     Long timestamp = System.currentTimeMillis();
 
                     // Write to the database
                     // Write to the database
                     Map<String, Object> childUpdates = new HashMap<>();
-                    Map<String, Object> updateHistory = new HashMap<>();
-                    updateHistory.put("price", offerPrice);
-                    updateHistory.put("user", mUserId);
-                    childUpdates.put("/offers/" + id + "/" + mStoreId + "/" + timestamp, offerPrice);
-                    childUpdates.put("/offers_history/" + id + "/" + mStoreId + timestamp, updateHistory);
+
+                    childUpdates.put("/sales/" + id + "/" + mStore.getId() + "/" + timestamp, onSalePrice);
+                    childUpdates.put("/sales_history/" + "/" + timestamp + "/" + id, sale);
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
                     myRef.updateChildren(childUpdates);
-                    readProductOfferFromFirebase();
+                    readProductOnSalePriceFromFirebase();
 
                 }
             });
@@ -565,8 +559,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void addPurchase() {
         if (mUserId != null && mProduct != null) {
-            if (mStoreId != null) {
-                if(mProduct.getCurrentPrice()!=null) {
+            if (mStore != null) {
+                if (mProduct.getCurrentPrice() != null) {
                     // Write to the local database
 
                     AlertDialog dialog;
@@ -592,7 +586,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                             Purchase purchase =
                                     new Purchase(mProduct.getId(),
                                             mProduct.Name, mProduct.Type,
-                                            mStoreId,
+                                            mStore.getId(),
                                             date,
                                             qty,
                                             mProduct.getCurrentPrice(),
@@ -620,7 +614,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     dialog.show();
                     dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
                     dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                }else {
+                } else {
                     Snackbar.make(findViewById(R.id.placeSnackBar),
                             getString(R.string.update_price_instruction),
                             Snackbar.LENGTH_SHORT)
@@ -697,6 +691,25 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    private Store getSelectedStore() {
+        ArrayList<Store> stores;
+        Store store;
+        try {
+            stores = readObjectsFromFile(PREFS_FILE, this);
+            store = stores.get(0);
+            return store;
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            return null;
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+            return null;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+            return null;
+        }
+    }
+
     public void getUserFirebaseData() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -751,7 +764,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             case R.id.update_price_button:
                 if (findViewById(R.id.on_sale_button).getVisibility() == View.VISIBLE) {
                     updatePriceFirebase();
-                } else markAsOfferFirebase();
+                } else markAsOnSaleFirebase();
                 break;
             case R.id.compare_price_button:
                 comparePrices();
@@ -760,7 +773,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 purchasesHistoryFirebase();
                 break;
             case R.id.on_sale_button:
-                markAsOfferFirebase();
+                markAsOnSaleFirebase();
                 break;
         }
 

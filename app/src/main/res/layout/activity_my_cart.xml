@@ -29,7 +29,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="48dp"/>
+            android:layout_height="48dp" />
 
     </LinearLayout>
 
@@ -39,10 +39,10 @@
         android:layout_height="150dp"
         android:background="@color/cardview_light_background"
         android:columnCount="2"
-        android:rowCount="3"
         android:elevation="6dp"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-        app:behavior_peekHeight="48dp">
+        android:rowCount="3"
+        app:behavior_peekHeight="48dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
 
         <TextView
@@ -54,8 +54,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:gravity="start"
-            android:text="Subtotal"
-            android:visibility="gone"/>
+            android:text="@string/my_cart_subtotal_text"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/discount_text"
@@ -65,8 +65,8 @@
             android:layout_column="0"
             android:layout_marginStart="16dp"
             android:gravity="start"
-            android:text="Descuento"
-            android:visibility="gone"/>
+            android:text="@string/my_cart_discount_text"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/total_text"
@@ -74,12 +74,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:gravity="start"
-            android:textStyle="bold"
-            android:text="TOTAL" />
+            android:text="@string/my_cart_total_text"
+            android:textAllCaps="true"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/subtotal_number"
@@ -92,8 +93,7 @@
             android:layout_marginTop="8dp"
             android:layout_row="0"
             android:gravity="start"
-            android:text="$15.00"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/discount_number"
@@ -105,8 +105,7 @@
             android:layout_marginEnd="16dp"
             android:layout_row="1"
             android:gravity="start"
-            android:text="$5.00"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/total_number"
@@ -115,13 +114,12 @@
             android:layout_height="wrap_content"
             android:layout_column="1"
             android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:layout_row="2"
             android:gravity="start"
-            android:textStyle="bold"
-            android:text="$10.00" />
+            android:textStyle="bold" />
 
     </GridLayout>
 

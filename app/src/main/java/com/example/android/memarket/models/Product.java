@@ -20,12 +20,11 @@ public class Product implements Serializable{
     public String Units;
     private Float currentPrice;
     private Float currentOffer;
-    private Bitmap Image;
     private Boolean isOffer;
 
 
     public Product() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+        // Default constructor required for calls to DataSnapshot.getValue(Product.class)
     }
 
     public Product(String ProductName, String ProductType, String ProductBrand, Float ProductQuantity, String ProductUnits) {
@@ -51,14 +50,6 @@ public class Product implements Serializable{
 
     public void setCurrentPrice(Float currentPrice) {
         this.currentPrice = currentPrice;
-    }
-
-    public Bitmap getImage() {
-        return Image;
-    }
-
-    public void setImage(Bitmap image) {
-        Image = image;
     }
 
     public Boolean getOffer() {

@@ -30,7 +30,6 @@ public class purchaseHistory extends BaseActivity {
     private String productId;
     private String mUserId;
     private ArrayList<String> storeIdList;
-    private ArrayList<String> companiesIdList;
     private ArrayList<String> companiesNameList;
     private ArrayList<String> priceList;
     private ArrayList<String> storeNameList;
@@ -50,9 +49,8 @@ public class purchaseHistory extends BaseActivity {
         // Get the Intent that started this activity and extract the string
 
         productId = getIntent().getStringExtra(PRODUCT_ID);
-        mUserId =getIntent().getStringExtra(USER_ID);
+        mUserId = getIntent().getStringExtra(USER_ID);
         storeIdList = new ArrayList<>();
-        companiesIdList = new ArrayList<>();
         companiesNameList = new ArrayList<>();
         priceList = new ArrayList<>();
         storeNameList = new ArrayList<>();
@@ -67,7 +65,7 @@ public class purchaseHistory extends BaseActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myHistoryRef = database.getReference().child("purchases").child(mUserId).child(productId);
         final DatabaseReference myStoresRef = database.getReference().child("stores");
-        final DatabaseReference myCompaniesRef = database.getReference().child("companies");
+
 
         //Table headers
         timeStamp.add(getString(R.string.date_label));
@@ -80,9 +78,11 @@ public class purchaseHistory extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot historySnapshot : dataSnapshot.getChildren()) {
                     Purchase itemPrice = historySnapshot.getValue(Purchase.class);
-                    priceList.add(itemPrice.price.toString());
-                    storeIdList.add(itemPrice.storeId);
-                    timeStamp.add(historySnapshot.getKey());
+                    if (itemPrice != null) {
+                        priceList.add(itemPrice.price.toString());
+                        storeIdList.add(itemPrice.storeId);
+                        timeStamp.add(historySnapshot.getKey());
+                    }
                 }
                 ValueEventListener storeListener = new ValueEventListener() {
                     @Override
@@ -90,26 +90,12 @@ public class purchaseHistory extends BaseActivity {
                         Store store;
                         for (int i = 0; i < storeIdList.size(); i++) {
                             store = dataSnapshot.child(storeIdList.get(i)).getValue(Store.class);
-                            storeNameList.add(store.Name);
-                            companiesIdList.add(store.CompanyId);
+                            if (store != null) {
+                                storeNameList.add(store.Name);
+                                companiesNameList.add(store.CompanyData.Name);
+                            }
+                            allDataRead();
                         }
-                        ValueEventListener companyListener = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Company company;
-                                for (int i = 0; i < companiesIdList.size(); i++) {
-                                    company = dataSnapshot.child(companiesIdList.get(i)).getValue(Company.class);
-                                    companiesNameList.add(company.Name);
-                                }
-                                allDataRead();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            hideProgressDialog();
-                            }
-                        };
-                        myCompaniesRef.addListenerForSingleValueEvent(companyListener);
                     }
 
                     @Override
@@ -150,11 +136,11 @@ public class purchaseHistory extends BaseActivity {
             titleText = new TextView(this);
             switch (c) {
                 case 0:
-                    if (r==0) {
+                    if (r == 0) {
                         titleText.setText(timeStamp.get(r));
-                    }else {
+                    } else {
                         Long ndate = Long.parseLong(timeStamp.get(r));
-                        String sdate = getDate(ndate,"dd/MM/yyyy hh:mm");
+                        String sdate = getDate(ndate, "dd/MM/yyyy hh:mm");
                         titleText.setText(sdate);
                     }
                     break;

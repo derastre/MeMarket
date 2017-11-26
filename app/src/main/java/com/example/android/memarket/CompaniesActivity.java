@@ -3,6 +3,7 @@ package com.example.android.memarket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -23,16 +24,12 @@ import java.util.ArrayList;
 
 public class CompaniesActivity extends BaseActivity implements View.OnClickListener{
 
-    public static final String COMPANY_ID = "com.example.android.memarket.COMPANY_ID";
-    public static final String COMPANY_NAME = "com.example.android.memarket.COMPANY_NAME";
-    public static final String COMPANY_TYPE = "com.example.android.memarket.COMPANY_TYPE";
+    public static final String COMPANY_DATA = "com.example.android.memarket.COMPANY_DATA";
 
     private DatabaseReference myRef;
     private ValueEventListener companiesListener;
     private ArrayList<Company> companyArrayList;
-
     private ListView listView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,26 +57,12 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
                                     int position, long id) {
                 startActivity(new Intent(
                         CompaniesActivity.this, StoresActivity.class)
-                        .putExtra(COMPANY_ID, companyArrayList.get(position).Id)
-                        .putExtra(COMPANY_NAME, companyArrayList.get(position).Name)
-                        .putExtra(COMPANY_TYPE, companyArrayList.get(position).Type)
+                        .putExtra(COMPANY_DATA, (Parcelable) companyArrayList.get(position))
                 );
             }
         });
 
 
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-        getCompaniesListFromFirebase();
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        removeFirebaseListener();
     }
 
     public void newCompany() {
@@ -105,8 +88,8 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
                 for (DataSnapshot companySnapshop : dataSnapshot.getChildren()) {
                     Company company = companySnapshop.getValue(Company.class);
                     if (company != null) {
+                        company.setId(companySnapshop.getKey());
                         companyArrayList.add(company);
-                        company.Id = companySnapshop.getKey();
                     }
 
 
@@ -139,6 +122,18 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
                 new ArrayAdapter<>(context, R.layout.companies_listview_layout, R.id.list_content, companiesNameList);
         listView.setAdapter(adapter);
 
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        getCompaniesListFromFirebase();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        removeFirebaseListener();
     }
 
     @Override

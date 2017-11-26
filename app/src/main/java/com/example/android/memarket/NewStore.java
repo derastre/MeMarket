@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.android.memarket.models.Company;
 import com.example.android.memarket.models.Store;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,8 +20,8 @@ public class NewStore extends AppCompatActivity {
     private EditText storeName;
     private EditText storeAddress;
     private EditText storePhone;
-    private String companyId;
-    private String companyName;
+    private Company companyData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +40,14 @@ public class NewStore extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
 
-        companyId = getIntent().getStringExtra(CompaniesActivity.COMPANY_ID);
-        companyName = getIntent().getStringExtra(CompaniesActivity.COMPANY_NAME);
-        if (companyId == null) {
+        companyData = getIntent().getParcelableExtra(CompaniesActivity.COMPANY_DATA);
+
+        if (companyData == null) {
             throw new IllegalArgumentException("Must pass COMPANY_ID");
         }
 
         TextView textView = (TextView) findViewById(R.id.companyName);
-        textView.setText(companyName);
+        textView.setText(companyData.Name);
     }
 
     public void addStore(){
@@ -54,28 +55,22 @@ public class NewStore extends AppCompatActivity {
         String address = storeAddress.getText().toString();
         String phone = storePhone.getText().toString();
 
-        writeNewStoreOnFirebase(companyId,name,address, phone);
+        writeNewStoreOnFirebase(name,address, phone,companyData);
 
         finish();
 
     }
 
-    public void writeNewStoreOnFirebase(String companyId, String name, String address, String phone){
+    public void writeNewStoreOnFirebase(String name, String address, String phone,Company companyData){
         // Write to the database
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-        Store store= new Store(name,address,phone,companyId);
-
+        Store store= new Store(name,address,phone,companyData);
         String key = myRef.child("stores").push().getKey();
 
         myRef.child("stores").child(key).setValue(store);
-        myRef.child("companies").child(companyId).child("stores").child(key).setValue(true);
 
-    }
-
-    public void cancelButton(View view){
-        finish();
     }
 
     @Override

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardview_purchase_history"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:visibility="gone"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp"
     app:contentPadding="3dp">
@@ -36,8 +36,7 @@
                 style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="01/01/01 00:00" />
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/last_purchase_price"
@@ -45,8 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left"
-                android:text="5" />
+                android:gravity="start" />
 
         </LinearLayout>
 
@@ -56,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:layout_marginTop="16dp"
             android:text="@string/purchase_history_button"
             android:textColor="@color/secondaryDarkColor" />
     </LinearLayout>

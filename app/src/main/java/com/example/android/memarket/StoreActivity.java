@@ -7,28 +7,21 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.android.memarket.components.BaseActivity;
+import com.example.android.memarket.models.Store;
 
-import static com.example.android.memarket.CompaniesActivity.COMPANY_ID;
-import static com.example.android.memarket.CompaniesActivity.COMPANY_NAME;
-import static com.example.android.memarket.StoresActivity.STORE_ADDRESS;
-import static com.example.android.memarket.StoresActivity.STORE_ID;
-import static com.example.android.memarket.StoresActivity.STORE_NAME;
-import static com.example.android.memarket.StoresActivity.STORE_PHONE;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
-
-public class StoreActivity extends BaseActivity {
+public class StoreActivity extends BaseActivity implements View.OnClickListener{
 
     public static final String PREFS_FILE = "MyPrefsFile";
 
-    private String companyName;
-    private String storeName;
-    private String companyId;
-    private String storeId;
-
-
+    private Store storeData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,36 +36,40 @@ public class StoreActivity extends BaseActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         //Getting data from Intent
-        companyName = getIntent().getStringExtra(COMPANY_NAME);
-        storeName = getIntent().getStringExtra(STORE_NAME);
-        companyId = getIntent().getStringExtra(COMPANY_ID);
-        storeId = getIntent().getStringExtra(STORE_ID);
-        String storeAddress = getIntent().getStringExtra(STORE_ADDRESS);
-        String storePhone = getIntent().getStringExtra(STORE_PHONE);
+        storeData = getIntent().getParcelableExtra(StoresActivity.STORE_DATA);
 
         //Putting data into the views
         TextView textView = (TextView) findViewById(R.id.companyName);
-        textView.setText(companyName);
+        textView.setText(storeData.CompanyData.Name);
         textView = (TextView) findViewById(R.id.storeName);
-        textView.setText(storeName);
+        textView.setText(storeData.Name);
         textView = (TextView) findViewById(R.id.storeAddress);
-        textView.setText(storeAddress);
+        textView.setText(storeData.Address);
         textView = (TextView) findViewById(R.id.storePhone);
-        textView.setText(storePhone);
+        textView.setText(storeData.Phone);
 
+        //Setting listener
+        findViewById(R.id.select_store_button).setOnClickListener(this);
     }
 
     public void selectStore (){
         //Saving selected Store
-        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("selectedCompanyName", companyName)
-                .putString("selectedCompanyId", companyId)
-                .putString("selectedStoreName", storeName)
-                .putString("selectedStoreId", storeId);
-
-        // Commit the edits!
-        editor.commit();
+//        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+//        SharedPreferences.Editor editor = settings.edit();
+//        editor.putString("selectedCompanyName", storeData.CompanyData.Name)
+//                .putString("selectedCompanyId", storeData.CompanyData.getId())
+//                .putString("selectedStoreName", storeData.Name)
+//                .putString("selectedStoreId", storeData.getId());
+//
+//        // Commit the edits!
+//        editor.commit();
+        ArrayList<Store> stores = new ArrayList<>();
+        stores.add(storeData);
+        try {
+            writeObjectsToFile(PREFS_FILE, stores, getApplicationContext());
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        }
 
 
         startActivity(new Intent(StoreActivity.this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
@@ -110,4 +107,13 @@ public class StoreActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onClick(View v){
+        int i = v.getId();
+        switch (i) {
+            case R.id.select_store_button:
+                selectStore();
+                break;
+        }
+    }
 }

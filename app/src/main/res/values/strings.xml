@@ -164,5 +164,10 @@
     <string name="done">Done</string>
     <string name="clear_cart">Clear cart</string>
     <string name="update_price_instruction">Please set product price first</string>
+    <string name="my_cart_total_text">Total</string>
+    <string name="my_cart_discount_text">Discount</string>
+    <string name="my_cart_subtotal_text">Subtotal</string>
+    <string name="product_no_product_selected">No product selected</string>
+    <string name="product_no_store_selected">No store selected</string>
 
 </resources>

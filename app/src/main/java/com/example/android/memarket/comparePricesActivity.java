@@ -27,7 +27,6 @@ public class comparePricesActivity extends BaseActivity {
 
     private String productId;
     private ArrayList<String> storeIdList;
-    private ArrayList<String> companiesIdList;
     private ArrayList<String> companiesNameList;
     private ArrayList<String> priceList;
     private ArrayList<String> storeNameList;
@@ -45,7 +44,6 @@ public class comparePricesActivity extends BaseActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         storeIdList = new ArrayList<>();
-        companiesIdList = new ArrayList<>();
         companiesNameList = new ArrayList<>();
         priceList = new ArrayList<>();
         storeNameList = new ArrayList<>();
@@ -60,7 +58,6 @@ public class comparePricesActivity extends BaseActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myPriceRef = database.getReference().child("prices").child(productId);
         final DatabaseReference myStoresRef = database.getReference().child("stores");
-        final DatabaseReference myCompaniesRef = database.getReference().child("companies");
         companiesNameList.add(getString(R.string.company_label));
         storeNameList.add(getString(R.string.store_label));
         priceList.add(getString(R.string.price_text));
@@ -81,28 +78,10 @@ public class comparePricesActivity extends BaseActivity {
                             store = dataSnapshot.child(storeIdList.get(i)).getValue(Store.class);
                             if (store != null) {
                                 storeNameList.add(store.Name);
-                                companiesIdList.add(store.CompanyId);
+                                companiesNameList.add(store.CompanyData.Name);
                             }
                         }
-                        ValueEventListener companyListener = new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Company company;
-                                for (int i = 0; i < companiesIdList.size(); i++) {
-                                    company = dataSnapshot.child(companiesIdList.get(i)).getValue(Company.class);
-                                    if (company != null) {
-                                        companiesNameList.add(company.Name);
-                                    }
-                                }
-                                allDataRead();
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                hideProgressDialog();
-                            }
-                        };
-                        myCompaniesRef.addListenerForSingleValueEvent(companyListener);
+                        allDataRead();
                     }
 
                     @Override
