@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
@@ -526,7 +527,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Float onSalePrice = Float.parseFloat(input.getText().toString());
-                    Sale sale = new Sale(onSalePrice, mUserId, mStore, mProduct);
+                    Sale sale = new Sale(onSalePrice, mUserId, mStore.getId(), mProduct.getId());
                     Long timestamp = System.currentTimeMillis();
 
                     // Write to the database
@@ -534,7 +535,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     Map<String, Object> childUpdates = new HashMap<>();
 
                     childUpdates.put("/sales/" + id + "/" + mStore.getId() + "/" + timestamp, onSalePrice);
-                    childUpdates.put("/sales_history/" + "/" + timestamp + "/" + id, sale);
+                    childUpdates.put("/sales_history/" + "/" + timestamp, sale); //TODO: use push instead of timestamp????
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -691,6 +692,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    @Nullable
     private Store getSelectedStore() {
         ArrayList<Store> stores;
         Store store;

@@ -1,5 +1,6 @@
 package com.example.android.memarket;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -7,12 +8,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +30,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.android.memarket.components.BaseActivity;
 import com.example.android.memarket.models.Product;
+import com.example.android.memarket.models.Purchase;
 import com.example.android.memarket.models.Sale;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,9 +41,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 
 import static com.example.android.memarket.SplashActivity.USER_EMAIL;
@@ -150,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
 
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Sale mSale = null;
+                Sale mSale;
                 ArrayList<Sale> sales = new ArrayList<>();
                 if (dataSnapshot.getChildren() != null) {
 
@@ -161,8 +176,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                 }
-                Toast.makeText(getApplicationContext(), mSale.userId,Toast.LENGTH_LONG).show();
-                //updateProductPriceOfferUI();
+                setSalesRecyclerView(sales);
             }
 
             @Override
@@ -172,7 +186,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         };
 
         myOfferQuery.addValueEventListener(myOfferListener);
+    }
 
+    private void setSalesRecyclerView(ArrayList<Sale> sales) {
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.on_sale_recyclerView);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                mLayoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        // specify an adapter (see also next example)
+        salesArrayAdapter mAdapter = new salesArrayAdapter(sales);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -264,4 +296,111 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             startActivity(new Intent(this, LoginActivity.class));
         }
     }
+
+    class salesArrayAdapter extends RecyclerView.Adapter<salesArrayAdapter.ViewHolder> {
+
+        private ArrayList<Sale> sales;
+
+        public salesArrayAdapter(ArrayList<Sale> sales) {
+            this.sales = sales;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private View row;
+            private TextView name = null, type = null, price = null;
+            private ImageView image;
+
+            public ViewHolder(View row) {
+                super(row);
+                this.row = row;
+            }
+
+            public TextView getNameText() {
+                if (this.name == null) {
+                    this.name = (TextView) row.findViewById(R.id.on_sale_product_name);
+                }
+                return this.name;
+            }
+
+            public TextView getTypeText() {
+                if (this.type == null) {
+                    this.type = (TextView) row.findViewById(R.id.on_sale_product_type);
+                }
+                return this.type;
+            }
+
+            public TextView getPriceText() {
+                if (this.price == null) {
+                    this.price = (TextView) row.findViewById(R.id.on_sale_product_price);
+                }
+                return this.price;
+            }
+
+            public ImageView getImage() {
+                if (this.image == null) {
+                    this.image = (ImageView) row.findViewById(R.id.on_sale_product_image);
+                }
+                return this.image;
+            }
+
+        }
+
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.on_sale_recyclerview_layout, parent, false);
+
+            return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+
+            //get the property we are displaying
+            final Sale sale = sales.get(position);
+            if (sale.productId != null) {
+                FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = mDatabase.getReference().child("products").child(sale.productId);
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference().child("images").child(sale.productId);
+                Glide.with(MainActivity.this)
+                        .using(new FirebaseImageLoader())
+                        .load(storageRef)
+                        .into(holder.getImage());
+
+                ValueEventListener myProductListener = new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Product mProduct = dataSnapshot.getValue(Product.class);
+                        if (mProduct != null) {
+                            mProduct.setId(dataSnapshot.getKey());
+                            holder.getNameText().setText(mProduct.Name);
+                            holder.getTypeText().setText(mProduct.Type);
+                            holder.getPriceText().setText(NumberFormat.getCurrencyInstance().format(sale.onSalePrice));
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        hideProgressDialog();
+                        Snackbar.make(findViewById(R.id.main_drawer_layout), databaseError.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    }
+                };
+
+                myRef.addListenerForSingleValueEvent(myProductListener);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return sales.size();
+        }
+
+    }
+
 }
