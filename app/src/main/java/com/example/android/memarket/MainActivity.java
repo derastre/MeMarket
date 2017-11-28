@@ -198,13 +198,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                mLayoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // specify an adapter (see also next example)
         salesArrayAdapter mAdapter = new salesArrayAdapter(sales);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.item
     }
 
     @Override
