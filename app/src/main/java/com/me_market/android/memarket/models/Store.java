@@ -1,4 +1,4 @@
-package com.example.android.memarket.models;
+package com.me_market.android.memarket.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

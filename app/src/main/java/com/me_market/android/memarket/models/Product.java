@@ -1,6 +1,4 @@
-package com.example.android.memarket.models;
-
-import android.graphics.Bitmap;
+package com.me_market.android.memarket.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -13,6 +11,7 @@ import java.io.Serializable;
 public class Product implements Serializable{
 
     private String Id;
+    public String Barcode;
     public String Name;
     public String Type;
     public String Brand;
@@ -27,8 +26,9 @@ public class Product implements Serializable{
         // Default constructor required for calls to DataSnapshot.getValue(Product.class)
     }
 
-    public Product(String ProductName, String ProductType, String ProductBrand, Float ProductQuantity, String ProductUnits) {
+    public Product(String Barcode, String ProductName, String ProductType, String ProductBrand, Float ProductQuantity, String ProductUnits) {
 
+        this.Barcode = Barcode;
         this.Name = ProductName;
         this.Type = ProductType;
         this.Brand = ProductBrand;

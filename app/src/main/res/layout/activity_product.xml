@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.example.android.memarket.ProductActivity">
+    tools:context="com.me_market.android.memarket.ProductActivity">
 
 
     <LinearLayout
@@ -55,6 +55,14 @@
 
                     <include layout="@layout/cardview_purchase_history"/>
 
+                    <TextView
+                        android:id="@+id/no_store_selected_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_store_for_more_text"
+                        android:textColor="@color/grey_300"
+                        android:layout_margin="10dp"
+                        style="@style/Base.TextAppearance.AppCompat.Large"/>
                 </LinearLayout>
 
             </android.support.v4.widget.NestedScrollView>

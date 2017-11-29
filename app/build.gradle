@@ -3,7 +3,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.example.android.memarket"
+        applicationId "com.me_market.android.memarket"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -30,6 +30,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-vision:11.0.4'
     compile 'com.google.android.gms:play-services-auth:11.0.4'
     compile 'com.google.firebase:firebase-auth:11.0.4'
+    compile 'com.google.firebase:firebase-ads:11.0.4'
     compile 'com.firebaseui:firebase-ui-storage:0.6.0'
     compile 'com.facebook.android:facebook-android-sdk:4.25.0'
     compile 'junit:junit:4.12'

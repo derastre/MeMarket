@@ -1,4 +1,4 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
 
 import android.content.Intent;
@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.components.BaseActivity;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;

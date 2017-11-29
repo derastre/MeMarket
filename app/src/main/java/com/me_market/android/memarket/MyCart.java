@@ -1,6 +1,5 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -19,14 +18,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.memarket.components.BaseActivity;
-import com.example.android.memarket.models.Product;
-import com.example.android.memarket.models.Purchase;
+import com.me_market.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.models.Purchase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -38,8 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-import static com.example.android.memarket.ProductActivity.filename;
-import static com.example.android.memarket.SplashActivity.USER_ID;
+import static com.me_market.android.memarket.ProductActivity.filename;
+import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
 public class MyCart extends BaseActivity implements View.OnClickListener {

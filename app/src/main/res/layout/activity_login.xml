@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context="com.example.android.memarket.LoginActivity">
+    tools:context="com.me_market.android.memarket.LoginActivity">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

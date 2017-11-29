@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:906279912165:android:b4f37c3d32e6e628",
         "android_client_info": {
-          "package_name": "com.example.android.memarket"
+          "package_name": "com.me_market.android.memarket"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "906279912165-h3pdlnjiigdee4ol1h7t2dmugc8mn9jr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.android.memarket",
+            "package_name": "com.me_market.android.memarket",
             "certificate_hash": "661c3be28f452c661333ad946a18161cdd5b1a48"
           }
         },

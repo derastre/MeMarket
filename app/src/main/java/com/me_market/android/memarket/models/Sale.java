@@ -1,4 +1,4 @@
-package com.example.android.memarket.models;
+package com.me_market.android.memarket.models;
 
 import java.io.Serializable;
 

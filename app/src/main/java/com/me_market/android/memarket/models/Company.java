@@ -1,9 +1,8 @@
-package com.example.android.memarket.models;
+package com.me_market.android.memarket.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.android.memarket.CompaniesActivity;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;

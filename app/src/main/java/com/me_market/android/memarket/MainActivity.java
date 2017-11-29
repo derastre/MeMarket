@@ -1,8 +1,6 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,19 +17,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.android.memarket.components.BaseActivity;
-import com.example.android.memarket.models.Product;
-import com.example.android.memarket.models.Purchase;
-import com.example.android.memarket.models.Sale;
+import com.me_market.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.models.Product;
+import com.me_market.android.memarket.models.Sale;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,18 +39,18 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.android.gms.ads.MobileAds;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
-
-import static com.example.android.memarket.SplashActivity.USER_EMAIL;
-import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
-import static com.example.android.memarket.SplashActivity.USER_ID;
-import static com.example.android.memarket.SplashActivity.USER_PICTURE;
-import static com.example.android.memarket.SplashActivity.USER_NAME;
+import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.SplashActivity.USER_EMAIL;
+import static com.me_market.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
+import static com.me_market.android.memarket.SplashActivity.USER_ID;
+import static com.me_market.android.memarket.SplashActivity.USER_PICTURE;
+import static com.me_market.android.memarket.SplashActivity.USER_NAME;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -71,12 +67,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private FloatingActionButton mainFab;
     private Query myOfferQuery;
     private ValueEventListener myOfferListener;
-
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Setting the Ads
+        MobileAds.initialize(this,"ca-app-pub-8262098314220863~2165729690");
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         //Setting Toolbar and Navigation Drawer
         mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -202,7 +204,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         // specify an adapter (see also next example)
         salesArrayAdapter mAdapter = new salesArrayAdapter(sales);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.item
+
     }
 
     @Override
@@ -349,6 +351,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.on_sale_recyclerview_layout, parent, false);
 
+
             return new ViewHolder(itemView);
         }
 
@@ -391,6 +394,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 };
 
                 myRef.addListenerForSingleValueEvent(myProductListener);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this,ProductActivity.class)
+                                .putExtra(PRODUCT_ID,sale.productId)
+                                .putExtra(USER_ID,mUserId));
+                    }
+                });
+
             }
         }
 

@@ -6,13 +6,19 @@
         android:id="@+id/my_cart_button"
         android:title="@string/view_purchases_text"
         android:icon="@drawable/ic_shopping_cart_black_24dp"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         />
 
     <item
         android:id="@+id/edit_product_button"
         android:title="@string/edit"
         android:icon="@drawable/ic_edit_black_24dp"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/select_store_button"
+        android:title="@string/select_store"
         app:showAsAction="never"
         />
 

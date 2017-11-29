@@ -1,4 +1,4 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
 
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.components.BaseActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.google.android.gms.auth.api.Auth;
@@ -29,11 +29,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import static com.example.android.memarket.SplashActivity.USER_EMAIL;
-import static com.example.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
-import static com.example.android.memarket.SplashActivity.USER_ID;
-import static com.example.android.memarket.SplashActivity.USER_NAME;
-import static com.example.android.memarket.SplashActivity.USER_PICTURE;
+import static com.me_market.android.memarket.SplashActivity.USER_EMAIL;
+import static com.me_market.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
+import static com.me_market.android.memarket.SplashActivity.USER_ID;
+import static com.me_market.android.memarket.SplashActivity.USER_NAME;
+import static com.me_market.android.memarket.SplashActivity.USER_PICTURE;
 
 public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 

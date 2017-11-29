@@ -1,4 +1,4 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.android.memarket.components.BaseActivity;
-import com.example.android.memarket.models.Product;
+import com.me_market.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,9 +42,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.example.android.memarket.BarcodeReader.PRODUCT_BARCODE;
-import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
-import static com.example.android.memarket.SplashActivity.USER_ID;
+import static com.me_market.android.memarket.BarcodeReader.PRODUCT_BARCODE;
+import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
 public class NewProduct extends BaseActivity implements View.OnClickListener {
@@ -128,7 +128,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         HashMap<String,Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-        Product Product= new Product(name,type,brand,quantity,units);
+        Product Product= new Product(ProductCode,name,type,brand,quantity,units);
         final String key= myRef.child("products_keys").child(ProductCode).push().getKey();
         childsUpdate.put("/products/" + key,Product);
         childsUpdate.put("/products_keys/" + ProductCode + "/" + key,name);

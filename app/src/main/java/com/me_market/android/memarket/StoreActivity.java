@@ -1,7 +1,5 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,10 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.android.memarket.components.BaseActivity;
-import com.example.android.memarket.models.Store;
+import com.me_market.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.models.Store;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -49,7 +46,7 @@ public class StoreActivity extends BaseActivity implements View.OnClickListener{
         textView.setText(storeData.Phone);
 
         //Setting listener
-        findViewById(R.id.select_store_button).setOnClickListener(this);
+        findViewById(R.id.select_this_store_button).setOnClickListener(this);
     }
 
     public void selectStore (){
@@ -71,8 +68,8 @@ public class StoreActivity extends BaseActivity implements View.OnClickListener{
             System.out.println("Error initializing stream");
         }
 
-
-        startActivity(new Intent(StoreActivity.this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        finish();
+        //startActivity(new Intent(StoreActivity.this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
 
     }
@@ -111,7 +108,7 @@ public class StoreActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View v){
         int i = v.getId();
         switch (i) {
-            case R.id.select_store_button:
+            case R.id.select_this_store_button:
                 selectStore();
                 break;
         }

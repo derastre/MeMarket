@@ -1,4 +1,4 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,8 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.memarket.components.BaseActivity;
-import com.example.android.memarket.models.Product;
+import com.me_market.android.memarket.components.BaseActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -42,7 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.example.android.memarket.SplashActivity.USER_ID;
+import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 public class BarcodeReader extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "BarcodeReader";

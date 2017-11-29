@@ -1,4 +1,4 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
@@ -14,8 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.example.android.memarket.components.BaseActivity;
-import com.example.android.memarket.models.Company;
+import com.me_market.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.models.Company;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

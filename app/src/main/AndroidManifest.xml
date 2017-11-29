@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.android.memarket">
+    package="com.me_market.android.memarket">
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -38,70 +38,70 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".ProductActivity">
+        <activity android:name="com.me_market.android.memarket.MainActivity" />
+        <activity android:name="com.me_market.android.memarket.ProductActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".NewProduct">
+        <activity android:name="com.me_market.android.memarket.NewProduct">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
         <activity
-            android:name=".BarcodeReader"
+            android:name="com.me_market.android.memarket.BarcodeReader"
             android:theme="@style/ThemeOverlay.MyNoTitleActivity" />
-        <activity android:name=".CompaniesActivity">
+        <activity android:name="com.me_market.android.memarket.CompaniesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".NewStore">
+        <activity android:name="com.me_market.android.memarket.NewStore">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".StoresActivity">
+        <activity android:name="com.me_market.android.memarket.StoresActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".NewCompany">
+        <activity android:name="com.me_market.android.memarket.NewCompany">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".StoreActivity">
+        <activity android:name="com.me_market.android.memarket.StoreActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".comparePricesActivity">
+        <activity android:name="com.me_market.android.memarket.comparePricesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.me_market.android.memarket.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MyProfileActivity">
+        <activity android:name="com.me_market.android.memarket.MyProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".purchaseHistory">
+        <activity android:name="com.me_market.android.memarket.LoginActivity" />
+        <activity android:name="com.me_market.android.memarket.purchaseHistory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".MyCart"></activity>
-        <activity android:name=".components.BaseActivity"/>
+        <activity android:name="com.me_market.android.memarket.MyCart"></activity>
+        <activity android:name="com.me_market.android.memarket.components.BaseActivity"/>
 
     </application>
 

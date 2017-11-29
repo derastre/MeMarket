@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryLightColor"
-    tools:context="com.example.android.memarket.SplashActivity"
+    tools:context="com.me_market.android.memarket.SplashActivity"
     android:orientation="vertical"
     android:gravity="center">
 

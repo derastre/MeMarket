@@ -169,5 +169,6 @@
     <string name="my_cart_subtotal_text">Subtotal</string>
     <string name="product_no_product_selected">No product selected</string>
     <string name="product_no_store_selected">No store selected</string>
+    <string name="select_store_for_more_text">Select a store to see more information.</string>
 
 </resources>

@@ -1,8 +1,7 @@
-package com.example.android.memarket;
+package com.me_market.android.memarket;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -24,11 +23,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.android.memarket.components.BaseActivity;
-import com.example.android.memarket.models.Product;
-import com.example.android.memarket.models.Purchase;
-import com.example.android.memarket.models.Sale;
-import com.example.android.memarket.models.Store;
+import com.me_market.android.memarket.components.BaseActivity;
+import com.me_market.android.memarket.models.Product;
+import com.me_market.android.memarket.models.Purchase;
+import com.me_market.android.memarket.models.Sale;
+import com.me_market.android.memarket.models.Store;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,10 +48,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.android.memarket.BarcodeReader.PRODUCT_BARCODE;
-import static com.example.android.memarket.BarcodeReader.PRODUCT_ID;
-import static com.example.android.memarket.SplashActivity.USER_ID;
-import static com.example.android.memarket.StoreActivity.PREFS_FILE;
+import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.SplashActivity.USER_ID;
+import static com.me_market.android.memarket.StoreActivity.PREFS_FILE;
 
 
 public class ProductActivity extends BaseActivity implements View.OnClickListener {
@@ -115,12 +113,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             Intent intent = getIntent();
             mUserId = intent.getStringExtra(USER_ID);
             mProductId = intent.getStringExtra(PRODUCT_ID);
-            mProductBarcode = intent.getStringExtra(PRODUCT_BARCODE);
 
         } else {
             mUserId = savedInstanceState.getString("mUserId");
             mProductId = savedInstanceState.getString("mProductId");
-            mProductBarcode = savedInstanceState.getString("mProductBarcode");
         }
 
         // If for any reason there is no product id.
@@ -144,10 +140,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         textView = (TextView) findViewById(R.id.selectedStoreName);
         textView.setText(storename);
-
-        //Set product barcode.
-        textView = (TextView) findViewById(R.id.productCode);
-        textView.setText(mProductBarcode);
 
         //Hide the FAB Button when scrolling
         scan_fab.show();
@@ -238,6 +230,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         //Check for the mProduct price in the selected store
         String id = mProduct.getId();
         if (id != null && mStore != null) {
+            findViewById(R.id.cardview_product_prices).setVisibility(View.VISIBLE);
+            findViewById(R.id.no_store_selected_text).setVisibility(View.GONE);
             myPriceRef = mDatabase.getReference().child("prices").child(id).child(mStore.getId());
             myPriceListener = new ValueEventListener() {
 
@@ -263,6 +257,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             };
 
             myPriceRef.addValueEventListener(myPriceListener);
+        }else {
+            findViewById(R.id.cardview_product_prices).setVisibility(View.GONE);
+            findViewById(R.id.no_store_selected_text).setVisibility(View.VISIBLE);
         }
     }
 
@@ -361,6 +358,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             FirebaseStorage storage = FirebaseStorage.getInstance();
             final StorageReference storageRef = storage.getReference().child("images").child(id);
             TextView textView;
+            //Set product barcode.
+            textView = (TextView) findViewById(R.id.productCode);
+            textView.setText(mProduct.Barcode);
             textView = (TextView) findViewById(R.id.productName);
             textView.setText(mProduct.Name);
             textView = (TextView) findViewById(R.id.productType);
@@ -797,6 +797,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 if (mUserId != null) {
                     startActivity(new Intent(this, MyCart.class).putExtra(USER_ID, mUserId));
                 }
+                return true;
+            case R.id.select_store_button:
+                startSelectStore();
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

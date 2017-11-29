@@ -1,6 +1,6 @@
-package com.example.android.memarket.components;
+package com.me_market.android.memarket.components;
 
-import com.example.android.memarket.models.Company;
+import com.me_market.android.memarket.models.Company;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
