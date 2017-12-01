@@ -75,6 +75,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "906279912165-iguorp2igk5p924dub7e31u9j4mhln3a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.me_market.android.memarket",
+            "certificate_hash": "9422c72317bafc0fc03732744ff34a5f081dec8b"
+          }
+        },
+        {
           "client_id": "906279912165-jie29blijnp88fkod54sttukekre31j7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
