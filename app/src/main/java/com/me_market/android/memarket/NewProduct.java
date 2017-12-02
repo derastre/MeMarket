@@ -102,7 +102,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
     }
 
-    public void addProduct(){
+    public void addProduct() {
         //Add button OnClick event
         String code = productCode.getText().toString();
         String name = productName.getText().toString();
@@ -118,31 +118,31 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageData = baos.toByteArray();
 
-        writeNewProductOnFirebase(code,name,type,brand,quantity,units,imageData);
+        writeNewProductOnFirebase(code, name, type, brand, quantity, units, imageData);
 
         finish();
     }
 
-    public void writeNewProductOnFirebase(final String ProductCode, String name, String type, String brand, Float quantity , String units, byte[] image){
+    public void writeNewProductOnFirebase(final String ProductCode, String name, String type, String brand, Float quantity, String units, byte[] image) {
         // Write to the database
-        HashMap<String,Object> childsUpdate = new HashMap<>();
+        HashMap<String, Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-        Product Product= new Product(ProductCode,name,type,brand,quantity,units);
-        final String key= myRef.child("products_keys").child(ProductCode).push().getKey();
-        childsUpdate.put("/products/" + key,Product);
-        childsUpdate.put("/products_keys/" + ProductCode + "/" + key,name);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units);
+        final String key = myRef.child("products_keys").child(ProductCode).push().getKey();
+        childsUpdate.put("/products/" + key, Product);
+        childsUpdate.put("/products_keys/" + ProductCode + "/" + key, name);
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                startProductActivity(key,ProductCode);
+                startProductActivity(key, ProductCode);
             }
         });
 
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference productImagesRef = storageRef.child("images/"+key);
+        StorageReference productImagesRef = storageRef.child("images/" + key);
 
         InputStream stream = new ByteArrayInputStream(image);
         UploadTask uploadTask = productImagesRef.putStream(stream);
@@ -160,13 +160,14 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
 
     }
 
-    private void startProductActivity(String id,String code) {
+    private void startProductActivity(String id, String code) {
         startActivity(new Intent(this, ProductActivity.class)
                 .putExtra(PRODUCT_ID, id)
                 .putExtra(PRODUCT_BARCODE, code)
-                .putExtra(USER_ID,mUserId));
+                .putExtra(USER_ID, mUserId));
     }
-    public void takePicture(){
+
+    public void takePicture() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
@@ -202,12 +203,12 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
                 }
                 unitsArrayList.add(getString(R.string.add_new_unit_type));
                 setUnitsTypesSpinner();
-                productUnitsSpinner.setOnItemSelectedListener (new AdapterView.OnItemSelectedListener() {
+                productUnitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        int j = productUnitsSpinner.getAdapter().getCount()-1;
-                        if (i==j) addNewProductUnit();
+                        int j = productUnitsSpinner.getAdapter().getCount() - 1;
+                        if (i == j) addNewProductUnit();
                     }
 
                     @Override
@@ -229,7 +230,7 @@ public class NewProduct extends BaseActivity implements View.OnClickListener {
     }
 
     private void setUnitsTypesSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,unitsArrayList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsArrayList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productUnitsSpinner.setAdapter(adapter);
     }

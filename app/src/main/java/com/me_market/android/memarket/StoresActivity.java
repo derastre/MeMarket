@@ -142,7 +142,7 @@ public class StoresActivity extends BaseActivity implements View.OnClickListener
         }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.companies_listview_layout, R.id.list_content, storesNameList);
+                new ArrayAdapter<>(context, R.layout.text_listview_layout, R.id.list_content, storesNameList);
         listView.setAdapter(adapter);
     }
 

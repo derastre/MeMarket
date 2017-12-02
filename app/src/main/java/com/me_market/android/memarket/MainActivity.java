@@ -1,5 +1,7 @@
 package com.me_market.android.memarket;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -75,7 +78,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
 
         //Setting the Ads
-        MobileAds.initialize(this,"ca-app-pub-8262098314220863~2165729690");
+        MobileAds.initialize(this, "ca-app-pub-8262098314220863~2165729690");
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -147,6 +150,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void gotoMyProfile() {
         startActivity(new Intent(this, MyProfileActivity.class));
+    }
+
+    private void gotoSettings() {
+        //startActivity(new Intent(this, SettingsActivity.class));
     }
 
     public void readOffersFromFirebase() {
@@ -259,6 +266,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+
         return true;
     }
 
@@ -277,6 +291,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.select_stores_button:
                 gotoStores();
+                break;
+            case R.id.action_settings:
+                gotoSettings();
                 break;
         }
         return true;
@@ -397,9 +414,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(MainActivity.this,ProductActivity.class)
-                                .putExtra(PRODUCT_ID,sale.productId)
-                                .putExtra(USER_ID,mUserId));
+                        startActivity(new Intent(MainActivity.this, ProductActivity.class)
+                                .putExtra(PRODUCT_ID, sale.productId)
+                                .putExtra(USER_ID, mUserId));
                     }
                 });
 

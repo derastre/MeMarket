@@ -73,13 +73,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <android.support.design.widget.TextInputEditText
+                    <EditText
                         android:id="@+id/productNameInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/product_name_input"
-                        app:hintEnabled="true"
-                        android:inputType="text" />
+                        android:inputType="textCapSentences" />
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/productTypeInput"
@@ -87,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/product_type_input"
                         app:hintEnabled="true"
-                        android:inputType="text" />
+                        android:inputType="textCapSentences" />
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/productBrandInput"
@@ -95,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/product_brand_input"
                         app:hintEnabled="true"
-                        android:inputType="text" />
+                        android:inputType="textCapSentences" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

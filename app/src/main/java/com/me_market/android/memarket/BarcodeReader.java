@@ -126,10 +126,11 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                             barcodeInfo.setText(    // Update the TextView
                                     barcodes.valueAt(0).displayValue
                             );
+                            readProductFromFirebase(barcodes.valueAt(0).rawValue);
                         }
                     });
 
-                    readProductFromFirebase(barcodes.valueAt(0).rawValue);
+
 
                 }
             }
@@ -265,6 +266,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         FirebaseDatabase mDatabase;
         DatabaseReference myRef;
         ValueEventListener myProductListener;
+        barcodeDetector.release();
 
         showProgressDialog(getString(R.string.loading));
 

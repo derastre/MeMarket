@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class CompaniesActivity extends BaseActivity implements View.OnClickListener{
+public class CompaniesActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String COMPANY_DATA = "com.example.android.memarket.COMPANY_DATA";
 
@@ -41,8 +41,10 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.companies_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(R.string.select_company);
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) {
+            ab.setTitle(R.string.select_company);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Floating action button
         FloatingActionButton companies_fab = (FloatingActionButton) findViewById(R.id.add_company_fab);
@@ -69,8 +71,8 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
         startActivity(new Intent(this, NewCompany.class));
     }
 
-    private void removeFirebaseListener(){
-        if(companiesListener!=null) {
+    private void removeFirebaseListener() {
+        if (companiesListener != null) {
             myRef.removeEventListener(companiesListener);
         }
     }
@@ -119,25 +121,25 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
         }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.companies_listview_layout, R.id.list_content, companiesNameList);
+                new ArrayAdapter<>(context, R.layout.text_listview_layout, R.id.list_content, companiesNameList);
         listView.setAdapter(adapter);
 
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         getCompaniesListFromFirebase();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         removeFirebaseListener();
     }
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
