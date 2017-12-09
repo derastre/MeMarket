@@ -5,3 +5,26 @@
 /local.properties
 /.idea/
 
+/app/src/androidTest/java/com/me_market/android/memarket/ApplicationTest.java
+app/libs/
+app/src/androidTest/
+app/src/bck/
+app/src/main/res/barcode-scan.zip
+app/src/main/res/barcode.zip
+app/src/main/res/ic_add_black_24dp.zip
+app/src/main/res/ic_add_shopping_cart_black_24dp.zip
+app/src/main/res/ic_attach_money_black_24dp.zip
+app/src/main/res/ic_camera_alt_black_24dp.zip
+app/src/main/res/ic_check_black_24dp.zip
+app/src/main/res/ic_compare_arrows_black_24dp.zip
+app/src/main/res/ic_delete_black_24dp.zip
+app/src/main/res/ic_edit_black_24dp.zip
+app/src/main/res/ic_history_black_24dp.zip
+app/src/main/res/ic_launcher.zip
+app/src/main/res/ic_perm_identity_black_24dp.zip
+app/src/main/res/ic_settings_black_24dp.zip
+app/src/main/res/ic_shopping_cart_black_24dp.zip
+app/src/main/res/ic_store_black_24dp.zip
+app/src/main/res/values-v21/
+app/src/test/
+projectFilesBackup/
