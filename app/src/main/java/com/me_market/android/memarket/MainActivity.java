@@ -145,7 +145,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
         startActivity(new Intent(this, ProductActivity.class)
                 .putExtra(USER_ID, mUserId)
-                .putExtra(SELECT_UI,"Main")
         );
     }
 

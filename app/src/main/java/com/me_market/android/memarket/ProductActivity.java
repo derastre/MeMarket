@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -109,6 +110,33 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.view_history_button).setOnClickListener(this);
         findViewById(R.id.on_sale_button).setOnClickListener(this);
 
+        //Set the UI
+        switch (SELECT_UI) {
+            case "Select":
+                scan_fab.hide();
+                add_purchase_fab.hide();
+                break;
+            default:
+                scan_fab.show();
+                add_purchase_fab.show();
+
+                //Hide the FAB Button when scrolling
+                NestedScrollView nsv = (NestedScrollView) findViewById(R.id.scroll_group_view);
+                nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                    @Override
+                    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                        if (scrollY > oldScrollY) {
+                            scan_fab.hide();
+                            add_purchase_fab.hide();
+                        } else {
+                            scan_fab.show();
+                            add_purchase_fab.show();
+                        }
+                    }
+                });
+                break;
+        }
+
 
         // Get the Intent that started this activity and extract the string
         if (savedInstanceState == null) {
@@ -144,22 +172,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         textView = (TextView) findViewById(R.id.selectedStoreName);
         textView.setText(storename);
 
-        //Hide the FAB Button when scrolling
-        scan_fab.show();
-        add_purchase_fab.show();
-        NestedScrollView nsv = (NestedScrollView) findViewById(R.id.scroll_group_view);
-        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > oldScrollY) {
-                    scan_fab.hide();
-                    add_purchase_fab.hide();
-                } else {
-                    scan_fab.show();
-                    add_purchase_fab.show();
-                }
-            }
-        });
 
         readProductFromFirebase();
 
@@ -786,7 +798,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.product_toolbar_menu, menu);
+        switch (SELECT_UI) {
+            case "Select":
+                getMenuInflater().inflate(R.menu.add_item_toolbar_menu, menu);
+                break;
+            default:
+                getMenuInflater().inflate(R.menu.product_toolbar_menu, menu);
+                break;
+        }
         return true;
     }
 
@@ -803,6 +822,12 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 return true;
             case R.id.select_store_button:
                 startSelectStore();
+                return true;
+            case R.id.select_button:
+                Intent data = new Intent();
+                data.putExtra(PRODUCT_ID, mProductId);
+                setResult(CommonStatusCodes.SUCCESS, data);
+                finish();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
