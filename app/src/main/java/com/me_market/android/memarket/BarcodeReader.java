@@ -288,7 +288,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                     }
                 } else if (dataSnapshot.getChildrenCount() == 0) {
                     //if mProduct code doesn't exist in database go to activity add new mProduct
-                    startActivity(new Intent(BarcodeReader.this, NewProduct.class).putExtra(PRODUCT_BARCODE, code).putExtra(USER_ID, mUserId));
+                    startActivity(new Intent(BarcodeReader.this, NewProductActivity.class).putExtra(PRODUCT_BARCODE, code).putExtra(USER_ID, mUserId));
                 } else if (dataSnapshot.getChildrenCount() > 1) {
                     for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
                         if (productSnapshop.getValue()!=null) {

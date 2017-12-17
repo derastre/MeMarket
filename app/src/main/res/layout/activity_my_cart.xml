@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.me_market.android.memarket.MyCart">
+    tools:context="com.me_market.android.memarket.MyCartActivity">
 
     <LinearLayout
         android:id="@+id/my_cart_list_layout"

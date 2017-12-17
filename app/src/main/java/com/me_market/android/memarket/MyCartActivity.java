@@ -39,7 +39,7 @@ import static com.me_market.android.memarket.ProductActivity.filename;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
-public class MyCart extends BaseActivity implements View.OnClickListener {
+public class MyCartActivity extends BaseActivity implements View.OnClickListener {
 
     String mUserId;
     BottomSheetBehavior behavior;

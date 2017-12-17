@@ -14,7 +14,7 @@ import com.me_market.android.memarket.models.Store;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class NewStore extends AppCompatActivity {
+public class NewStoreActivity extends AppCompatActivity {
 
     private EditText storeName;
     private EditText storeAddress;

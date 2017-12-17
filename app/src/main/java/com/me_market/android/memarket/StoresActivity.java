@@ -148,7 +148,7 @@ public class StoresActivity extends BaseActivity implements View.OnClickListener
 
     public void newStore() {
         startActivity(new Intent(
-                StoresActivity.this, NewStore.class)
+                StoresActivity.this, NewStoreActivity.class)
                 .putExtra(CompaniesActivity.COMPANY_DATA, (Parcelable) companyData)
         );
     }

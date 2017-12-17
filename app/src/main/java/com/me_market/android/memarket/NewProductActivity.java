@@ -47,7 +47,7 @@ import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
-public class NewProduct extends BaseActivity implements View.OnClickListener {
+public class NewProductActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int CAMERA_REQUEST = 1888;
     private String mUserId;

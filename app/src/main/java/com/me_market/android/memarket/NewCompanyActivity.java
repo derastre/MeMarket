@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class NewCompany extends BaseActivity {
+public class NewCompanyActivity extends BaseActivity {
 
     private EditText companyName;
     private Spinner companyTypeSpinner;

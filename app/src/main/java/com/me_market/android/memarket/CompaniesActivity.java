@@ -68,7 +68,7 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
     }
 
     public void newCompany() {
-        startActivity(new Intent(this, NewCompany.class));
+        startActivity(new Intent(this, NewCompanyActivity.class));
     }
 
     private void removeFirebaseListener() {

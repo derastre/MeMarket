@@ -440,14 +440,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void comparePrices() {
-        startActivity(new Intent(ProductActivity.this, comparePricesActivity.class).putExtra(PRODUCT_ID, mProduct.getId()));
+        startActivity(new Intent(ProductActivity.this, ComparePricesActivity.class).putExtra(PRODUCT_ID, mProduct.getId()));
     }
 
     public void purchasesHistoryFirebase() {
         String id = mProduct.getId();
         if (id != null && mUserId != null) {
 
-            startActivity(new Intent(ProductActivity.this, purchaseHistory.class)
+            startActivity(new Intent(ProductActivity.this, PurchaseHistoryActivity.class)
                     .putExtra(PRODUCT_ID, id)
                     .putExtra(USER_ID, mUserId)
             );
@@ -795,7 +795,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         switch (i) {
             case R.id.my_cart_button:
                 if (mUserId != null) {
-                    startActivity(new Intent(this, MyCart.class).putExtra(USER_ID, mUserId));
+                    startActivity(new Intent(this, MyCartActivity.class).putExtra(USER_ID, mUserId));
                 }
                 return true;
             case R.id.select_store_button:

@@ -245,5 +245,6 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="results">Results</string>
+    <string name="qty">Qty</string>
 
 </resources>

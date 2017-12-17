@@ -53,7 +53,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".NewProduct">
+        <activity android:name=".NewProductActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
@@ -66,7 +66,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".NewStore">
+        <activity android:name=".NewStoreActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
@@ -76,7 +76,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".NewCompany">
+        <activity android:name=".NewCompanyActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
@@ -86,7 +86,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".comparePricesActivity">
+        <activity android:name=".ComparePricesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
@@ -104,12 +104,12 @@
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".purchaseHistory">
+        <activity android:name=".PurchaseHistoryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".MyCart" />
+        <activity android:name=".MyCartActivity" />
         <activity android:name=".components.BaseActivity" />
         <activity android:name=".SearchActivity">
             <intent-filter>
@@ -120,6 +120,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+        <activity android:name=".ShoppingListActivity"></activity>
     </application>
 
 </manifest>
