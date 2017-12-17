@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.ProductActivity.SELECT_UI;
 import static com.me_market.android.memarket.SplashActivity.USER_EMAIL;
 import static com.me_market.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
@@ -141,7 +142,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void searchProducts() {
-        startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
+        //startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
+        startActivity(new Intent(this, ProductActivity.class)
+                .putExtra(USER_ID, mUserId)
+                .putExtra(SELECT_UI,"Main")
+        );
     }
 
     public void gotoStores() {

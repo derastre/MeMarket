@@ -50,7 +50,7 @@ import static com.me_market.android.memarket.SplashActivity.USER_ID;
 public class NewProductActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int CAMERA_REQUEST = 1888;
-    private String mUserId;
+    //private String mUserId;
     private ImageView productImage;
     private TextView productCode;
     private EditText productType;
@@ -71,7 +71,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         String code = intent.getStringExtra(PRODUCT_BARCODE);
-        mUserId = intent.getStringExtra(USER_ID);
+        //mUserId = intent.getStringExtra(USER_ID);
 
         //Get references to layout views
         productCode = (TextView) findViewById(R.id.productCode);
@@ -164,7 +164,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         startActivity(new Intent(this, ProductActivity.class)
                 .putExtra(PRODUCT_ID, id)
                 .putExtra(PRODUCT_BARCODE, code)
-                .putExtra(USER_ID, mUserId));
+                //.putExtra(USER_ID, mUserId)
+        );
     }
 
     public void takePicture() {

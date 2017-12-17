@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -58,7 +59,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     public static final String PRODUCT_ID = "ProductId";
     public static final String PRODUCT_BARCODE = "ProductBarcode";
 
-    private String mUserId;
+    //private String mUserId;
     private SurfaceView cameraView;
     private TextView barcodeInfo;
     private BarcodeDetector barcodeDetector;
@@ -80,7 +81,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         // read parameters from the intent used to launch the activity.
         autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
         useFlash = getIntent().getBooleanExtra(UseFlash, false);
-        mUserId = getIntent().getStringExtra(USER_ID);
+        //mUserId = getIntent().getStringExtra(USER_ID);
 
 
         // Check for the camera permission before accessing the camera.  If the
@@ -131,17 +132,22 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                     });
 
 
-
                 }
             }
         });
     }
 
-    private void startProductActivity(String id, String code) {
-        startActivity(new Intent(this, ProductActivity.class)
-                .putExtra(PRODUCT_ID, id)
-                .putExtra(PRODUCT_BARCODE, code)
-                .putExtra(USER_ID, mUserId));
+    private void setResultAndExit(String id, String code) {
+
+        Intent data = new Intent();
+        data.putExtra(PRODUCT_ID, id);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
+
+//        startActivity(new Intent(this, ProductActivity.class)
+//                .putExtra(PRODUCT_ID, id)
+//                .putExtra(PRODUCT_BARCODE, code)
+//                .putExtra(USER_ID, mUserId));
     }
 
     private void createCameraSource(boolean autoFocus, boolean useFlash) {
@@ -284,14 +290,16 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                 if (dataSnapshot.getChildrenCount() == 1) {
                     for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
                         id = productSnapshop.getKey();
-                        startProductActivity(id, code);
+                        setResultAndExit(id, code);
                     }
                 } else if (dataSnapshot.getChildrenCount() == 0) {
                     //if mProduct code doesn't exist in database go to activity add new mProduct
-                    startActivity(new Intent(BarcodeReader.this, NewProductActivity.class).putExtra(PRODUCT_BARCODE, code).putExtra(USER_ID, mUserId));
+                    startActivity(new Intent(BarcodeReader.this, NewProductActivity.class)
+                            .putExtra(PRODUCT_BARCODE, code));
+                            //.putExtra(USER_ID, mUserId));
                 } else if (dataSnapshot.getChildrenCount() > 1) {
                     for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
-                        if (productSnapshop.getValue()!=null) {
+                        if (productSnapshop.getValue() != null) {
                             name = productSnapshop.getValue().toString();
                             key = productSnapshop.getKey();
                             productNameList.add(name);
@@ -325,7 +333,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String id = productKeyArrayList.get(i);
-                startProductActivity(id, code);
+                setResultAndExit(id, code);
             }
         });
         builder.show();

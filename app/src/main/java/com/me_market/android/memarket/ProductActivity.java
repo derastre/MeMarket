@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Product;
 import com.me_market.android.memarket.models.Purchase;
@@ -55,6 +57,7 @@ import static com.me_market.android.memarket.StoreActivity.PREFS_FILE;
 
 public class ProductActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final String SELECT_UI = "com.me_market.android.memarket.SELECT_UI";
     public static final String filename = "myPurchases.save";
     private static final int RC_BARCODE_CAPTURE = 9001;
 
@@ -62,7 +65,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private FloatingActionButton scan_fab;
     private FloatingActionButton add_purchase_fab;
     private String mProductId;
-    private String mProductBarcode;
     private Product mProduct;
     private Store mStore;
     private String mUserId;
@@ -119,9 +121,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             mProductId = savedInstanceState.getString("mProductId");
         }
 
-        // If for any reason there is no product id.
+        // If there is no product id.
         if (mProductId == null) {
-            startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
+            //startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
+            scan_barcode();
         }
         //If we lost the UserID
         if (mUserId == null) getUserFirebaseData();
@@ -257,7 +260,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             };
 
             myPriceRef.addValueEventListener(myPriceListener);
-        }else {
+        } else {
             findViewById(R.id.cardview_product_prices).setVisibility(View.GONE);
             findViewById(R.id.no_store_selected_text).setVisibility(View.VISIBLE);
         }
@@ -812,11 +815,32 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
-        savedInstanceState.putString("mProductBarcode", mProductBarcode);
         savedInstanceState.putString("mProductId", mProductId);
         savedInstanceState.putString("mUserId", mUserId);
 
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Returning from barcode capture activity
+        if (requestCode == RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    mProductId = data.getStringExtra(PRODUCT_ID);
+                    readProductFromFirebase();
+                } else {
+                    finish();
+                }
+            } else {
+                Snackbar.make(findViewById(R.id.placeSnackBar),
+                        String.format(getString(R.string.barcode_error), CommonStatusCodes.getStatusCodeString(resultCode)),
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }
