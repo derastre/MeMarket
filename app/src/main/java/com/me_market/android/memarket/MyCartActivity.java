@@ -41,11 +41,11 @@ import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 public class MyCartActivity extends BaseActivity implements View.OnClickListener {
 
-    String mUserId;
-    BottomSheetBehavior behavior;
-    GridLayout gridLayout;
-    ArrayList<Purchase> purchaseArrayList;
-    ListView listView;
+    private String mUserId;
+    private BottomSheetBehavior behavior;
+    private GridLayout gridLayout;
+    private ArrayList<Purchase> purchaseArrayList;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,10 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_cart_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(R.string.my_cart_label);
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab!=null) {
+            ab.setTitle(R.string.my_cart_label);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Buttons listeners
         findViewById(R.id.my_cart_gridlayout).setOnClickListener(this);

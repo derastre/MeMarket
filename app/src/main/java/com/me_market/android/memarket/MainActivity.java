@@ -156,6 +156,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         startActivity(new Intent(this, MyProfileActivity.class));
     }
 
+    public void gotoShoppingList() {
+        if (mUserId!=null) {
+            startActivity(new Intent(this, ShoppingListActivity.class).putExtra(USER_ID, mUserId));
+        }
+    }
+
     private void gotoSettings() {
         //startActivity(new Intent(this, SettingsActivity.class));
     }
@@ -298,6 +304,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.action_settings:
                 gotoSettings();
+                break;
+            case R.id.action_shopping_list:
+                gotoShoppingList();
                 break;
         }
         return true;
