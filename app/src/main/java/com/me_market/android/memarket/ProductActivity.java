@@ -65,6 +65,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     private FloatingActionButton scan_fab;
     private FloatingActionButton add_purchase_fab;
+    private String selectUi;
     private String mProductId;
     private Product mProduct;
     private Store mStore;
@@ -111,7 +112,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.on_sale_button).setOnClickListener(this);
 
         //Set the UI
-        switch (SELECT_UI) {
+        selectUi = getIntent().getStringExtra(SELECT_UI);
+        switch (selectUi) {
             case "Select":
                 scan_fab.hide();
                 add_purchase_fab.hide();
@@ -205,6 +207,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         Intent intent = new Intent(ProductActivity.this, BarcodeReader.class);
         intent.putExtra(BarcodeReader.AutoFocus, true);
         intent.putExtra(BarcodeReader.UseFlash, false);
+        intent.putExtra(SELECT_UI, false);
 
         startActivityForResult(intent, RC_BARCODE_CAPTURE);
 

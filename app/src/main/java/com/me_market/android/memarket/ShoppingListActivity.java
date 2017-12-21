@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.ProductActivity.SELECT_UI;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 public class ShoppingListActivity extends BaseActivity implements View.OnClickListener {
@@ -255,7 +256,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void addProduct() {
-        startActivityForResult(new Intent(ShoppingListActivity.this,ProductActivity.class),RC_SELECT_PRODUCT);
+        startActivityForResult(new Intent(ShoppingListActivity.this,ProductActivity.class) .putExtra(SELECT_UI, "Select"),RC_SELECT_PRODUCT);
     }
 
     @Override

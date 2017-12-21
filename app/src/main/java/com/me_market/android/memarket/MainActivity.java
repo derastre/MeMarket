@@ -157,8 +157,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void gotoShoppingList() {
-        if (mUserId!=null) {
-            startActivity(new Intent(this, ShoppingListActivity.class).putExtra(USER_ID, mUserId));
+        if (mUserId != null) {
+            startActivity(new Intent(this, ShoppingListActivity.class)
+                    .putExtra(USER_ID, mUserId)
+            );
         }
     }
 
