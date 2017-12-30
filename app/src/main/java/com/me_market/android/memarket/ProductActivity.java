@@ -757,19 +757,19 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        scan_fab.hide();
-        add_purchase_fab.hide();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        scan_fab.show();
-        add_purchase_fab.show();
-    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        scan_fab.hide();
+//        add_purchase_fab.hide();
+//    }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        scan_fab.show();
+//        add_purchase_fab.show();
+//    }
 
     @Override
     public void onClick(View v) {

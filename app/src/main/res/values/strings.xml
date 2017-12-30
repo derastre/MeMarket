@@ -246,5 +246,6 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="results">Results</string>
     <string name="qty">Qty</string>
+    <string name="clear_shopping_list">Clear list</string>
 
 </resources>
