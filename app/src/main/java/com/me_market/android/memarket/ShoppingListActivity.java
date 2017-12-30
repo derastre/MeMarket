@@ -296,7 +296,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
                 if (product != null) {
                     product.setId(dataSnapshot.getKey());
                     DatabaseReference myWriteRef = mDatabase.getReference();
-                    myWriteRef.child("shopping_list").child(product.getId()).setValue(product);
+                    myWriteRef.child("shopping_list").child(mUserId).child(product.getId()).setValue(product);
                 }
 
             }

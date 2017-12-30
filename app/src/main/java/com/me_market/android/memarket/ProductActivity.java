@@ -111,12 +111,35 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.view_history_button).setOnClickListener(this);
         findViewById(R.id.on_sale_button).setOnClickListener(this);
 
+        // Get the Intent that started this activity and extract the string
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            mUserId = intent.getStringExtra(USER_ID);
+            mProductId = intent.getStringExtra(PRODUCT_ID);
+            selectUi = getIntent().getStringExtra(SELECT_UI);
+
+        } else {
+            mUserId = savedInstanceState.getString("mUserId");
+            mProductId = savedInstanceState.getString("mProductId");
+            selectUi = savedInstanceState.getString("selectUi");
+        }
+
+        // If there is no product id.
+        if (mProductId == null) {
+            //startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
+            scan_barcode();
+        }
+        //If we lost the UserID
+        if (mUserId == null) getUserFirebaseData();
+
+        // Get selected Store
+        mStore = getSelectedStore();
+
         //Set the UI
-        selectUi = getIntent().getStringExtra(SELECT_UI);
         switch (selectUi) {
             case "Select":
-                scan_fab.hide();
-                add_purchase_fab.hide();
+                scan_fab.setVisibility(View.INVISIBLE);
+                add_purchase_fab.setVisibility(View.INVISIBLE);
                 break;
             default:
                 scan_fab.show();
@@ -138,29 +161,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 });
                 break;
         }
-
-
-        // Get the Intent that started this activity and extract the string
-        if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            mUserId = intent.getStringExtra(USER_ID);
-            mProductId = intent.getStringExtra(PRODUCT_ID);
-
-        } else {
-            mUserId = savedInstanceState.getString("mUserId");
-            mProductId = savedInstanceState.getString("mProductId");
-        }
-
-        // If there is no product id.
-        if (mProductId == null) {
-            //startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
-            scan_barcode();
-        }
-        //If we lost the UserID
-        if (mUserId == null) getUserFirebaseData();
-
-        // Get selected Store
-        mStore = getSelectedStore();
 
         // Set store name on price card
         TextView textView;
@@ -801,7 +801,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        switch (SELECT_UI) {
+        switch (selectUi) {
             case "Select":
                 getMenuInflater().inflate(R.menu.add_item_toolbar_menu, menu);
                 break;
@@ -845,6 +845,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         savedInstanceState.putString("mProductId", mProductId);
         savedInstanceState.putString("mUserId", mUserId);
+        savedInstanceState.putString("selectUi",selectUi);
 
         super.onSaveInstanceState(savedInstanceState);
     }
