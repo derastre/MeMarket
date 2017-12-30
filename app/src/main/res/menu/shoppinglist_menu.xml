@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/clear_list_button"
-        android:title="@string/clear_shopping_list"
+        android:id="@+id/clear_checked_button"
+        android:title="@string/clear_checked_shopping_list"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/clear_all_list_button"
+        android:title="@string/clear_all_shopping_list"
+        app:showAsAction="never" />
+
 </menu>

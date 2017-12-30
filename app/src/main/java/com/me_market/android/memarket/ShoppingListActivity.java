@@ -1,18 +1,25 @@
 package com.me_market.android.memarket;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Product;
+import com.me_market.android.memarket.models.ShoppingListItem;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -36,7 +44,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     private FirebaseDatabase mDatabase;
     private String mUserId;
     private ListView listView;
-    private ArrayList<Product> productsList;
+    private ArrayList<ShoppingListItem> shoppingListItems;
     private static final int RC_SELECT_PRODUCT = 9002;
 
     @Override
@@ -68,9 +76,9 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (productsList != null) {
+                if (shoppingListItems != null) {
                     startActivity(new Intent(ShoppingListActivity.this, ProductActivity.class)
-                            .putExtra(PRODUCT_ID, productsList.get(position).getId())
+                            .putExtra(PRODUCT_ID, shoppingListItems.get(position).productId)
                     );
                 }
             }
@@ -90,20 +98,19 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         DatabaseReference myRef;
         ValueEventListener myListener;
 
-        productsList=new ArrayList<>();
+        shoppingListItems = new ArrayList<>();
         myRef = mDatabase.getReference().child("shopping_list").child(mUserId);
         myListener = new ValueEventListener() {
             @Override
 
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Product product;
+                ShoppingListItem shoppingListItem;
 
                 if (dataSnapshot.getChildren() != null) {
                     for (DataSnapshot resultSnapshot : dataSnapshot.getChildren()) {
                         if (resultSnapshot != null) {
-                            product = resultSnapshot.getValue(Product.class);
-                            product.setId(resultSnapshot.getKey());
-                            productsList.add(product);
+                            shoppingListItem = resultSnapshot.getValue(ShoppingListItem.class);
+                            shoppingListItems.add(shoppingListItem);
                         }
                     }
                 }
@@ -123,8 +130,8 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
     private void setShoppingListOnListView() {
         listView = (ListView) findViewById(R.id.shopping_list_listview);
-        if (productsList != null) {
-            ShoppingListActivity.productArrayAdapter adapter = new ShoppingListActivity.productArrayAdapter(this, R.layout.shopping_list_listview_layout, productsList);
+        if (shoppingListItems != null) {
+            ShoppingListActivity.productArrayAdapter adapter = new ShoppingListActivity.productArrayAdapter(this, R.layout.shopping_list_listview_layout, shoppingListItems);
             listView.setAdapter(adapter);
         } else {
             listView.setAdapter(null);
@@ -181,14 +188,14 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    class productArrayAdapter extends ArrayAdapter<Product> {
+    class productArrayAdapter extends ArrayAdapter<ShoppingListItem> {
         private Context context;
-        private ArrayList<Product> products;
+        private ArrayList<ShoppingListItem> shoppingListItems;
 
-        public productArrayAdapter(Context context, int resource, ArrayList<Product> products) {
-            super(context, resource, products);
+        public productArrayAdapter(Context context, int resource, ArrayList<ShoppingListItem> shoppingListItems) {
+            super(context, resource, shoppingListItems);
             this.context = context;
-            this.products = products;
+            this.shoppingListItems = shoppingListItems;
 
         }
 
@@ -196,7 +203,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         public View getView(final int position, View convertView, ViewGroup parent) {
 
             //get the property we are displaying
-            Product product = products.get(position);
+            ShoppingListItem shoppingListItem = shoppingListItems.get(position);
 
             //get the inflater and inflate the XML layout for each item
             ShoppingListActivity.ViewHolder holder = null;
@@ -209,15 +216,28 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
                 holder = (ShoppingListActivity.ViewHolder) convertView.getTag();
             }
 
-            holder.getNameText().setText(product.Name);
-            holder.getTypeText().setText(product.Type);
-            String qty = String.format(Locale.getDefault(), "%f", product.Quantity); //TODO: Check quantity
+            holder.getNameText().setText(shoppingListItem.productName);
+            holder.getTypeText().setText(shoppingListItem.productType);
+            String qty = String.format(Locale.getDefault(), "%f", shoppingListItem.quantity);
             holder.getQtyText().setText(qty);
 
             holder.getButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    eraseProduct(position);
+                    eraseShoppingListItem(position);
+                }
+            });
+
+            holder.getCheckBox().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (((CheckBox) view).isChecked()) {
+                        checkShoppingListItem(position);
+                    }
+                    else {
+                        uncheckShoppingListItem(position);
+                    }
+
                 }
             });
 
@@ -227,14 +247,46 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private void eraseProduct(int position) {
+    private void uncheckShoppingListItem(int position) {
         showProgressDialog(getString(R.string.loading));
 
         DatabaseReference myRef;
-        Product product;
+        ShoppingListItem shoppingListItem;
 
-        product = productsList.get(position);
-        myRef = mDatabase.getReference().child("shopping_list").child(mUserId).child(product.getId());
+        shoppingListItem = shoppingListItems.get(position);
+        myRef = mDatabase.getReference().child("shopping_list").child(mUserId).child(shoppingListItem.productId).child("checked");
+        myRef.setValue( false,new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                getShoppingListFromFirebase();
+            }
+        });
+    }
+
+    private void checkShoppingListItem(int position) {
+        showProgressDialog(getString(R.string.loading));
+
+        DatabaseReference myRef;
+        ShoppingListItem shoppingListItem;
+
+        shoppingListItem = shoppingListItems.get(position);
+        myRef = mDatabase.getReference().child("shopping_list").child(mUserId).child(shoppingListItem.productId).child("checked");
+        myRef.setValue( true,new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                getShoppingListFromFirebase();
+            }
+        });
+    }
+
+    private void eraseShoppingListItem(int position) {
+        showProgressDialog(getString(R.string.loading));
+
+        DatabaseReference myRef;
+        ShoppingListItem shoppingListItem;
+
+        shoppingListItem = shoppingListItems.get(position);
+        myRef = mDatabase.getReference().child("shopping_list").child(mUserId).child(shoppingListItem.productId);
         myRef.removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -256,7 +308,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void addProduct() {
-        startActivityForResult(new Intent(ShoppingListActivity.this,ProductActivity.class) .putExtra(SELECT_UI, "Select"),RC_SELECT_PRODUCT);
+        startActivityForResult(new Intent(ShoppingListActivity.this, ProductActivity.class).putExtra(SELECT_UI, "Select"), RC_SELECT_PRODUCT);
     }
 
     @Override
@@ -281,6 +333,50 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.shoppinglist_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //AppBar onClick method
+        int i = item.getItemId();
+
+        switch (i) {
+            case R.id.clear_all_list_button:
+                clearAllList();
+                return true;
+
+            case R.id.clear_checked_button:
+                clearCheckedList();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void clearCheckedList() {
+    }
+
+    private void clearAllList() {
+        showProgressDialog(getString(R.string.loading));
+
+        DatabaseReference myRef;
+
+        myRef = mDatabase.getReference().child("shopping_list").child(mUserId);
+        myRef.removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                getShoppingListFromFirebase();
+            }
+        });
+    }
+
     private void addProductToFirebase(String id) {
         DatabaseReference myRef;
         ValueEventListener myListener;
@@ -291,14 +387,59 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Product product;
+                Float ProductQuantity;
+
 
                 product = dataSnapshot.getValue(Product.class);
                 if (product != null) {
                     product.setId(dataSnapshot.getKey());
-                    DatabaseReference myWriteRef = mDatabase.getReference();
-                    myWriteRef.child("shopping_list").child(mUserId).child(product.getId()).setValue(product);
+                    buildShoppingListItem(product);
                 }
 
+            }
+
+            private void buildShoppingListItem(final Product product) {
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingListActivity.this);
+                builder.setTitle(R.string.product_quantity_input);
+
+                final EditText input = new EditText(ShoppingListActivity.this);
+
+                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Float ProductQuantity = Float.parseFloat(input.getText().toString());
+                        ShoppingListItem shoppingListItem = new ShoppingListItem(
+                                product.getId(),
+                                product.Name,
+                                product.Type,
+                                ProductQuantity,
+                                false);
+
+
+                        DatabaseReference myWriteRef = mDatabase.getReference();
+                        myWriteRef.child("shopping_list").child(mUserId).child(product.getId()).setValue(shoppingListItem, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                getShoppingListFromFirebase();
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog = builder.create();
+                dialog.show();
+                dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
 
             @Override
