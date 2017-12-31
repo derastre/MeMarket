@@ -42,7 +42,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 public class BarcodeReader extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "BarcodeReader";
@@ -137,17 +136,12 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         });
     }
 
-    private void setResultAndExit(String id, String code) {
+    private void setResultAndExit(String id) {
 
         Intent data = new Intent();
         data.putExtra(PRODUCT_ID, id);
         setResult(CommonStatusCodes.SUCCESS, data);
         finish();
-
-//        startActivity(new Intent(this, ProductActivity.class)
-//                .putExtra(PRODUCT_ID, id)
-//                .putExtra(PRODUCT_BARCODE, code)
-//                .putExtra(USER_ID, mUserId));
     }
 
     private void createCameraSource(boolean autoFocus, boolean useFlash) {
@@ -290,7 +284,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                 if (dataSnapshot.getChildrenCount() == 1) {
                     for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
                         id = productSnapshop.getKey();
-                        setResultAndExit(id, code);
+                        setResultAndExit(id);
                     }
                 } else if (dataSnapshot.getChildrenCount() == 0) {
                     //if mProduct code doesn't exist in database go to activity add new mProduct
@@ -333,7 +327,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String id = productKeyArrayList.get(i);
-                setResultAndExit(id, code);
+                setResultAndExit(id);
             }
         });
         builder.show();
