@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -68,6 +66,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private String selectUi;
     private String mProductId;
     private Product mProduct;
+    private Boolean scan_barcode_called;
     private Store mStore;
     private String mUserId;
     private String lastPurchaseDate;
@@ -122,11 +121,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             mUserId = savedInstanceState.getString("mUserId");
             mProductId = savedInstanceState.getString("mProductId");
             selectUi = savedInstanceState.getString("selectUi");
+            scan_barcode_called = savedInstanceState.getBoolean("scan_barcode_called");
         }
 
         // If there is no product id.
         if (mProductId == null) {
             //startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
+
             scan_barcode();
         }
         //If we lost the UserID
@@ -136,6 +137,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         mStore = getSelectedStore();
 
         //Set the UI
+        if (selectUi == null) selectUi = "";
         switch (selectUi) {
             case "Select":
                 scan_fab.setVisibility(View.INVISIBLE);
@@ -204,13 +206,15 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void scan_barcode() {
 
         // launch barcode activity.
-        Intent intent = new Intent(ProductActivity.this, BarcodeReader.class);
-        intent.putExtra(BarcodeReader.AutoFocus, true);
-        intent.putExtra(BarcodeReader.UseFlash, false);
-        intent.putExtra(SELECT_UI, false);
-
-        startActivityForResult(intent, RC_BARCODE_CAPTURE);
-
+        if (scan_barcode_called == null) {
+            Intent intent = new Intent(ProductActivity.this, BarcodeReader.class);
+            intent.putExtra(BarcodeReader.AutoFocus, true);
+            intent.putExtra(BarcodeReader.UseFlash, false);
+            intent.putExtra(SELECT_UI, false);
+            scan_barcode_called = true;
+            startActivityForResult(intent, RC_BARCODE_CAPTURE);
+        }
+        scan_barcode_called = null;
     }
 
     public void readProductFromFirebase() {
@@ -845,7 +849,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         savedInstanceState.putString("mProductId", mProductId);
         savedInstanceState.putString("mUserId", mUserId);
-        savedInstanceState.putString("selectUi",selectUi);
+        savedInstanceState.putString("selectUi", selectUi);
+        if (scan_barcode_called != null)
+            savedInstanceState.putBoolean("scan_barcode_called", scan_barcode_called);
 
         super.onSaveInstanceState(savedInstanceState);
     }
