@@ -249,4 +249,7 @@
     <string name="clear_all_shopping_list">Clear All</string>
     <string name="clear_checked_shopping_list">Clear only checked</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
