@@ -47,8 +47,10 @@ public class StoresActivity extends BaseActivity implements View.OnClickListener
         Toolbar toolbar = (Toolbar) findViewById(R.id.stores_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(R.string.select_store);
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab!=null) {
+            ab.setTitle(R.string.select_store);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Floating action button
         FloatingActionButton stores_fab = (FloatingActionButton) findViewById(R.id.add_store_fab);

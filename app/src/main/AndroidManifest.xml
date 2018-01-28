@@ -120,7 +120,8 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".ShoppingListActivity"></activity>
+        <activity android:name=".ShoppingListActivity" />
+        <activity android:name=".SelectStoreActivity"></activity>
     </application>
 
 </manifest>

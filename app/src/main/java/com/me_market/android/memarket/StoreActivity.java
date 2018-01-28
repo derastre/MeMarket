@@ -29,9 +29,10 @@ public class StoreActivity extends BaseActivity implements View.OnClickListener{
         Toolbar toolbar = (Toolbar) findViewById(R.id.store_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setTitle("");
-        ab.setDisplayHomeAsUpEnabled(true);
-
+        if (ab!=null) {
+            ab.setTitle("");
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
         //Getting data from Intent
         storeData = getIntent().getParcelableExtra(StoresActivity.STORE_DATA);
 
