@@ -1,10 +1,8 @@
 package com.me_market.android.memarket;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,7 +27,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
     private ArrayList<Company> companyArrayList;
     private ListView listView;
 
-    private OnFragmentInteractionListener mListener;
+    private CompaniesListListener mListener;
 
     public CompaniesListFragment() {
         // Required empty public constructor
@@ -58,28 +56,22 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
+                mListener.onCompanySelected(companyArrayList.get(position));
             }
         });
 
         return myView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof CompaniesListListener) {
+            mListener = (CompaniesListListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement CompaniesListListener");
         }
     }
 
@@ -90,9 +82,8 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
     }
 
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface CompaniesListListener {
+        void onCompanySelected(Company c);
     }
 
     @Override
