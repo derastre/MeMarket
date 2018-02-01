@@ -59,7 +59,7 @@ public class PurchaseHistoryActivity extends BaseActivity {
     }
 
     private void readPurchasesHistoryFromFirebase() {
-        showProgressDialog(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading),getApplicationContext());
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myHistoryRef = database.getReference().child("purchases").child(mUserId).child(productId);

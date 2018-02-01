@@ -45,6 +45,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View myView = inflater.inflate(R.layout.fragment_companies_list, container, false);
 
         //Floating action button
@@ -78,7 +79,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
     public void getCompaniesListFromFirebase() {
         //Obtener lista de companias de la base de datos
         baseActivity = new BaseActivity();
-        baseActivity.showProgressDialog(getString(R.string.loading));
+        baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("companies");
 

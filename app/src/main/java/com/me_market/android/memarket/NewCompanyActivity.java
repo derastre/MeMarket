@@ -83,7 +83,7 @@ public class NewCompanyActivity extends BaseActivity {
 
     public void getCompaniesTypesListFromFirebase() {
         //Obtener lista de companias de la base de datos
-        showProgressDialog(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading),getApplicationContext());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("companies_types");
 

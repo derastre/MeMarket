@@ -220,7 +220,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readProductFromFirebase() {
 
         if (mProductId != null) {
-            showProgressDialog(getString(R.string.loading));
+            showProgressDialog(getString(R.string.loading),getApplicationContext());
 
             myRef = mDatabase.getReference().child("products").child(mProductId);
 

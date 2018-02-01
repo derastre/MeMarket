@@ -4,9 +4,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Company;
+import com.me_market.android.memarket.models.Store;
 
-public class SelectStoreActivity extends AppCompatActivity implements CompaniesListFragment.CompaniesListListener{
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class SelectStoreActivity extends BaseActivity implements CompaniesListFragment.CompaniesListListener,
+        StoresListFragment.StoresListListener,
+        StoreDetailFragment.StoreDetailListener
+{
+
+    public static final String PREFS_FILE = "MyPrefsFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,4 +65,40 @@ public class SelectStoreActivity extends AppCompatActivity implements CompaniesL
         transaction.commit();
 
     }
+
+    @Override
+    public void onStoreSelected(Store s){
+
+        //Start Stores List Fragment and pass the selected company
+        StoreDetailFragment storeDetailFragment = new StoreDetailFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(StoreDetailFragment.STORE_DATA,s);
+        storeDetailFragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.fragment_container, storeDetailFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
+    @Override
+    public void onStoreConfirmed(Store s){
+
+        ArrayList<Store> stores = new ArrayList<>();
+        stores.add(s);
+        try {
+            writeObjectsToFile(PREFS_FILE, stores, getApplicationContext());
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        }
+
+        finish();
+
+    }
+
+
 }

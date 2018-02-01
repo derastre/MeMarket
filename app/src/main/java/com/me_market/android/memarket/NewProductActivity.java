@@ -187,7 +187,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         DatabaseReference myRef;
         ValueEventListener unitsListener;
 
-        showProgressDialog(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading),getApplicationContext());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("product_units");
 

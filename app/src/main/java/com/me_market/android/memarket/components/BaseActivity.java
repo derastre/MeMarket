@@ -35,9 +35,9 @@ public class BaseActivity extends AppCompatActivity {
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
 
-    public void showProgressDialog(String message) {
+    public void showProgressDialog(String message,Context c) {
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog = new ProgressDialog(c);
             mProgressDialog.setMessage(message);
             mProgressDialog.setIndeterminate(true);
         }

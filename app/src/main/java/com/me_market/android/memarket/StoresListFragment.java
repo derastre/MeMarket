@@ -54,7 +54,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        super.onCreateView(inflater, container, savedInstanceState);
         View myView = inflater.inflate(R.layout.fragment_stores_list, container, false);
 
         //Floating action button
@@ -93,7 +93,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
 
     private void getStoresListFromFirebase() {
         baseActivity = new BaseActivity();
-        baseActivity.showProgressDialog(getString(R.string.loading));
+        baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("stores");
         MyRefQuery = myRef.orderByChild("CompanyData/id").equalTo(companyData.getId());

@@ -104,7 +104,7 @@ public class StoresActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void getStoresListFromFirebase() {
-        showProgressDialog(getString(R.string.loading));
+        showProgressDialog(getString(R.string.loading),getApplicationContext());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("stores");
         MyRefQuery = myRef.orderByChild("CompanyData/id").equalTo(companyData.getId());

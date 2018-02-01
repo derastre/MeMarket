@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void gotoStores() {
-        startActivity(new Intent(this, CompaniesActivity.class));
+        startActivity(new Intent(this, SelectStoreActivity.class));
     }
 
     public void gotoMyProfile() {
