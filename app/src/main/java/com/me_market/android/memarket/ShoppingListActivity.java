@@ -93,7 +93,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
     private void getShoppingListFromFirebase() {
 
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),ShoppingListActivity.this);
 
         DatabaseReference myRef;
         ValueEventListener myListener;
@@ -248,7 +248,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void uncheckShoppingListItem(int position) {
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),ShoppingListActivity.this);
 
         DatabaseReference myRef;
         ShoppingListItem shoppingListItem;
@@ -264,7 +264,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void checkShoppingListItem(int position) {
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),ShoppingListActivity.this);
 
         DatabaseReference myRef;
         ShoppingListItem shoppingListItem;
@@ -280,7 +280,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void eraseShoppingListItem(int position) {
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),ShoppingListActivity.this);
 
         DatabaseReference myRef;
         ShoppingListItem shoppingListItem;
@@ -364,7 +364,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void clearAllList() {
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),ShoppingListActivity.this);
 
         DatabaseReference myRef;
 

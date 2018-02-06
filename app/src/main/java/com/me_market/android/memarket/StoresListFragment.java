@@ -67,9 +67,9 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
             throw new IllegalArgumentException("Must pass COMPANY_ID");
         }
 
-        TextView textView = myView.findViewById(R.id.companyName);
+        TextView textView = myView.findViewById(R.id.companyNameText);
         textView.setText(companyData.Name);
-        TextView textView2 = myView.findViewById(R.id.companyTypeSpinner);
+        TextView textView2 = myView.findViewById(R.id.companyTypeText);
         textView2.setText(companyData.Type);
 
 

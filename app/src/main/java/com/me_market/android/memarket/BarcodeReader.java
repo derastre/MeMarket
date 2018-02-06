@@ -268,7 +268,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         ValueEventListener myProductListener;
         barcodeDetector.release();
 
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),this);
 
         mDatabase = FirebaseDatabase.getInstance();
         myRef = mDatabase.getReference().child("products_keys").child(code);

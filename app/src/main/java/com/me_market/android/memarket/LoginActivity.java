@@ -150,7 +150,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             return;
         }
 
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),LoginActivity.this);
 
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             return;
         }
 
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),LoginActivity.this);
 
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
@@ -302,7 +302,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // [START_EXCLUDE silent]
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),LoginActivity.this);
         // [END_EXCLUDE]
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -341,7 +341,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         // [START_EXCLUDE silent]
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),LoginActivity.this);
         // [END_EXCLUDE]
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -374,7 +374,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),LoginActivity.this);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);

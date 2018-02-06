@@ -53,7 +53,7 @@ public class ComparePricesActivity extends BaseActivity {
     }
 
     private void readPricesFromFirebase() {
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),ComparePricesActivity.this);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myPriceRef = database.getReference().child("prices").child(productId);
         final DatabaseReference myStoresRef = database.getReference().child("stores");

@@ -1,8 +1,10 @@
 package com.me_market.android.memarket;
 
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Company;
@@ -44,6 +46,15 @@ public class SelectStoreActivity extends BaseActivity implements CompaniesListFr
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, companiesListFragment).commit();
+        }
+
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.select_store_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setTitle(R.string.select_company);
+            ab.setDisplayHomeAsUpEnabled(true);
         }
     }
 

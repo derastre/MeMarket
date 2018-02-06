@@ -79,7 +79,7 @@ public class CompaniesActivity extends BaseActivity implements View.OnClickListe
 
     public void getCompaniesListFromFirebase() {
         //Obtener lista de companias de la base de datos
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),CompaniesActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("companies");
 

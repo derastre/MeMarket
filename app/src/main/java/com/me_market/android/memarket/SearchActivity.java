@@ -79,7 +79,7 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void doMySearch(String query) {
-        showProgressDialog(getString(R.string.loading),getApplicationContext());
+        showProgressDialog(getString(R.string.loading),SearchActivity.this);
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mySearchRef;
         Query mySearchQuery;
