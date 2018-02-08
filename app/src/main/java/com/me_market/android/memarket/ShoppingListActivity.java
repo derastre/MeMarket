@@ -220,6 +220,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
             holder.getTypeText().setText(shoppingListItem.productType);
             String qty = String.format(Locale.getDefault(), "%f", shoppingListItem.quantity);
             holder.getQtyText().setText(qty);
+            holder.getCheckBox().setChecked(shoppingListItem.checked);
 
             holder.getButton().setOnClickListener(new View.OnClickListener() {
                 @Override
