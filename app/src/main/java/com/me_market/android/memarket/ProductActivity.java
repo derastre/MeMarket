@@ -182,14 +182,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    private void startSelectStore() {
+    private void askToSelectStore() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_store_instruction);
 
         builder.setPositiveButton(R.string.select_store, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(ProductActivity.this, SelectStoreActivity.class));
+                startSelectStore();
             }
         });
         builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
@@ -201,6 +201,11 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         });
 
         builder.show();
+    }
+
+    private void startSelectStore() {
+        startActivity(new Intent(ProductActivity.this, SelectStoreActivity.class));
+        mStore = getSelectedStore();
     }
 
     public void scan_barcode() {
@@ -656,7 +661,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                         .setAction(R.string.select_button, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                startSelectStore();
+                                askToSelectStore();
                             }
                         })
                         .show();
