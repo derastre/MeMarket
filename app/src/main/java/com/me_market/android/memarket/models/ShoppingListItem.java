@@ -12,6 +12,11 @@ public class ShoppingListItem {
     public Float quantity;
     public Boolean checked;
 
+
+    public ShoppingListItem(){
+
+    }
+
     public ShoppingListItem(String productId, String productName, String productType, Float quantity, Boolean checked) {
         this.productId = productId;
         this.productName = productName;

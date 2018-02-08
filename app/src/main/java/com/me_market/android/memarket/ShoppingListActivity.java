@@ -62,7 +62,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.shopping_list_fab).setOnClickListener(this);
 
         //Setting Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_cart_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.shopping_list_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
