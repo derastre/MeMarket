@@ -189,7 +189,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         builder.setPositiveButton(R.string.select_store, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(ProductActivity.this, CompaniesActivity.class));
+                startActivity(new Intent(ProductActivity.this, SelectStoreActivity.class));
             }
         });
         builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
