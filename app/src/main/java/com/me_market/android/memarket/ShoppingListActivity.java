@@ -21,13 +21,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Product;
@@ -132,6 +135,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         listView = (ListView) findViewById(R.id.shopping_list_listview);
         if (shoppingListItems != null) {
             ShoppingListActivity.productArrayAdapter adapter = new ShoppingListActivity.productArrayAdapter(this, R.layout.shopping_list_listview_layout, shoppingListItems);
+            adapter.notifyDataSetInvalidated();
             listView.setAdapter(adapter);
         } else {
             listView.setAdapter(null);
@@ -362,6 +366,29 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void clearCheckedList() {
+        showProgressDialog(getString(R.string.loading),ShoppingListActivity.this);
+
+        final DatabaseReference myRef;
+        Query myQuery;
+
+        myRef = mDatabase.getReference().child("shopping_list").child(mUserId);
+        myQuery = myRef.orderByChild("checked").equalTo(true);
+        myQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot childs:dataSnapshot.getChildren()){
+                    myRef.child(childs.getKey()).removeValue();
+                }
+                getShoppingListFromFirebase();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void clearAllList() {

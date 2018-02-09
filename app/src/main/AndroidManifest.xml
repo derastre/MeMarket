@@ -61,27 +61,13 @@
         <activity
             android:name=".BarcodeReader"
             android:theme="@style/ThemeOverlay.MyNoTitleActivity" />
-        <activity android:name=".CompaniesActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.me_market.android.memarket.MainActivity" />
-        </activity>
+
         <activity android:name=".NewStoreActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".StoresActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.me_market.android.memarket.MainActivity" />
-        </activity>
         <activity android:name=".NewCompanyActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.me_market.android.memarket.MainActivity" />
-        </activity>
-        <activity android:name=".StoreActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
@@ -120,8 +106,16 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".ShoppingListActivity" />
-        <activity android:name=".SelectStoreActivity"></activity>
+        <activity android:name=".ShoppingListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.me_market.android.memarket.MainActivity" />
+        </activity>
+        <activity android:name=".SelectStoreActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.me_market.android.memarket.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

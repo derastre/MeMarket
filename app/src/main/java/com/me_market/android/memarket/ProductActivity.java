@@ -50,8 +50,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.SelectStoreActivity.PREFS_FILE;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
-import static com.me_market.android.memarket.StoreActivity.PREFS_FILE;
+
 
 
 public class ProductActivity extends BaseActivity implements View.OnClickListener {

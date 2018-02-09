@@ -140,7 +140,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
     public void newStore() {
         startActivity(new Intent(
                 getActivity(), NewStoreActivity.class)
-                .putExtra(CompaniesActivity.COMPANY_DATA, (Parcelable) companyData)
+                .putExtra(COMPANY_DATA, (Parcelable) companyData)
         );
     }
 

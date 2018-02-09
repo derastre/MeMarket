@@ -14,6 +14,8 @@ import com.me_market.android.memarket.models.Store;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.me_market.android.memarket.StoresListFragment.COMPANY_DATA;
+
 public class NewStoreActivity extends AppCompatActivity {
 
     private EditText storeName;
@@ -39,7 +41,7 @@ public class NewStoreActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
 
-        companyData = getIntent().getParcelableExtra(CompaniesActivity.COMPANY_DATA);
+        companyData = getIntent().getParcelableExtra(COMPANY_DATA);
 
         if (companyData == null) {
             throw new IllegalArgumentException("Must pass COMPANY_ID");
