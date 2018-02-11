@@ -54,7 +54,7 @@ public class MyProfileActivity extends BaseActivity implements GoogleApiClient.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_profile_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab!=null)ab.setDisplayHomeAsUpEnabled(true);
 
         //Firebase authentication
         mAuth = FirebaseAuth.getInstance();

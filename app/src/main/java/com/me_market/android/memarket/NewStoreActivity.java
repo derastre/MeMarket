@@ -38,8 +38,7 @@ public class NewStoreActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.new_store_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-
+        if (ab!=null)ab.setDisplayHomeAsUpEnabled(true);
 
         companyData = getIntent().getParcelableExtra(COMPANY_DATA);
 
@@ -68,9 +67,8 @@ public class NewStoreActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         Store store= new Store(name,address,phone,companyData);
-        String key = myRef.child("stores").push().getKey();
-
-        myRef.child("stores").child(key).setValue(store);
+        String key = myRef.child(getString(R.string.stores)).push().getKey();
+        myRef.child(getString(R.string.stores)).child(key).setValue(store);
 
     }
 

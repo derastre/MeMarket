@@ -43,7 +43,7 @@ public class PurchaseHistoryActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.purchase_history_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
 
         // Get the Intent that started this activity and extract the string
 
@@ -59,11 +59,11 @@ public class PurchaseHistoryActivity extends BaseActivity {
     }
 
     private void readPurchasesHistoryFromFirebase() {
-        showProgressDialog(getString(R.string.loading),PurchaseHistoryActivity.this);
+        showProgressDialog(getString(R.string.loading), PurchaseHistoryActivity.this);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myHistoryRef = database.getReference().child("purchases").child(mUserId).child(productId);
-        final DatabaseReference myStoresRef = database.getReference().child("stores");
+        DatabaseReference myHistoryRef = database.getReference().child(getString(R.string.purchases)).child(mUserId).child(productId);
+        final DatabaseReference myStoresRef = database.getReference().child(getString(R.string.stores));
 
 
         //Table headers

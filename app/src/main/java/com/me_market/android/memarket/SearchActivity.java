@@ -85,7 +85,7 @@ public class SearchActivity extends BaseActivity {
         Query mySearchQuery;
         ValueEventListener mySearchListener;
 
-        mySearchRef = mDatabase.getReference().child("products");
+        mySearchRef = mDatabase.getReference().child(getString(R.string.products));
         mySearchQuery = mySearchRef.orderByChild("Name").startAt(query).endAt(query + "\uF8FF");
         mySearchListener = new ValueEventListener() {
             @Override

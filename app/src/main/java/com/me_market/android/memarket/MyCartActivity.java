@@ -59,7 +59,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_cart_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        if (ab!=null) {
+        if (ab != null) {
             ab.setTitle(R.string.my_cart_label);
             ab.setDisplayHomeAsUpEnabled(true);
         }
@@ -178,7 +178,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
                 if (purchaseArrayList != null) {
                     for (int i = 0; i < purchaseArrayList.size(); i++) {
                         register_product = purchaseArrayList.get(i);
-                        childUpdates.put("/purchases/" + mUserId + "/" +register_product.productId + "/" + register_product.timeStamp, register_product);
+                        childUpdates.put("/" + getString(R.string.purchases) + "/" + mUserId + "/" + register_product.productId + "/" + register_product.timeStamp, register_product);
                     }
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -208,10 +208,10 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
             public void onClick(DialogInterface dialogInterface, int j) {
                 try {
                     purchaseArrayList = null;
-                    emptyObjectFile(filename,getApplicationContext());
+                    emptyObjectFile(filename, getApplicationContext());
                     setListProducts();
-                }catch (IOException e){
-                    Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });

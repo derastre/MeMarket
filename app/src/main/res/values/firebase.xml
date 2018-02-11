@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--database roots-->
+    <string name="companies">companies</string>
+    <string name="companies_types">companies_types</string>
+    <string name="prices">prices</string>
+    <string name="prices_history">prices_history</string>
+    <string name="product_units">product_units</string>
+    <string name="products">products</string>
+    <string name="products_keys">products_keys</string>
+    <string name="purchases">purchases</string>
+    <string name="sales">sales</string>
+    <string name="sales_history">sales_history</string>
+    <string name="shopping_list">shopping_list</string>
+    <string name="stores">stores</string>
+
+    <string name="images">images</string>
+
+    <!--shopping list child-->
+    <string name="checked">checked</string>
+
+    <!--Stores childs-->
+    <string name="companydata_id">CompanyData/id</string>
+</resources>

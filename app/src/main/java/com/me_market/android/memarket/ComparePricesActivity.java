@@ -40,7 +40,7 @@ public class ComparePricesActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.prices_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab!=null) ab.setDisplayHomeAsUpEnabled(true);
 
         storeIdList = new ArrayList<>();
         companiesNameList = new ArrayList<>();
@@ -55,8 +55,8 @@ public class ComparePricesActivity extends BaseActivity {
     private void readPricesFromFirebase() {
         showProgressDialog(getString(R.string.loading),ComparePricesActivity.this);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myPriceRef = database.getReference().child("prices").child(productId);
-        final DatabaseReference myStoresRef = database.getReference().child("stores");
+        DatabaseReference myPriceRef = database.getReference().child(getString(R.string.prices)).child(productId);
+        final DatabaseReference myStoresRef = database.getReference().child(getString(R.string.stores));
         companiesNameList.add(getString(R.string.company_label));
         storeNameList.add(getString(R.string.store_label));
         priceList.add(getString(R.string.price_text));

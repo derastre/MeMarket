@@ -45,10 +45,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private EditText mUserNameField;
     private GoogleApiClient mGoogleApiClient; //Google
     private CallbackManager mCallbackManager; //Facebook
-
-    // [START declare_auth]
     private FirebaseAuth mAuth;
-    // [END declare_auth]
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

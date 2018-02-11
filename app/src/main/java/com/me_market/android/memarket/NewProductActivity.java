@@ -129,9 +129,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         Product Product = new Product(ProductCode, name, type, brand, quantity, units);
-        final String key = myRef.child("products_keys").child(ProductCode).push().getKey();
-        childsUpdate.put("/products/" + key, Product);
-        childsUpdate.put("/products_keys/" + ProductCode + "/" + key, name);
+        final String key = myRef.child(getString(R.string.products_keys)).child(ProductCode).push().getKey();
+        childsUpdate.put("/" + getString(R.string.products) + "/" + key, Product);
+        childsUpdate.put("/" + getString(R.string.products_keys) + "/" + ProductCode + "/" + key, name);
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -142,7 +142,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference productImagesRef = storageRef.child("images/" + key);
+        StorageReference productImagesRef = storageRef.child(getString(R.string.images) + "/" + key);
 
         InputStream stream = new ByteArrayInputStream(image);
         UploadTask uploadTask = productImagesRef.putStream(stream);
@@ -162,9 +162,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
     private void startProductActivity(String id, String code) {
         startActivity(new Intent(this, ProductActivity.class)
-                .putExtra(PRODUCT_ID, id)
-                .putExtra(PRODUCT_BARCODE, code)
-                //.putExtra(USER_ID, mUserId)
+                        .putExtra(PRODUCT_ID, id)
+                        .putExtra(PRODUCT_BARCODE, code)
         );
     }
 
@@ -187,9 +186,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         DatabaseReference myRef;
         ValueEventListener unitsListener;
 
-        showProgressDialog(getString(R.string.loading),NewProductActivity.this);
+        showProgressDialog(getString(R.string.loading), NewProductActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("product_units");
+        myRef = database.getReference().child(getString(R.string.product_units));
 
         unitsListener = new ValueEventListener() {
             @Override
@@ -257,7 +256,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference();
-                myRef.child("product_units").push().setValue(type);
+                myRef.child(getString(R.string.product_units)).push().setValue(type);
                 getProductUnitsListFromFirebase();
 
             }

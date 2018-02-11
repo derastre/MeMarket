@@ -173,14 +173,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference myOfferRef;
 
-
+        //Setting the time to yesterday midnight
         Calendar dateToday = Calendar.getInstance();
         dateToday.add(Calendar.DATE, -1); //Yesterday
         dateToday.set(Calendar.HOUR_OF_DAY, 0);
         dateToday.set(Calendar.MINUTE, 0);
         Long dateStart = dateToday.getTimeInMillis();
 
-        myOfferRef = mDatabase.getReference().child("sales_history");
+        myOfferRef = mDatabase.getReference().child(getString(R.string.sales_history));
         myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
         myOfferListener = new ValueEventListener() {
             @Override

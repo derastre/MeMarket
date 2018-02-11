@@ -81,7 +81,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
         baseActivity = new BaseActivity();
         baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("companies");
+        myRef = database.getReference().child(getString(R.string.companies));
 
         companiesListener = new ValueEventListener() {
             @Override

@@ -49,9 +49,7 @@ public class NewCompanyActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.new_company_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-
-
+        if (ab!=null) ab.setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -72,20 +70,18 @@ public class NewCompanyActivity extends BaseActivity {
     }
 
     public void writeNewCompanyOnFirebase(String name, String type){
-        // Write to the database
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         Company company= new Company(name,type);
-        myRef.child("companies").push().setValue(company);
+        myRef.child(getString(R.string.companies)).push().setValue(company);
 
     }
 
     public void getCompaniesTypesListFromFirebase() {
-        //Obtener lista de companias de la base de datos
+
         showProgressDialog(getString(R.string.loading),NewCompanyActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("companies_types");
+        myRef = database.getReference().child(getString(R.string.companies_types));
 
         companiesTypesListener = new ValueEventListener() {
             @Override
@@ -153,7 +149,7 @@ public class NewCompanyActivity extends BaseActivity {
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference();
-                myRef.child("companies_types").push().setValue(type);
+                myRef.child(getString(R.string.companies_types)).push().setValue(type);
                 getCompaniesTypesListFromFirebase();
 
             }

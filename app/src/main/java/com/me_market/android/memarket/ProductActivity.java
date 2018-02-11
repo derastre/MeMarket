@@ -54,7 +54,6 @@ import static com.me_market.android.memarket.SelectStoreActivity.PREFS_FILE;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
-
 public class ProductActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String SELECT_UI = "com.me_market.android.memarket.SELECT_UI";
@@ -226,9 +225,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public void readProductFromFirebase() {
 
         if (mProductId != null) {
-            showProgressDialog(getString(R.string.loading),ProductActivity.this);
+            showProgressDialog(getString(R.string.loading), ProductActivity.this);
 
-            myRef = mDatabase.getReference().child("products").child(mProductId);
+            myRef = mDatabase.getReference().child(getString(R.string.products)).child(mProductId);
 
             myProductListener = new ValueEventListener() {
                 @Override
@@ -260,7 +259,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         if (id != null && mStore != null) {
             findViewById(R.id.cardview_product_prices).setVisibility(View.VISIBLE);
             findViewById(R.id.no_store_selected_text).setVisibility(View.GONE);
-            myPriceRef = mDatabase.getReference().child("prices").child(id).child(mStore.getId());
+            myPriceRef = mDatabase.getReference().child(getString(R.string.prices)).child(id).child(mStore.getId());
             myPriceListener = new ValueEventListener() {
 
                 @Override
@@ -303,7 +302,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             Long dateStart = dateToday.getTimeInMillis();
             mProduct.setCurrentOffer(null);
             mProduct.setOffer(false);
-            myOfferRef = mDatabase.getReference().child("sales").child(id).child(mStore.getId());
+            myOfferRef = mDatabase.getReference().child(getString(R.string.sales)).child(id).child(mStore.getId());
             myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
             myOfferListener = new ValueEventListener() {
                 @Override
@@ -343,7 +342,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         lastPurchasePrice = null;
         lastPurchaseDate = null;
         if (mUserId != null && id != null) {
-            myPurchasesRef = mDatabase.getReference().child("purchases").child(mUserId).child(id);
+            myPurchasesRef = mDatabase.getReference().child(getString(R.string.purchases)).child(mUserId).child(id);
             myPurchasesQuery = myPurchasesRef.orderByKey().limitToLast(1);
             myPurchasesListener = new ValueEventListener() {
                 @Override
@@ -384,7 +383,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         if (id != null) {
             //Storage for product picture
             FirebaseStorage storage = FirebaseStorage.getInstance();
-            final StorageReference storageRef = storage.getReference().child("images").child(id);
+            final StorageReference storageRef = storage.getReference().child(getString(R.string.images)).child(id);
             TextView textView;
             //Set product barcode.
             textView = (TextView) findViewById(R.id.productCode);
@@ -471,7 +470,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         startActivity(new Intent(ProductActivity.this, ComparePricesActivity.class).putExtra(PRODUCT_ID, mProduct.getId()));
     }
 
-    public void purchasesHistoryFirebase() {
+    public void startPurchasesHistory() {
         String id = mProduct.getId();
         if (id != null && mUserId != null) {
 
@@ -510,8 +509,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     Map<String, Object> updateHistory = new HashMap<>();
                     updateHistory.put("price", price);
                     updateHistory.put("user", mUserId);
-                    childUpdates.put("/prices/" + id + "/" + mStore.getId(), price);
-                    childUpdates.put("/prices_history/" + id + "/" + mStore.getId() + "/" + date, updateHistory);
+                    childUpdates.put("/" + getString(R.string.prices) + "/" + id + "/" + mStore.getId(), price);
+                    childUpdates.put("/" + getString(R.string.prices_history) + "/" + id + "/" + mStore.getId() + "/" + date, updateHistory);
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -562,8 +561,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     // Write to the database
                     Map<String, Object> childUpdates = new HashMap<>();
 
-                    childUpdates.put("/sales/" + id + "/" + mStore.getId() + "/" + timestamp, onSalePrice);
-                    childUpdates.put("/sales_history/" + "/" + timestamp, sale); //TODO: use push instead of timestamp????
+                    childUpdates.put("/" + getString(R.string.sales) + "/" + id + "/" + mStore.getId() + "/" + timestamp, onSalePrice);
+                    childUpdates.put("/" + getString(R.string.sales_history) + "/" + "/" + timestamp, sale); //TODO: use push instead of timestamp????
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference();
@@ -800,7 +799,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 comparePrices();
                 break;
             case R.id.view_history_button:
-                purchasesHistoryFirebase();
+                startPurchasesHistory();
                 break;
             case R.id.on_sale_button:
                 markAsOnSaleFirebase();

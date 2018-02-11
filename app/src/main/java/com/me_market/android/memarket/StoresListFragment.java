@@ -95,8 +95,8 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
         baseActivity = new BaseActivity();
         baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("stores");
-        MyRefQuery = myRef.orderByChild("CompanyData/id").equalTo(companyData.getId());
+        DatabaseReference myRef = database.getReference().child(getString(R.string.stores));
+        MyRefQuery = myRef.orderByChild(getString(R.string.companydata_id)).equalTo(companyData.getId());
 
         storesListener = new ValueEventListener() {
             @Override
