@@ -61,7 +61,6 @@
         <activity
             android:name=".BarcodeReader"
             android:theme="@style/ThemeOverlay.MyNoTitleActivity" />
-
         <activity android:name=".NewStoreActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -116,6 +115,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
+        <activity android:name=".SelectCityActivity"></activity>
     </application>
 
 </manifest>

@@ -368,10 +368,11 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
         final DatabaseReference myRef;
         Query myQuery;
+        ValueEventListener myListener;
 
         myRef = mDatabase.getReference().child(getString(R.string.shopping_list)).child(mUserId);
         myQuery = myRef.orderByChild(getString(R.string.checked)).equalTo(true);
-        myQuery.addValueEventListener(new ValueEventListener() {
+        myListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -385,7 +386,8 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        myQuery.addListenerForSingleValueEvent(myListener);
 
     }
 
