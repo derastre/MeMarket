@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void gotoSettings() {
-        //startActivity(new Intent(this, SettingsActivity.class));
+        startActivity(new Intent(this, SelectCityActivity.class));
     }
 
     public void readOffersFromFirebase() {
