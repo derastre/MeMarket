@@ -32,8 +32,11 @@ public class SelectCityActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_city);
-        cityName = (TextView) findViewById(R.id.city_name);
-        countryName = (TextView) findViewById(R.id.country_name);
+
+
+    }
+
+    private void locationFromGPS(){
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         showProgressDialog(getString(R.string.loading), this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

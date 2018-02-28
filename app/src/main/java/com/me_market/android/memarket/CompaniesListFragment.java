@@ -93,12 +93,9 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
                         company.setId(companySnapshop.getKey());
                         companyArrayList.add(company);
                     }
-
-
                 }
                 setCompaniesNameListView();
                 baseActivity.hideProgressDialog();
-
             }
 
             @Override
