@@ -48,7 +48,7 @@ public class CityListFragment extends Fragment {
         // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.fragment_city_list, container, false);
 
-        selectedCountryCode = getArguments().getParcelable(COUNTRY_CODE);
+        selectedCountryCode = getArguments().getString(COUNTRY_CODE);
         //Setting ListView
         listView = myView.findViewById(R.id.countriesList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

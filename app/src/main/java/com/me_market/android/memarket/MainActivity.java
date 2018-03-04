@@ -3,6 +3,7 @@ package com.me_market.android.memarket;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private Query myOfferQuery;
     private ValueEventListener myOfferListener;
     private AdView mAdView;
+    private String mCityCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +140,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } else {
             textView.setText(displayName + "\n" + getString(R.string.verify_email));
         }
+
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        if (mCityCode == null) gotoSelectCity();
+
         readOffersFromFirebase();
     }
 
@@ -164,7 +172,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void gotoSettings() {
+    public void gotoSelectCity() {
         startActivity(new Intent(this, SelectCityActivity.class));
     }
 
@@ -180,7 +188,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dateToday.set(Calendar.MINUTE, 0);
         Long dateStart = dateToday.getTimeInMillis();
 
-        myOfferRef = mDatabase.getReference().child(getString(R.string.sales_history));
+        myOfferRef = mDatabase.getReference().child(mCityCode).child(getString(R.string.sales_history));
         myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
         myOfferListener = new ValueEventListener() {
             @Override
@@ -305,10 +313,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 gotoStores();
                 break;
             case R.id.action_settings:
-                gotoSettings();
+                //gotoSettings();
                 break;
             case R.id.action_shopping_list:
                 gotoShoppingList();
+                break;
+            case R.id.select_city_button:
+                gotoSelectCity();
                 break;
         }
         return true;

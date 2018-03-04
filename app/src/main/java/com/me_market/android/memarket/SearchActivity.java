@@ -3,6 +3,7 @@ package com.me_market.android.memarket;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.provider.SearchRecentSuggestions;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class SearchActivity extends BaseActivity {
 
     private ArrayList<Product> products;
     private ListView listView;
+    private String mCityCode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,10 @@ public class SearchActivity extends BaseActivity {
             ab.setTitle(R.string.results);
             ab.setDisplayHomeAsUpEnabled(true);
         }
+
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
 
         //Setting ListView
         listView = (ListView) findViewById(R.id.results_list);
@@ -74,18 +80,18 @@ public class SearchActivity extends BaseActivity {
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                     MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE);
             suggestions.saveRecentQuery(query, null);
-            doMySearch(query);
+            doMySearchOnFirebase(query);
         }
     }
 
-    private void doMySearch(String query) {
+    private void doMySearchOnFirebase(String query) {
         showProgressDialog(getString(R.string.loading),SearchActivity.this);
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mySearchRef;
         Query mySearchQuery;
         ValueEventListener mySearchListener;
 
-        mySearchRef = mDatabase.getReference().child(getString(R.string.products));
+        mySearchRef = mDatabase.getReference().child(mCityCode).child(getString(R.string.products));
         mySearchQuery = mySearchRef.orderByChild("Name").startAt(query).endAt(query + "\uF8FF");
         mySearchListener = new ValueEventListener() {
             @Override

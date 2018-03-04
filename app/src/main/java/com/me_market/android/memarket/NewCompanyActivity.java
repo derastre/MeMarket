@@ -1,6 +1,8 @@
 package com.me_market.android.memarket;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -28,7 +30,7 @@ public class NewCompanyActivity extends BaseActivity {
 
     private EditText companyName;
     private Spinner companyTypeSpinner;
-
+    private String mCityCode;
     private DatabaseReference myRef;
     private ValueEventListener companiesTypesListener;
     private ArrayList<String> companyTypesArrayList;
@@ -41,6 +43,10 @@ public class NewCompanyActivity extends BaseActivity {
         //Getting widgets ids
         companyName=(EditText) findViewById(R.id.companyName);
         companyTypeSpinner = (Spinner) findViewById(R.id.companyTypeSpinner);
+
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
 
         //Setting spinner
         getCompaniesTypesListFromFirebase();
@@ -71,7 +77,7 @@ public class NewCompanyActivity extends BaseActivity {
 
     public void writeNewCompanyOnFirebase(String name, String type){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
+        DatabaseReference myRef = database.getReference().child(mCityCode);
         Company company= new Company(name,type);
         myRef.child(getString(R.string.companies)).push().setValue(company);
 
@@ -81,7 +87,7 @@ public class NewCompanyActivity extends BaseActivity {
 
         showProgressDialog(getString(R.string.loading),NewCompanyActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(getString(R.string.companies_types));
+        myRef = database.getReference().child(mCityCode).child(getString(R.string.companies_types));
 
         companiesTypesListener = new ValueEventListener() {
             @Override
@@ -101,7 +107,7 @@ public class NewCompanyActivity extends BaseActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         int j = companyTypeSpinner.getAdapter().getCount()-1;
-                        if (i==j) addNewCompanyType();
+                        if (i==j) addNewCompanyTypeFirebase();
                     }
 
                     @Override
@@ -128,7 +134,7 @@ public class NewCompanyActivity extends BaseActivity {
         companyTypeSpinner.setAdapter(adapter);
     }
 
-    private void addNewCompanyType() {
+    private void addNewCompanyTypeFirebase() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.add_new_company_type);
@@ -148,7 +154,7 @@ public class NewCompanyActivity extends BaseActivity {
 
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference();
+                DatabaseReference myRef = database.getReference().child(mCityCode);
                 myRef.child(getString(R.string.companies_types)).push().setValue(type);
                 getCompaniesTypesListFromFirebase();
 

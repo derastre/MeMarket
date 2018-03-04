@@ -1,8 +1,10 @@
 package com.me_market.android.memarket;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -59,7 +61,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     private EditText productName;
     private Spinner productUnitsSpinner;
     private Button addPhoto;
-
+    private String mCityCode;
     private ArrayList<String> unitsArrayList;
 
 
@@ -90,6 +92,10 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         // Capture the layout's EditText and set the string as its text
         productCode.setText(code);
 
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+
         //Setting the spinner
         getProductUnitsListFromFirebase();
 
@@ -97,7 +103,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         Toolbar toolbar = (Toolbar) findViewById(R.id.new_product_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab!=null) ab.setDisplayHomeAsUpEnabled(true);
 
 
     }
@@ -127,7 +133,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         // Write to the database
         HashMap<String, Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
+        DatabaseReference myRef = database.getReference().child(mCityCode);
         Product Product = new Product(ProductCode, name, type, brand, quantity, units);
         final String key = myRef.child(getString(R.string.products_keys)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products) + "/" + key, Product);
@@ -142,7 +148,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference productImagesRef = storageRef.child(getString(R.string.images) + "/" + key);
+        StorageReference productImagesRef = storageRef.child(mCityCode).child(getString(R.string.images) + "/" + key);
 
         InputStream stream = new ByteArrayInputStream(image);
         UploadTask uploadTask = productImagesRef.putStream(stream);
@@ -188,7 +194,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         showProgressDialog(getString(R.string.loading), NewProductActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(getString(R.string.product_units));
+        myRef = database.getReference().child(mCityCode).child(getString(R.string.product_units));
 
         unitsListener = new ValueEventListener() {
             @Override

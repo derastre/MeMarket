@@ -1,5 +1,7 @@
 package com.me_market.android.memarket;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +24,7 @@ public class NewStoreActivity extends AppCompatActivity {
     private EditText storeAddress;
     private EditText storePhone;
     private Company companyData;
-
+    private String mCityCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,11 @@ public class NewStoreActivity extends AppCompatActivity {
             throw new IllegalArgumentException("Must pass COMPANY_ID");
         }
 
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+
+
         TextView textView = (TextView) findViewById(R.id.companyName);
         textView.setText(companyData.Name);
     }
@@ -65,7 +72,7 @@ public class NewStoreActivity extends AppCompatActivity {
         // Write to the database
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
+        DatabaseReference myRef = database.getReference().child(mCityCode);
         Store store= new Store(name,address,phone,companyData);
         String key = myRef.child(getString(R.string.stores)).push().getKey();
         myRef.child(getString(R.string.stores)).child(key).setValue(store);

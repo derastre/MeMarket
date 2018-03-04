@@ -3,6 +3,7 @@ package com.me_market.android.memarket;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
@@ -41,7 +42,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
     private Company companyData;
     private StoresListListener mListener;
     private BaseActivity baseActivity;
-
+    private String mCityCode;
     public StoresListFragment() {
         // Required empty public constructor
     }
@@ -60,6 +61,10 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
         //Floating action button
         FloatingActionButton stores_fab = myView.findViewById(R.id.add_store_fab);
         stores_fab.setOnClickListener(this);
+
+        //Getting the selected city
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
 
         companyData = getArguments().getParcelable(COMPANY_DATA);
 
@@ -95,7 +100,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
         baseActivity = new BaseActivity();
         baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child(getString(R.string.stores));
+        DatabaseReference myRef = database.getReference().child(mCityCode).child(getString(R.string.stores));
         MyRefQuery = myRef.orderByChild(getString(R.string.companydata_id)).equalTo(companyData.getId());
 
         storesListener = new ValueEventListener() {

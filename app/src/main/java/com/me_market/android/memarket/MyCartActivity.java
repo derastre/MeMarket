@@ -2,6 +2,7 @@ package com.me_market.android.memarket;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -46,6 +47,8 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
     private GridLayout gridLayout;
     private ArrayList<Purchase> purchaseArrayList;
     private ListView listView;
+    private String mCityCode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,11 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
 
             }
         });
+
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+
 
         //Getting the product list
         setListProducts();
@@ -165,7 +173,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    public void addPurchase() {
+    public void addPurchaseToFirebase() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.add_all_purchases_question));
@@ -181,7 +189,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
                         childUpdates.put("/" + getString(R.string.purchases) + "/" + mUserId + "/" + register_product.productId + "/" + register_product.timeStamp, register_product);
                     }
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference();
+                    DatabaseReference myRef = database.getReference().child(mCityCode);
                     myRef.updateChildren(childUpdates);
                     clearCart();
                     Snackbar.make(findViewById(R.id.my_cart_list_layout), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)
@@ -360,7 +368,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
 
         switch (i) {
             case R.id.done_button:
-                addPurchase();
+                addPurchaseToFirebase();
                 return true;
 
             case R.id.clear_button:

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.support.design.widget.FloatingActionButton;
@@ -66,6 +67,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     private FloatingActionButton enter_code_fab;
     private boolean autoFocus;
     private boolean useFlash;
+    private String mCityCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,9 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         useFlash = getIntent().getBooleanExtra(UseFlash, false);
         //mUserId = getIntent().getStringExtra(USER_ID);
 
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -271,7 +276,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         showProgressDialog(getString(R.string.loading),this);
 
         mDatabase = FirebaseDatabase.getInstance();
-        myRef = mDatabase.getReference().child(getString(R.string.products_keys)).child(code);
+        myRef = mDatabase.getReference().child(mCityCode).child(getString(R.string.products_keys)).child(code);
 
         myProductListener = new ValueEventListener() {
             @Override

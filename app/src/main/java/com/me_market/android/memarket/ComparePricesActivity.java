@@ -1,6 +1,8 @@
 package com.me_market.android.memarket;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -29,7 +31,7 @@ public class ComparePricesActivity extends BaseActivity {
     private ArrayList<String> companiesNameList;
     private ArrayList<String> priceList;
     private ArrayList<String> storeNameList;
-
+    private String mCityCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,10 @@ public class ComparePricesActivity extends BaseActivity {
         storeNameList = new ArrayList<>();
         productId = getIntent().getStringExtra(PRODUCT_ID);
 
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+
         readPricesFromFirebase();
 
     }
@@ -55,8 +61,8 @@ public class ComparePricesActivity extends BaseActivity {
     private void readPricesFromFirebase() {
         showProgressDialog(getString(R.string.loading),ComparePricesActivity.this);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myPriceRef = database.getReference().child(getString(R.string.prices)).child(productId);
-        final DatabaseReference myStoresRef = database.getReference().child(getString(R.string.stores));
+        DatabaseReference myPriceRef = database.getReference().child(mCityCode).child(getString(R.string.prices)).child(productId);
+        final DatabaseReference myStoresRef = database.getReference().child(mCityCode).child(getString(R.string.stores));
         companiesNameList.add(getString(R.string.company_label));
         storeNameList.add(getString(R.string.store_label));
         priceList.add(getString(R.string.price_text));

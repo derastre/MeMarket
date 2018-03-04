@@ -1,5 +1,7 @@
 package com.me_market.android.memarket;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -33,6 +35,7 @@ public class PurchaseHistoryActivity extends BaseActivity {
     private ArrayList<String> priceList;
     private ArrayList<String> storeNameList;
     private ArrayList<String> timeStamp;
+    private String mCityCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,11 @@ public class PurchaseHistoryActivity extends BaseActivity {
         storeNameList = new ArrayList<>();
         timeStamp = new ArrayList<>();
 
+        //Getting the selected city
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+
+
         readPurchasesHistoryFromFirebase();
     }
 
@@ -62,8 +70,8 @@ public class PurchaseHistoryActivity extends BaseActivity {
         showProgressDialog(getString(R.string.loading), PurchaseHistoryActivity.this);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myHistoryRef = database.getReference().child(getString(R.string.purchases)).child(mUserId).child(productId);
-        final DatabaseReference myStoresRef = database.getReference().child(getString(R.string.stores));
+        DatabaseReference myHistoryRef = database.getReference().child(mCityCode).child(getString(R.string.purchases)).child(mUserId).child(productId);
+        final DatabaseReference myStoresRef = database.getReference().child(mCityCode).child(getString(R.string.stores));
 
 
         //Table headers
