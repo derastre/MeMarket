@@ -75,7 +75,7 @@ public class CityListFragment extends Fragment {
         baseActivity = new BaseActivity();
         baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(getString(R.string.locations)).child(selectedCountryCode);
+        myRef = database.getReference().child(getString(R.string.locations)).child(selectedCountryCode).child(getString(R.string.cities));
 
         cityListener = new ValueEventListener() {
             @Override

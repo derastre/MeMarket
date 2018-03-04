@@ -78,7 +78,7 @@ public class CountryListFragment extends Fragment {
                 countryCodeArrayList = new ArrayList<>();
                 for (DataSnapshot countrySnapshop : dataSnapshot.getChildren()) {
                     if (countrySnapshop.getValue()!=null){
-                        countryNameArrayList.add(countrySnapshop.getValue().toString());
+                        countryNameArrayList.add(countrySnapshop.child(getString(R.string.country_name)).getValue().toString());
                         countryCodeArrayList.add(countrySnapshop.getKey());
                     }
                 }

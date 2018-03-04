@@ -22,4 +22,8 @@
 
     <!--Stores childs-->
     <string name="companydata_id">CompanyData/id</string>
+
+    <!--locations child-->
+    <string name="country_name">country_name</string>
+    <string name="cities">cities</string>
 </resources>
