@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.me_market.android.memarket.components.BaseActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class CountryListFragment extends Fragment {
@@ -78,7 +79,12 @@ public class CountryListFragment extends Fragment {
                 countryCodeArrayList = new ArrayList<>();
                 for (DataSnapshot countrySnapshop : dataSnapshot.getChildren()) {
                     if (countrySnapshop.getValue()!=null){
-                        countryNameArrayList.add(countrySnapshop.child(getString(R.string.country_name)).getValue().toString());
+                        try {
+                            countryNameArrayList.add(countrySnapshop.child(getString(R.string.country_name)).getValue().toString());
+                        } catch (NullPointerException e){
+                            countryNameArrayList.add(getString(R.string.empty));
+                        }
+
                         countryCodeArrayList.add(countrySnapshop.getKey());
                     }
                 }
