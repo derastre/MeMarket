@@ -26,6 +26,7 @@ import com.me_market.android.memarket.models.Product;
 import java.util.ArrayList;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 
 public class SearchActivity extends BaseActivity {
 
@@ -49,8 +50,8 @@ public class SearchActivity extends BaseActivity {
         }
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
 
         //Setting ListView
         listView = (ListView) findViewById(R.id.results_list);

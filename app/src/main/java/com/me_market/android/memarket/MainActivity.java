@@ -147,9 +147,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
         if (mCityCode == null) {
             gotoSelectCity();
+        } else {
+            readOffersFromFirebase();
         }
 
-        readOffersFromFirebase();
     }
 
     public void searchProducts() {

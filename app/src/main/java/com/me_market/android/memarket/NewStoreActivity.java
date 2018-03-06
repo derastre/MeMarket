@@ -16,6 +16,7 @@ import com.me_market.android.memarket.models.Store;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 import static com.me_market.android.memarket.StoresListFragment.COMPANY_DATA;
 
 public class NewStoreActivity extends AppCompatActivity {
@@ -49,8 +50,8 @@ public class NewStoreActivity extends AppCompatActivity {
         }
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
 
 
         TextView textView = (TextView) findViewById(R.id.companyName);

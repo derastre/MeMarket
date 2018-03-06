@@ -23,6 +23,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 
 public class ComparePricesActivity extends BaseActivity {
 
@@ -51,8 +52,8 @@ public class ComparePricesActivity extends BaseActivity {
         productId = getIntent().getStringExtra(PRODUCT_ID);
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
 
         readPricesFromFirebase();
 

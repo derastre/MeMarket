@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 public class PurchaseHistoryActivity extends BaseActivity {
@@ -59,8 +60,8 @@ public class PurchaseHistoryActivity extends BaseActivity {
         timeStamp = new ArrayList<>();
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
 
 
         readPurchasesHistoryFromFirebase();

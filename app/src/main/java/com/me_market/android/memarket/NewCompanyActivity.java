@@ -26,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
+
 public class NewCompanyActivity extends BaseActivity {
 
     private EditText companyName;
@@ -45,8 +47,8 @@ public class NewCompanyActivity extends BaseActivity {
         companyTypeSpinner = (Spinner) findViewById(R.id.companyTypeSpinner);
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
 
         //Setting spinner
         getCompaniesTypesListFromFirebase();

@@ -46,6 +46,7 @@ import java.util.HashMap;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_BARCODE;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
@@ -93,8 +94,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         productCode.setText(code);
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
 
         //Setting the spinner
         getProductUnitsListFromFirebase();
@@ -261,7 +262,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference();
+                DatabaseReference myRef = database.getReference().child(mCityCode);
                 myRef.child(getString(R.string.product_units)).push().setValue(type);
                 getProductUnitsListFromFirebase();
 

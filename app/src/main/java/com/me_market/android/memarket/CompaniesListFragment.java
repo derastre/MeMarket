@@ -24,6 +24,8 @@ import com.me_market.android.memarket.models.Company;
 
 import java.util.ArrayList;
 
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
+
 public class CompaniesListFragment extends Fragment implements View.OnClickListener {
 
     private DatabaseReference myRef;
@@ -54,7 +56,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
         companies_fab.setOnClickListener(this);
 
         //Getting the selected city
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
 
 

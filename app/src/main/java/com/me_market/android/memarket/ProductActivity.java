@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 import static com.me_market.android.memarket.SelectStoreActivity.PREFS_FILE;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
@@ -113,8 +114,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.on_sale_button).setOnClickListener(this);
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
 
         // Get the Intent that started this activity and extract the string
         if (savedInstanceState == null) {
@@ -389,7 +390,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         if (id != null) {
             //Storage for product picture
             FirebaseStorage storage = FirebaseStorage.getInstance();
-            final StorageReference storageRef = storage.getReference().child(getString(R.string.images)).child(id);
+            final StorageReference storageRef = storage.getReference().child(mCityCode).child(getString(R.string.images)).child(id);
             TextView textView;
             //Set product barcode.
             textView = (TextView) findViewById(R.id.productCode);
