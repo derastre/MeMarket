@@ -3,6 +3,7 @@ package com.me_market.android.memarket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 import static com.me_market.android.memarket.ProductActivity.SELECT_UI;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
@@ -45,6 +47,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     private FirebaseDatabase mDatabase;
     private String mUserId;
     private ListView listView;
+    private String mCountryCode;
     private ArrayList<ShoppingListItem> shoppingListItems;
     private static final int RC_SELECT_PRODUCT = 9002;
 
@@ -61,6 +64,10 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
         //Setting FAB listener
         findViewById(R.id.shopping_list_fab).setOnClickListener(this);
+
+        //Getting the selected city
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         //Setting Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.shopping_list_toolbar);
@@ -409,7 +416,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         DatabaseReference myRef;
         ValueEventListener myListener;
 
-        myRef = mDatabase.getReference().child(getString(R.string.products)).child(id);
+        myRef = mDatabase.getReference().child(mCountryCode).child(getString(R.string.products)).child(id);
         myListener = new ValueEventListener() {
             @Override
 

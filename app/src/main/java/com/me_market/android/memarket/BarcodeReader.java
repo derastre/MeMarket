@@ -90,6 +90,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -279,7 +280,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         showProgressDialog(getString(R.string.loading),this);
 
         mDatabase = FirebaseDatabase.getInstance();
-        myRef = mDatabase.getReference().child(mCityCode).child(getString(R.string.products_keys)).child(code);
+        myRef = mDatabase.getReference().child(mCountryCode).child(getString(R.string.products_keys)).child(code);
 
         myProductListener = new ValueEventListener() {
             @Override

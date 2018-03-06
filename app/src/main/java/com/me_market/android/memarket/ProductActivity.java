@@ -392,7 +392,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         if (id != null) {
             //Storage for product picture
             FirebaseStorage storage = FirebaseStorage.getInstance();
-            final StorageReference storageRef = storage.getReference().child(mCityCode).child(getString(R.string.images)).child(id);
+            final StorageReference storageRef = storage.getReference().child(mCountryCode).child(getString(R.string.images)).child(id);
             TextView textView;
             //Set product barcode.
             textView = (TextView) findViewById(R.id.productCode);
