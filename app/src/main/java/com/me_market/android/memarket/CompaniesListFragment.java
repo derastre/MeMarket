@@ -34,6 +34,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
     private ListView listView;
     private BaseActivity baseActivity;
     private String mCityCode;
+    private String mCountryCode;
     private CompaniesListListener mListener;
 
     public CompaniesListFragment() {
@@ -58,6 +59,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
         //Getting the selected city
         SharedPreferences sharedPref = getActivity().getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
 
         //Setting ListView
@@ -89,7 +91,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
         baseActivity = new BaseActivity();
         baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(mCityCode).child(getString(R.string.companies));
+        myRef = database.getReference().child(mCountryCode).child(getString(R.string.companies));
 
         companiesListener = new ValueEventListener() {
             @Override

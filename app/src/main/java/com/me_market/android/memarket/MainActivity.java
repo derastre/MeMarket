@@ -76,6 +76,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private AdView mAdView;
     private String mCityCode;
 
+
+    //TODO: Poner ciertas cosas bajo PAIS (product_units,product_keys, etc)
+    //Precios y ofertas si deberian estar bajo ciudad.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

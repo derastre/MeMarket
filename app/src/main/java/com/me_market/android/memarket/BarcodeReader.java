@@ -70,6 +70,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     private boolean autoFocus;
     private boolean useFlash;
     private String mCityCode;
+    private String mCountryCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

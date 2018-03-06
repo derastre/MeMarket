@@ -33,6 +33,7 @@ public class NewCompanyActivity extends BaseActivity {
     private EditText companyName;
     private Spinner companyTypeSpinner;
     private String mCityCode;
+    private String mCountryCode;
     private DatabaseReference myRef;
     private ValueEventListener companiesTypesListener;
     private ArrayList<String> companyTypesArrayList;
@@ -49,6 +50,7 @@ public class NewCompanyActivity extends BaseActivity {
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         //Setting spinner
         getCompaniesTypesListFromFirebase();
@@ -79,7 +81,7 @@ public class NewCompanyActivity extends BaseActivity {
 
     public void writeNewCompanyOnFirebase(String name, String type){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child(mCityCode);
+        DatabaseReference myRef = database.getReference().child(mCountryCode);
         Company company= new Company(name,type);
         myRef.child(getString(R.string.companies)).push().setValue(company);
 
@@ -89,7 +91,7 @@ public class NewCompanyActivity extends BaseActivity {
 
         showProgressDialog(getString(R.string.loading),NewCompanyActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(mCityCode).child(getString(R.string.companies_types));
+        myRef = database.getReference().child(mCountryCode).child(getString(R.string.companies_types));
 
         companiesTypesListener = new ValueEventListener() {
             @Override
@@ -156,7 +158,7 @@ public class NewCompanyActivity extends BaseActivity {
 
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference().child(mCityCode);
+                DatabaseReference myRef = database.getReference().child(mCountryCode);
                 myRef.child(getString(R.string.companies_types)).push().setValue(type);
                 getCompaniesTypesListFromFirebase();
 

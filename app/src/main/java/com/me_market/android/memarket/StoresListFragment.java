@@ -45,6 +45,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
     private StoresListListener mListener;
     private BaseActivity baseActivity;
     private String mCityCode;
+    private String mCountryCode;
     public StoresListFragment() {
         // Required empty public constructor
     }
@@ -67,6 +68,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
         //Getting the selected city
         SharedPreferences sharedPref = getActivity().getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         companyData = getArguments().getParcelable(COMPANY_DATA);
 
@@ -102,7 +104,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
         baseActivity = new BaseActivity();
         baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child(mCityCode).child(getString(R.string.stores));
+        DatabaseReference myRef = database.getReference().child(mCountryCode).child(mCityCode).child(getString(R.string.stores));
         MyRefQuery = myRef.orderByChild(getString(R.string.companydata_id)).equalTo(companyData.getId());
 
         storesListener = new ValueEventListener() {

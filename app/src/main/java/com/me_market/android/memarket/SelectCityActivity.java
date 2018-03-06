@@ -88,10 +88,11 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     }
 
     @Override
-    public void onCitySelected(String s){
+    public void onCitySelected(String city, String country){
         SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.city_pref), s);
+        editor.putString(getString(R.string.city_pref), city);
+        editor.putString(getString(R.string.country_pref), country);
         editor.commit();
 
         finish();

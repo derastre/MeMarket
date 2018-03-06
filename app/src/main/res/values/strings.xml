@@ -240,6 +240,7 @@
     <string name="countries_list">Paises</string>
     <string name="city_pref">selected_city</string>
     <string name="empty">Empty</string>
+    <string name="country_pref">selected_country</string>
 
 
 </resources>

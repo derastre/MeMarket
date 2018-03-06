@@ -47,7 +47,6 @@ import java.util.HashMap;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_BARCODE;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
-import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
 public class NewProductActivity extends BaseActivity implements View.OnClickListener {
@@ -63,6 +62,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     private Spinner productUnitsSpinner;
     private Button addPhoto;
     private String mCityCode;
+    private String mCountryCode;
     private ArrayList<String> unitsArrayList;
 
 
@@ -96,6 +96,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         //Setting the spinner
         getProductUnitsListFromFirebase();
@@ -134,7 +135,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         // Write to the database
         HashMap<String, Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child(mCityCode);
+        DatabaseReference myRef = database.getReference().child(mCountryCode);
         Product Product = new Product(ProductCode, name, type, brand, quantity, units);
         final String key = myRef.child(getString(R.string.products_keys)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products) + "/" + key, Product);
@@ -149,7 +150,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference productImagesRef = storageRef.child(mCityCode).child(getString(R.string.images) + "/" + key);
+        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images) + "/" + key);
 
         InputStream stream = new ByteArrayInputStream(image);
         UploadTask uploadTask = productImagesRef.putStream(stream);
@@ -195,7 +196,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         showProgressDialog(getString(R.string.loading), NewProductActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(mCityCode).child(getString(R.string.product_units));
+        myRef = database.getReference().child(mCountryCode).child(getString(R.string.product_units));
 
         unitsListener = new ValueEventListener() {
             @Override
@@ -215,7 +216,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         int j = productUnitsSpinner.getAdapter().getCount() - 1;
-                        if (i == j) addNewProductUnit();
+                        if (i == j) addNewProductUnitFirebase();
                     }
 
                     @Override
@@ -242,7 +243,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         productUnitsSpinner.setAdapter(adapter);
     }
 
-    private void addNewProductUnit() {
+    private void addNewProductUnitFirebase() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.add_new_unit_type);
@@ -262,7 +263,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference().child(mCityCode);
+                DatabaseReference myRef = database.getReference().child(mCountryCode);
                 myRef.child(getString(R.string.product_units)).push().setValue(type);
                 getProductUnitsListFromFirebase();
 

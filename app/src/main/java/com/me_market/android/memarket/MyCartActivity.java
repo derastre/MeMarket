@@ -49,6 +49,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
     private ArrayList<Purchase> purchaseArrayList;
     private ListView listView;
     private String mCityCode;
+    private String mCountryCode;
 
 
     @Override
@@ -101,6 +102,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
 
         //Getting the product list
@@ -190,7 +192,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
                         childUpdates.put("/" + getString(R.string.purchases) + "/" + mUserId + "/" + register_product.productId + "/" + register_product.timeStamp, register_product);
                     }
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference().child(mCityCode);
+                    DatabaseReference myRef = database.getReference().child(mCountryCode).child(mCityCode);
                     myRef.updateChildren(childUpdates);
                     clearCart();
                     Snackbar.make(findViewById(R.id.my_cart_list_layout), getString(R.string.purchase_added_snackbar), Snackbar.LENGTH_LONG)

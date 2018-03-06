@@ -37,6 +37,7 @@ public class PurchaseHistoryActivity extends BaseActivity {
     private ArrayList<String> storeNameList;
     private ArrayList<String> timeStamp;
     private String mCityCode;
+    private String mCountryCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class PurchaseHistoryActivity extends BaseActivity {
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
 
         readPurchasesHistoryFromFirebase();
@@ -71,8 +73,8 @@ public class PurchaseHistoryActivity extends BaseActivity {
         showProgressDialog(getString(R.string.loading), PurchaseHistoryActivity.this);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myHistoryRef = database.getReference().child(mCityCode).child(getString(R.string.purchases)).child(mUserId).child(productId);
-        final DatabaseReference myStoresRef = database.getReference().child(mCityCode).child(getString(R.string.stores));
+        DatabaseReference myHistoryRef = database.getReference().child(mCountryCode).child(mCityCode).child(getString(R.string.purchases)).child(mUserId).child(productId);
+        final DatabaseReference myStoresRef = database.getReference().child(mCountryCode).child(mCityCode).child(getString(R.string.stores));
 
 
         //Table headers

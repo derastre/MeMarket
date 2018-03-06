@@ -56,7 +56,7 @@ public class CityListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                mListener.onCitySelected(cityCodeArrayList.get(position));
+                mListener.onCitySelected(cityCodeArrayList.get(position),selectedCountryCode);
             }
         });
 
@@ -118,7 +118,7 @@ public class CityListFragment extends Fragment {
     }
 
     public interface CityListListener {
-        void onCitySelected(String c);
+        void onCitySelected(String city,String country);
     }
 
     @Override
