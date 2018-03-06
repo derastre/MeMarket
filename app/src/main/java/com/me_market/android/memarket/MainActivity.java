@@ -60,6 +60,7 @@ import static com.me_market.android.memarket.SplashActivity.USER_NAME;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String SHARED_PREF = "com.example.android.memarket.SHARED_PREF";
     private String mUserId;
     private String mUserName;
     private String mUserEmail;
@@ -142,9 +143,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
 
         //Getting the selected city
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
-        if (mCityCode == null) gotoSelectCity();
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        if (mCityCode == null) {
+            gotoSelectCity();
+        }
 
         readOffersFromFirebase();
     }

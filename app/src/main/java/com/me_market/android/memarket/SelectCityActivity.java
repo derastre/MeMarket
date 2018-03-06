@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.me_market.android.memarket.CityListFragment.COUNTRY_CODE;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 
 public class SelectCityActivity extends BaseActivity implements CountryListFragment.CountryListListener,
         CityListFragment.CityListListener{
@@ -88,10 +89,12 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
 
     @Override
     public void onCitySelected(String s){
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.city_pref), s);
-        editor.apply();
+        editor.commit();
+
+        finish();
     }
 
     private void locationFromGPS() {

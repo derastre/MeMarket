@@ -45,13 +45,12 @@ public class CityListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.fragment_city_list, container, false);
 
         selectedCountryCode = getArguments().getString(COUNTRY_CODE);
 
         //Setting ListView
-        listView = myView.findViewById(R.id.countriesList);
+        listView = myView.findViewById(R.id.citiesList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
