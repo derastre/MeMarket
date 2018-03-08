@@ -137,7 +137,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void setShoppingListOnListView() {
-        listView = (ListView) findViewById(R.id.shopping_list_listview);
+        //listView = (ListView) findViewById(R.id.shopping_list_listview);
         if (shoppingListItems != null) {
             ShoppingListActivity.productArrayAdapter adapter = new ShoppingListActivity.productArrayAdapter(this, R.layout.shopping_list_listview_layout, shoppingListItems);
             adapter.notifyDataSetInvalidated();
