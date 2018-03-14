@@ -215,6 +215,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private void startSelectStore() {
         startActivity(new Intent(ProductActivity.this, SelectStoreActivity.class));
         mStore = getSelectedStore();
+        readProductFromFirebase();
     }
 
     public void scan_barcode() {
