@@ -184,11 +184,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
         textView = (TextView) findViewById(R.id.selectedStoreName);
         textView.setText(storename);
-
-
-        readProductFromFirebase();
-
-
     }
 
     private void askToSelectStore() {
@@ -757,6 +752,12 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         } else {
             startActivity(new Intent(this, LoginActivity.class));
         }
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        readProductFromFirebase();
     }
 
     @Override
