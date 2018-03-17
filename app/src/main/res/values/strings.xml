@@ -241,6 +241,13 @@
     <string name="city_pref">selected_city</string>
     <string name="empty">Empty</string>
     <string name="country_pref">selected_country</string>
+    <string name="getting_current_location">Getting current location</string>
+    <string name="current_location">Current location</string>
+    <string name="country">Country</string>
+    <string name="country_code">Country code</string>
+    <string name="city">City</string>
+    <string name="question_add_city">Do you want to add this city?</string>
+    <string name="permission_location_rationale">Location permission is needed to add a city</string>
 
 
 </resources>
