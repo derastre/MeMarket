@@ -231,7 +231,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
             ActivityCompat.requestPermissions(SelectCityActivity.this, permissions, RC_HANDLE_LOCATION_PERM);
-            this.recreate();
+            //this.recreate();
             return;
         }
 
