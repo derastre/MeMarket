@@ -1,7 +1,6 @@
 package com.me_market.android.memarket;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,12 +17,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -39,8 +36,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.me_market.android.memarket.components.BaseActivity;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,6 +55,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     private String cityName;
     private String countryName;
     private String countryCode;
+    private int attemps;
     private boolean mRequestingLocationUpdates;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
@@ -97,9 +93,6 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        //View where we add a new city
-        dialogView = getLayoutInflater().inflate(R.layout.add_country_city_dialog, null);
-
         //FAB Button
         FloatingActionButton addCityFab = (FloatingActionButton) findViewById(R.id.add_city_fab);
         addCityFab.setOnClickListener(this);
@@ -134,7 +127,11 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
         finish();
     }
 
-    private void getlocationFromGPS() {
+    private void getlocation() {
+        //Setting GPS attemps back to 0
+        attemps = 0;
+
+        showProgressDialog(getString(R.string.getting_location), this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         showProgressDialog(getString(R.string.loading), SelectCityActivity.this);
         if (ActivityCompat.checkSelfPermission(SelectCityActivity.this,
@@ -143,7 +140,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
+                            // Got last known location. In some rare sit uations this can be null.
                             if (location != null) {
                                 findCountryCityGeocode(location);
                             } else {
@@ -157,6 +154,10 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     }
 
     private void findCountryCityGeocode(Location location) {
+        updateProgressDialogMessage(getString(R.string.getting_city_name));
+        //View where we add a new city
+        dialogView = getLayoutInflater().inflate(R.layout.add_country_city_dialog, null);
+
         Geocoder geocoder = new Geocoder(SelectCityActivity.this, Locale.getDefault());
         try {
             List<Address> list = geocoder.getFromLocation(
@@ -166,14 +167,18 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
                 countryName = address.getCountryName();
                 countryCode = address.getCountryCode();
                 cityName = address.getSubAdminArea();
-                TextView textView = dialogView.findViewById(R.id.country_name_textview);
-                textView.setText(countryName);
-                textView = dialogView.findViewById(R.id.country_code_textview);
-                textView.setText(countryCode);
-                textView = dialogView.findViewById(R.id.city_name_textview);
-                textView.setText(cityName);
-
-                hideProgressDialog();
+                if (cityName != null) {
+                    TextView textView = dialogView.findViewById(R.id.country_name_textview);
+                    textView.setText(countryName);
+                    textView = dialogView.findViewById(R.id.country_code_textview);
+                    textView.setText(countryCode);
+                    textView = dialogView.findViewById(R.id.city_name_textview);
+                    textView.setText(cityName);
+                    hideProgressDialog();
+                    add_new_city();
+                } else {
+                    findCurrentLocation();
+                }
             }
         } catch (IOException e) {
             Log.e("Location", "Impossible to connect to Geocoder", e);
@@ -181,30 +186,40 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     }
 
     private void findCurrentLocation() {
-        createLocationRequest();
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
+        String message = getString(R.string.getting_gps_signal) + " " + attemps;
+        updateProgressDialogMessage(message);
+        if (attemps == 0) {
+            createLocationRequest();
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        return;
+                    }
+                    attemps = attemps + 1;
+
+                    Location location = locationResult.getLastLocation();
+                    //for (Location location : locationResult.getLocations()) {
+                    findCountryCityGeocode(location);
+                    //}
                 }
-                Location location = locationResult.getLastLocation();
 
-                //for (Location location : locationResult.getLocations()) {
-                findCountryCityGeocode(location);
-                //}
-            }
-
-            ;
-        };
+                ;
+            };
+        } else if (attemps == 5) {
+            stopLocationUpdates();
+            hideProgressDialog();
+            Snackbar.make(findViewById(R.id.fragment_container_city), R.string.city_location_error,
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        }
     }
 
     private void add_new_city() {
 
-        AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
-        getlocationFromGPS();
+
         // Set up the buttons
         builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
             @Override
@@ -219,8 +234,9 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
                 dialog.cancel();
             }
         });
-        dialog = builder.create();
-        dialog.show();
+        builder.show();
+        //dialog = builder.create();
+        //dialog.show();
     }
 
     private void requestLocationPermission() {
@@ -244,7 +260,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
             }
         };
 
-        findViewById(R.id.camera_view).setOnClickListener(listener);
+        findViewById(R.id.fragment_container_city).setOnClickListener(listener);
         Snackbar.make(findViewById(R.id.fragment_container_city), R.string.permission_location_rationale,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok, listener)
@@ -321,7 +337,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.add_city_fab) {
-            add_new_city();
+            getlocation();
         }
     }
 }

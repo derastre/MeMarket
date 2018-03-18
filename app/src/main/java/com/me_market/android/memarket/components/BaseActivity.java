@@ -51,6 +51,12 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void updateProgressDialogMessage(String message){
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.setMessage(message);
+        }
+    }
+
     @Override
     public void onStop() {
         super.onStop();

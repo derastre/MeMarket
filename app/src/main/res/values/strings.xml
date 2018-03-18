@@ -248,6 +248,10 @@
     <string name="city">City</string>
     <string name="question_add_city">Do you want to add this city?</string>
     <string name="permission_location_rationale">Location permission is needed to add a city</string>
+    <string name="getting_location">Getting location</string>
+    <string name="getting_city_name">Getting city name</string>
+    <string name="getting_gps_signal">Getting gps signal</string>
+    <string name="city_location_error">Cannot locate city</string>
 
 
 </resources>
