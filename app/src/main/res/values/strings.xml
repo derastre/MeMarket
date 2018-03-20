@@ -252,6 +252,10 @@
     <string name="getting_city_name">Getting city name</string>
     <string name="getting_gps_signal">Getting gps signal</string>
     <string name="city_location_error">Cannot locate city</string>
+    <string name="product_description_input">Description</string>
+    <string name="saving_new_product">Saving</string>
+    <string name="loading_picture">Loading picture</string>
+    <string name="loading_product_data">Loading product data</string>
 
 
 </resources>

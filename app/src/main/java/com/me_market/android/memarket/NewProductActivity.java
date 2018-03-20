@@ -63,6 +63,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     private Button addPhoto;
     private String mCityCode;
     private String mCountryCode;
+    private boolean uploadComplete;
     private ArrayList<String> unitsArrayList;
 
 
@@ -94,9 +95,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         productCode.setText(code);
 
         //Getting the selected city
-        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
-        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        mCountryCode = sharedPref.getString(getString(R.string.country_pref), null);
 
         //Setting the spinner
         getProductUnitsListFromFirebase();
@@ -105,7 +106,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         Toolbar toolbar = (Toolbar) findViewById(R.id.new_product_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        if (ab!=null) ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
 
 
     }
@@ -128,11 +129,14 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         writeNewProductOnFirebase(code, name, type, brand, quantity, units, imageData);
 
-        finish();
+        //finish();
+
     }
 
     public void writeNewProductOnFirebase(final String ProductCode, String name, String type, String brand, Float quantity, String units, byte[] image) {
         // Write to the database
+        uploadComplete = false;
+        showProgressDialog(getString(R.string.saving_new_product), NewProductActivity.this);
         HashMap<String, Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
@@ -143,7 +147,13 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                startProductActivity(key, ProductCode);
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(key, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_picture));
+                }
             }
         });
 
@@ -162,7 +172,13 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(key, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_product_data));
+                }
             }
         });
 
@@ -170,8 +186,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
     private void startProductActivity(String id, String code) {
         startActivity(new Intent(this, ProductActivity.class)
-                        .putExtra(PRODUCT_ID, id)
-                        .putExtra(PRODUCT_BARCODE, code)
+                .putExtra(PRODUCT_ID, id)
+                .putExtra(PRODUCT_BARCODE, code)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
         );
     }
 

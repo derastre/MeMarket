@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:layout_margin="8dp"
             android:text="@string/product_code_input" />
 
         <TextView
@@ -31,8 +32,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_margin="8dp"
             android:maxLines="1"
-            android:textAlignment="center" />
+            android:text="123456"
+            android:textAlignment="textStart" />
     </LinearLayout>
 
     <ScrollView
@@ -84,7 +87,7 @@
                         android:id="@+id/productTypeInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/product_type_input"
+                        android:hint="@string/product_description_input"
                         app:hintEnabled="true"
                         android:inputType="textCapSentences" />
 

@@ -166,7 +166,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
                 Address address = list.get(0);
                 countryName = address.getCountryName();
                 countryCode = address.getCountryCode();
-                cityName = address.getSubAdminArea();
+                cityName = address.getAdminArea();
                 if (cityName != null) {
                     TextView textView = dialogView.findViewById(R.id.country_name_textview);
                     textView.setText(countryName);
