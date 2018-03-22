@@ -193,7 +193,7 @@
     <string name="loading_picture">Loading picture</string>
     <string name="loading_product_data">Loading product data</string>
     <string name="unit_detail_text">Product unit detail</string>
-    <string name="product_no_barcode">Product unit doesn\'t have a barcode</string>
+    <string name="product_no_barcode">This unit doesn\'t have a barcode</string>
 
 
 </resources>
