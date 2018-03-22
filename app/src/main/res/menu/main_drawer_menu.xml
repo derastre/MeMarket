@@ -14,7 +14,7 @@
 
     <item
         android:id="@+id/select_city_button"
-        android:title="@string/select_city"
+        android:title="@string/select_area"
         android:icon="@drawable/ic_location_city_black_24dp"/>
 
     <item

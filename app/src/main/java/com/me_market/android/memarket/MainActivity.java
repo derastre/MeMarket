@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
-import static com.me_market.android.memarket.ProductActivity.SELECT_UI;
 import static com.me_market.android.memarket.SplashActivity.USER_EMAIL;
 import static com.me_market.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
@@ -147,7 +146,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
         if (mCityCode == null) {
             gotoSelectCity();
         } else {
@@ -195,7 +194,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dateToday.set(Calendar.MINUTE, 0);
         Long dateStart = dateToday.getTimeInMillis();
 
-        myOfferRef = mDatabase.getReference().child(mCityCode).child(getString(R.string.sales_history));
+        myOfferRef = mDatabase.getReference().child(mCityCode).child(getString(R.string.sales_history_fb));
         myOfferQuery = myOfferRef.orderByKey().startAt(dateStart.toString());
         myOfferListener = new ValueEventListener() {
             @Override

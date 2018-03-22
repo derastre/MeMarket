@@ -54,7 +54,7 @@ public class ComparePricesActivity extends BaseActivity {
 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
         mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         readPricesFromFirebase();
@@ -64,8 +64,8 @@ public class ComparePricesActivity extends BaseActivity {
     private void readPricesFromFirebase() {
         showProgressDialog(getString(R.string.loading),ComparePricesActivity.this);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myPriceRef = database.getReference().child(mCountryCode).child(mCityCode).child(getString(R.string.prices)).child(productId);
-        final DatabaseReference myStoresRef = database.getReference().child(mCountryCode).child(mCityCode).child(getString(R.string.stores));
+        DatabaseReference myPriceRef = database.getReference().child(mCountryCode).child(mCityCode).child(getString(R.string.prices_fb)).child(productId);
+        final DatabaseReference myStoresRef = database.getReference().child(mCountryCode).child(mCityCode).child(getString(R.string.stores_fb));
         companiesNameList.add(getString(R.string.company_label));
         storeNameList.add(getString(R.string.store_label));
         priceList.add(getString(R.string.price_text));

@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--database roots-->
-    <string name="companies">companies</string>
-    <string name="companies_types">companies_types</string>
-    <string name="prices">prices</string>
-    <string name="prices_history">prices_history</string>
-    <string name="product_units">product_units</string>
-    <string name="products">products</string>
-    <string name="products_keys">products_keys</string>
-    <string name="purchases">purchases</string>
-    <string name="sales">sales</string>
-    <string name="sales_history">sales_history</string>
-    <string name="shopping_list">shopping_list</string>
-    <string name="stores">stores</string>
-    <string name="locations">locations</string>
+    <string name="companies_fb">companies</string>
+    <string name="companies_types_fb">companies_types</string>
+    <string name="prices_fb">prices</string>
+    <string name="prices_history_fb">prices_history</string>
+    <string name="product_units_fb">product_units</string>
+    <string name="products_fb">products</string>
+    <string name="products_keys_fb">products_keys</string>
+    <string name="purchases_fb">purchases</string>
+    <string name="sales_fb">sales</string>
+    <string name="sales_history_fb">sales_history</string>
+    <string name="shopping_list_fb">shopping_list</string>
+    <string name="stores_fb">stores</string>
+    <string name="locations_fb">locations</string>
 
-    <string name="images">images</string>
+    <string name="images_fb">images</string>
 
     <!--shopping list child-->
-    <string name="checked">checked</string>
+    <string name="checked_fb">checked</string>
 
     <!--Stores childs-->
-    <string name="companydata_id">CompanyData/id</string>
+    <string name="companydata_id_fb">CompanyData/id</string>
 
     <!--locations child-->
-    <string name="country_name">country_name</string>
-    <string name="cities">cities</string>
+    <string name="country_name_fb">country_name</string>
+    <string name="cities_fb">cities</string>
 </resources>

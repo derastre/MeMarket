@@ -96,7 +96,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref), null);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref), null);
         mCountryCode = sharedPref.getString(getString(R.string.country_pref), null);
 
         //Setting the spinner
@@ -141,9 +141,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
         Product Product = new Product(ProductCode, name, type, brand, quantity, units);
-        final String key = myRef.child(getString(R.string.products_keys)).child(ProductCode).push().getKey();
-        childsUpdate.put("/" + getString(R.string.products) + "/" + key, Product);
-        childsUpdate.put("/" + getString(R.string.products_keys) + "/" + ProductCode + "/" + key, name);
+        final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
+        childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -160,7 +160,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         //Write picture
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images) + "/" + key);
+        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images_fb) + "/" + key);
 
         InputStream stream = new ByteArrayInputStream(image);
         UploadTask uploadTask = productImagesRef.putStream(stream);
@@ -213,7 +213,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         showProgressDialog(getString(R.string.loading), NewProductActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(mCountryCode).child(getString(R.string.product_units));
+        myRef = database.getReference().child(mCountryCode).child(getString(R.string.product_units_fb));
 
         unitsListener = new ValueEventListener() {
             @Override
@@ -281,7 +281,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference().child(mCountryCode);
-                myRef.child(getString(R.string.product_units)).push().setValue(type);
+                myRef.child(getString(R.string.product_units_fb)).push().setValue(type);
                 getProductUnitsListFromFirebase();
 
             }

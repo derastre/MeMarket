@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -107,7 +106,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         ValueEventListener myListener;
 
         shoppingListItems = new ArrayList<>();
-        myRef = mDatabase.getReference().child(getString(R.string.shopping_list)).child(mUserId);
+        myRef = mDatabase.getReference().child(getString(R.string.shopping_list_fb)).child(mUserId);
         myListener = new ValueEventListener() {
             @Override
 
@@ -276,7 +275,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         ShoppingListItem shoppingListItem;
 
         shoppingListItem = shoppingListItems.get(position);
-        myRef = mDatabase.getReference().child(getString(R.string.shopping_list)).child(mUserId).child(shoppingListItem.productId).child(getString(R.string.checked));
+        myRef = mDatabase.getReference().child(getString(R.string.shopping_list_fb)).child(mUserId).child(shoppingListItem.productId).child(getString(R.string.checked_fb));
         myRef.setValue( false,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -292,7 +291,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         ShoppingListItem shoppingListItem;
 
         shoppingListItem = shoppingListItems.get(position);
-        myRef = mDatabase.getReference().child(getString(R.string.shopping_list)).child(mUserId).child(shoppingListItem.productId).child(getString(R.string.checked));
+        myRef = mDatabase.getReference().child(getString(R.string.shopping_list_fb)).child(mUserId).child(shoppingListItem.productId).child(getString(R.string.checked_fb));
         myRef.setValue( true,new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -308,7 +307,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         ShoppingListItem shoppingListItem;
 
         shoppingListItem = shoppingListItems.get(position);
-        myRef = mDatabase.getReference().child(getString(R.string.shopping_list)).child(mUserId).child(shoppingListItem.productId);
+        myRef = mDatabase.getReference().child(getString(R.string.shopping_list_fb)).child(mUserId).child(shoppingListItem.productId);
         myRef.removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -389,8 +388,8 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         Query myQuery;
         ValueEventListener myListener;
 
-        myRef = mDatabase.getReference().child(getString(R.string.shopping_list)).child(mUserId);
-        myQuery = myRef.orderByChild(getString(R.string.checked)).equalTo(true);
+        myRef = mDatabase.getReference().child(getString(R.string.shopping_list_fb)).child(mUserId);
+        myQuery = myRef.orderByChild(getString(R.string.checked_fb)).equalTo(true);
         myListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -415,7 +414,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
         DatabaseReference myRef;
 
-        myRef = mDatabase.getReference().child(getString(R.string.shopping_list)).child(mUserId);
+        myRef = mDatabase.getReference().child(getString(R.string.shopping_list_fb)).child(mUserId);
         myRef.removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -428,7 +427,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
         DatabaseReference myRef;
         ValueEventListener myListener;
 
-        myRef = mDatabase.getReference().child(mCountryCode).child(getString(R.string.products)).child(id);
+        myRef = mDatabase.getReference().child(mCountryCode).child(getString(R.string.products_fb)).child(id);
         myListener = new ValueEventListener() {
             @Override
 
@@ -469,7 +468,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
 
                         DatabaseReference myWriteRef = mDatabase.getReference();
-                        myWriteRef.child(getString(R.string.shopping_list)).child(mUserId).child(product.getId()).setValue(shoppingListItem, new DatabaseReference.CompletionListener() {
+                        myWriteRef.child(getString(R.string.shopping_list_fb)).child(mUserId).child(product.getId()).setValue(shoppingListItem, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 getShoppingListFromFirebase();

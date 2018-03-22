@@ -89,7 +89,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
-            ab.setTitle(R.string.select_city);
+            ab.setTitle(R.string.select_area);
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -120,7 +120,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     public void onCitySelected(String city, String country) {
         SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.city_pref), city);
+        editor.putString(getString(R.string.area_pref), city);
         editor.putString(getString(R.string.country_pref), country);
         editor.commit();
 
@@ -154,7 +154,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     }
 
     private void findCountryCityGeocode(Location location) {
-        updateProgressDialogMessage(getString(R.string.getting_city_name));
+        updateProgressDialogMessage(getString(R.string.getting_area_name));
         //View where we add a new city
         dialogView = getLayoutInflater().inflate(R.layout.add_country_city_dialog, null);
 
@@ -209,7 +209,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
         } else if (attemps == 5) {
             stopLocationUpdates();
             hideProgressDialog();
-            Snackbar.make(findViewById(R.id.fragment_container_city), R.string.city_location_error,
+            Snackbar.make(findViewById(R.id.fragment_container_city), R.string.area_location_error,
                     Snackbar.LENGTH_LONG)
                     .show();
         }

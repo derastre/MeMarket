@@ -52,7 +52,7 @@ public class NewStoreActivity extends AppCompatActivity {
 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
         mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
 
@@ -77,8 +77,8 @@ public class NewStoreActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode).child(mCityCode);
         Store store= new Store(name,address,phone,companyData);
-        String key = myRef.child(getString(R.string.stores)).push().getKey();
-        myRef.child(getString(R.string.stores)).child(key).setValue(store);
+        String key = myRef.child(getString(R.string.stores_fb)).push().getKey();
+        myRef.child(getString(R.string.stores_fb)).child(key).setValue(store);
 
     }
 

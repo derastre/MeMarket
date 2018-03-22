@@ -49,7 +49,7 @@ public class NewCompanyActivity extends BaseActivity {
 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
         mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         //Setting spinner
@@ -83,7 +83,7 @@ public class NewCompanyActivity extends BaseActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
         Company company= new Company(name,type);
-        myRef.child(getString(R.string.companies)).push().setValue(company);
+        myRef.child(getString(R.string.companies_fb)).push().setValue(company);
 
     }
 
@@ -91,7 +91,7 @@ public class NewCompanyActivity extends BaseActivity {
 
         showProgressDialog(getString(R.string.loading),NewCompanyActivity.this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(mCountryCode).child(getString(R.string.companies_types));
+        myRef = database.getReference().child(mCountryCode).child(getString(R.string.companies_types_fb));
 
         companiesTypesListener = new ValueEventListener() {
             @Override
@@ -159,7 +159,7 @@ public class NewCompanyActivity extends BaseActivity {
                 // Write to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference().child(mCountryCode);
-                myRef.child(getString(R.string.companies_types)).push().setValue(type);
+                myRef.child(getString(R.string.companies_types_fb)).push().setValue(type);
                 getCompaniesTypesListFromFirebase();
 
             }

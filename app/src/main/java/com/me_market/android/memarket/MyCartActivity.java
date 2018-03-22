@@ -101,7 +101,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
         mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
 
@@ -189,7 +189,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
                 if (purchaseArrayList != null) {
                     for (int i = 0; i < purchaseArrayList.size(); i++) {
                         register_product = purchaseArrayList.get(i);
-                        childUpdates.put("/" + getString(R.string.purchases) + "/" + mUserId + "/" + register_product.productId + "/" + register_product.timeStamp, register_product);
+                        childUpdates.put("/" + getString(R.string.purchases_fb) + "/" + mUserId + "/" + register_product.productId + "/" + register_product.timeStamp, register_product);
                     }
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference().child(mCountryCode).child(mCityCode);

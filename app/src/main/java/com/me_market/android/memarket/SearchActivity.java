@@ -52,7 +52,7 @@ public class SearchActivity extends BaseActivity {
 
         //Getting the selected city
         SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.city_pref),null);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
         mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
 
         //Setting ListView
@@ -94,7 +94,7 @@ public class SearchActivity extends BaseActivity {
         Query mySearchQuery;
         ValueEventListener mySearchListener;
 
-        mySearchRef = mDatabase.getReference().child(mCountryCode).child(getString(R.string.products));
+        mySearchRef = mDatabase.getReference().child(mCountryCode).child(getString(R.string.products_fb));
         mySearchQuery = mySearchRef.orderByChild("Name").startAt(query).endAt(query + "\uF8FF");
         mySearchListener = new ValueEventListener() {
             @Override
