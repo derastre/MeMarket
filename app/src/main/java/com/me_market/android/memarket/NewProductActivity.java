@@ -8,8 +8,10 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -55,16 +58,27 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     //private String mUserId;
     private ImageView productImage;
     private TextView productCode;
-    private EditText productType;
-    private EditText productBrand;
-    private EditText productQty;
-    private EditText productName;
+    private TextInputEditText productType;
+    private TextInputEditText productBrand;
+    private TextInputEditText productQty;
+    private TextInputEditText productName;
+    private TextInputEditText productUnitCode;
+    private TextInputEditText productUnitName;
+    private TextInputEditText productUnitDescription;
+    private TextInputEditText productUnitQty;
+    private CheckBox productUnitCheckbox;
     private Spinner productUnitsSpinner;
+    private Spinner productUnitUnitsSpinner;
     private Button addPhoto;
+    private Button productUnitScanCodeButton;
+    private Button productUnitEditNameButton;
+    private Button productUnitEditDescriptionButton;
+    private CardView unitDetail;
     private String mCityCode;
     private String mCountryCode;
     private boolean uploadComplete;
     private ArrayList<String> unitsArrayList;
+    private ArrayList<String> unitsUnitArrayList;
 
 
     @Override
@@ -79,17 +93,32 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         //Get references to layout views
         productCode = (TextView) findViewById(R.id.productCode);
-        productName = (EditText) findViewById(R.id.productNameInput);
-        productType = (EditText) findViewById(R.id.productTypeInput);
-        productBrand = (EditText) findViewById(R.id.productBrandInput);
-        productQty = (EditText) findViewById(R.id.productQuantityInput);
+        productName = (TextInputEditText) findViewById(R.id.productNameInput);
+        productType = (TextInputEditText) findViewById(R.id.productTypeInput);
+        productBrand = (TextInputEditText) findViewById(R.id.productBrandInput);
+        productQty = (TextInputEditText) findViewById(R.id.productQuantityInput);
         productUnitsSpinner = (Spinner) findViewById(R.id.spinner_unit);
         productImage = (ImageView) findViewById(R.id.productImageInput);
         addPhoto = (Button) findViewById(R.id.add_photo_button);
 
+        unitDetail = (CardView) findViewById(R.id.product_unit_detail_cardview);
+        productUnitCode = (TextInputEditText) findViewById(R.id.product_unit_code_edittext);
+        productUnitName = (TextInputEditText) findViewById(R.id.product_unit_name_edittext);
+        productUnitDescription = (TextInputEditText) findViewById(R.id.product_description_unit_edittext);
+        productUnitQty = (TextInputEditText) findViewById(R.id.product_unit_quantity_input);
+        productUnitScanCodeButton = (Button) findViewById(R.id.product_unit_barcode_button);
+        productUnitEditNameButton = (Button) findViewById(R.id.product_unit_edit_name_button);
+        productUnitEditDescriptionButton = (Button) findViewById(R.id.product_unit_edit_description_button);
+        productUnitCheckbox = (CheckBox) findViewById(R.id.product_unit_checkbox);
+
+
         //Listeners
         addPhoto.setOnClickListener(this);
         productImage.setOnClickListener(this);
+        productUnitScanCodeButton.setOnClickListener(this);
+        productUnitEditNameButton.setOnClickListener(this);
+        productUnitEditDescriptionButton.setOnClickListener(this);
+        productUnitCheckbox.setOnClickListener(this);
 
         // Capture the layout's EditText and set the string as its text
         productCode.setText(code);
@@ -102,6 +131,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         //Setting the spinner
         getProductUnitsListFromFirebase();
 
+        //Setting the unit detail card view
+        initializeUnitDetailCardView();
+
         //Setting Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.new_product_toolbar);
         setSupportActionBar(toolbar);
@@ -109,6 +141,16 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
 
 
+    }
+
+    private void initializeUnitDetailCardView() {
+        unitDetail.setVisibility(View.GONE);
+        productUnitName.setVisibility(View.GONE);
+        productUnitEditNameButton.setVisibility(View.GONE);
+        productUnitDescription.setVisibility(View.GONE);
+        productUnitEditDescriptionButton.setVisibility(View.GONE);
+        productUnitQty.setVisibility(View.GONE);
+        productUnitUnitsSpinner.setVisibility(View.GONE);
     }
 
     public void addProduct() {
@@ -215,24 +257,49 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child(mCountryCode).child(getString(R.string.product_units_fb));
 
+        //Initializing arrays
+        unitsArrayList = new ArrayList<>();
+        unitsArrayList.add("");
+        unitsArrayList.add(getString(R.string.unit_count));
+
+        unitsUnitArrayList= new ArrayList<>();
+        unitsUnitArrayList.add("");
+
         unitsListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                unitsArrayList = new ArrayList<>();
-                unitsArrayList.add("");
+
                 for (DataSnapshot unitsSnapshop : dataSnapshot.getChildren()) {
-                    String companyType = unitsSnapshop.getValue().toString();
-                    if (companyType != null) {
-                        unitsArrayList.add(companyType);
+                    String unitName = unitsSnapshop.getValue().toString();
+                    if (unitName != null) {
+                        unitsArrayList.add(unitName);
+                        unitsUnitArrayList.add(unitName);
                     }
                 }
                 unitsArrayList.add(getString(R.string.add_new_unit_type));
+                unitsUnitArrayList.add(getString(R.string.add_new_unit_type));
+
                 setUnitsTypesSpinner();
+
                 productUnitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         int j = productUnitsSpinner.getAdapter().getCount() - 1;
+                        if (i == j) addNewProductUnitFirebase();
+                        if (i == 1) unitDetail.setVisibility(View.VISIBLE); else unitDetail.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+                productUnitUnitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        int j = productUnitUnitsSpinner.getAdapter().getCount() - 1;
                         if (i == j) addNewProductUnitFirebase();
                     }
 
@@ -241,6 +308,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
                     }
                 });
+
                 hideProgressDialog();
             }
 
@@ -258,6 +326,10 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsArrayList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productUnitsSpinner.setAdapter(adapter);
+
+        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsUnitArrayList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        productUnitUnitsSpinner.setAdapter(adapter);
     }
 
     private void addNewProductUnitFirebase() {
@@ -306,8 +378,37 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             case R.id.productImageInput:
                 takePicture();
                 break;
+            case R.id.product_unit_checkbox:
+                if (((CheckBox) v).isChecked()) {
+                    showProductUnitCardViewDetails(true);
+                }
+                else {
+                    showProductUnitCardViewDetails(false);
+                }
         }
 
+    }
+
+    private void showProductUnitCardViewDetails(boolean b) {
+        if (b){
+            productUnitName.setVisibility(View.VISIBLE);
+            productUnitEditNameButton.setVisibility(View.VISIBLE);
+            productUnitDescription.setVisibility(View.VISIBLE);
+            productUnitEditDescriptionButton.setVisibility(View.VISIBLE);
+            productUnitQty.setVisibility(View.VISIBLE);
+            productUnitUnitsSpinner.setVisibility(View.VISIBLE);
+            productUnitScanCodeButton.setEnabled(false);
+            productUnitCode.setEnabled(false);
+        } else {
+            productUnitName.setVisibility(View.GONE);
+            productUnitEditNameButton.setVisibility(View.GONE);
+            productUnitDescription.setVisibility(View.GONE);
+            productUnitEditDescriptionButton.setVisibility(View.GONE);
+            productUnitQty.setVisibility(View.GONE);
+            productUnitUnitsSpinner.setVisibility(View.GONE);
+            productUnitScanCodeButton.setEnabled(true);
+            productUnitCode.setEnabled(true);
+        }
     }
 
     @Override

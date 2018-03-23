@@ -79,17 +79,6 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
 
         //Setting ListView
         listView = (ListView) findViewById(R.id.shopping_list_listview);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (shoppingListItems != null) {
-//                    startActivity(new Intent(ShoppingListActivity.this, ProductActivity.class)
-//                            .putExtra(PRODUCT_ID, shoppingListItems.get(position).productId)
-//                    );
-//                }
-//            }
-//        });
 
         //Getting the product shopping list
         if (mUserId != null) {
