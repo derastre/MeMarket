@@ -62,6 +62,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public static final String SELECT_UI = "com.me_market.android.memarket.SELECT_UI";
     public static final String filename = "myPurchases.save";
     private static final int RC_BARCODE_CAPTURE = 9001;
+    public static final String PRODUCT_DATA = "com.me_market.android.memarket.PRODUCT_DATA";
 
 
     private FloatingActionButton scan_fab;
@@ -849,6 +850,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             case R.id.select_button:
                 Intent data = new Intent();
                 data.putExtra(PRODUCT_ID, mProductId);
+                data.putExtra(PRODUCT_DATA, mProduct);
                 setResult(CommonStatusCodes.SUCCESS, data);
                 finish();
                 return true;

@@ -39,6 +39,7 @@
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/new_product_scroll_layout"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_margin="8dp"
@@ -193,6 +194,7 @@
                                 android:layout_marginTop="8dp"
                                 android:layout_weight="1"
                                 android:hint="@string/product_name_input"
+                                android:textColorHint="@color/hintColor"
                                 android:inputType="textCapSentences" />
 
                             <Button
@@ -242,7 +244,7 @@
                                 app:hintEnabled="true" />
 
                             <Spinner
-                                android:id="@+id/spinner_ProductUnit_unit"
+                                android:id="@+id/product_unit_spinner"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1.5" />

@@ -4,9 +4,9 @@
     <color name="primaryColor">#0091ea</color>
     <color name="primaryLightColor">#64c1ff</color>
     <color name="primaryDarkColor">#0064b7</color>
-    <color name="secondaryColor">#ffff00</color>
+    <color name="secondaryColor">#f7a900</color>
     <color name="secondaryLightColor">#ffff5a</color>
-    <color name="secondaryDarkColor">#f7a900</color>
+    <color name="secondaryDarkColor">#6e500e</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#ffffff</color>
 
@@ -14,5 +14,6 @@
 
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
+    <color name="hintColor">#f7a900</color>
 
 </resources>

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,11 +52,14 @@ import java.util.HashMap;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_BARCODE;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
+import static com.me_market.android.memarket.ProductActivity.PRODUCT_DATA;
+import static com.me_market.android.memarket.ProductActivity.SELECT_UI;
 
 
 public class NewProductActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int CAMERA_REQUEST = 1888;
+    private static final int RC_SELECT_PRODUCT = 9003;
     //private String mUserId;
     private ImageView productImage;
     private TextView productCode;
@@ -79,6 +84,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     private boolean uploadComplete;
     private ArrayList<String> unitsArrayList;
     private ArrayList<String> unitsUnitArrayList;
+    private String mProductUnitId;
 
 
     @Override
@@ -110,7 +116,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         productUnitEditNameButton = (Button) findViewById(R.id.product_unit_edit_name_button);
         productUnitEditDescriptionButton = (Button) findViewById(R.id.product_unit_edit_description_button);
         productUnitCheckbox = (CheckBox) findViewById(R.id.product_unit_checkbox);
-
+        productUnitUnitsSpinner = (Spinner) findViewById(R.id.product_unit_spinner);
 
         //Listeners
         addPhoto.setOnClickListener(this);
@@ -151,6 +157,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         productUnitEditDescriptionButton.setVisibility(View.GONE);
         productUnitQty.setVisibility(View.GONE);
         productUnitUnitsSpinner.setVisibility(View.GONE);
+
+        productUnitName.setEnabled(false);
+        productUnitDescription.setEnabled(false);
     }
 
     public void addProduct() {
@@ -246,6 +255,31 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             productImage.setVisibility(View.VISIBLE);
             addPhoto.setVisibility(View.GONE);
         }
+        //Returning from barcode capture activity
+        if (requestCode == RC_SELECT_PRODUCT) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Product mProductUnit = data.getParcelableExtra(PRODUCT_DATA);
+                    mProductUnitId = data.getStringExtra(PRODUCT_ID);
+                    productUnitName.setText(mProductUnit.Name);
+                    productUnitDescription.setText(mProductUnit.Type);
+                    productUnitCode.setText(mProductUnit.Barcode);
+                    productUnitQty.setText(String.format("%f",mProductUnit.Quantity));
+                    productUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
+                } else {
+                    finish();
+                }
+            } else {
+                Snackbar.make(findViewById(R.id.new_product_scroll_layout),
+                        String.format(getString(R.string.barcode_error), CommonStatusCodes.getStatusCodeString(resultCode)),
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+
     }
 
     public void getProductUnitsListFromFirebase() {
@@ -262,7 +296,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         unitsArrayList.add("");
         unitsArrayList.add(getString(R.string.unit_count));
 
-        unitsUnitArrayList= new ArrayList<>();
+        unitsUnitArrayList = new ArrayList<>();
         unitsUnitArrayList.add("");
 
         unitsListener = new ValueEventListener() {
@@ -287,7 +321,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         int j = productUnitsSpinner.getAdapter().getCount() - 1;
                         if (i == j) addNewProductUnitFirebase();
-                        if (i == 1) unitDetail.setVisibility(View.VISIBLE); else unitDetail.setVisibility(View.GONE);
+                        if (i == 1) unitDetail.setVisibility(View.VISIBLE);
+                        else unitDetail.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -381,16 +416,32 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             case R.id.product_unit_checkbox:
                 if (((CheckBox) v).isChecked()) {
                     showProductUnitCardViewDetails(true);
-                }
-                else {
+                } else {
                     showProductUnitCardViewDetails(false);
                 }
+                break;
+            case R.id.product_unit_barcode_button:
+                startGetBarcode();
+                break;
+            case R.id.product_unit_edit_name_button:
+                productUnitName.setEnabled(true);
+                break;
+            case R.id.product_unit_edit_description_button:
+                productUnitDescription.setEnabled(true);
+                break;
+
         }
 
     }
 
+    private void startGetBarcode() {
+        startActivityForResult(new Intent(NewProductActivity.this, ProductActivity.class)
+                .putExtra(SELECT_UI, "Select"), RC_SELECT_PRODUCT);
+    }
+
+
     private void showProductUnitCardViewDetails(boolean b) {
-        if (b){
+        if (b) {
             productUnitName.setVisibility(View.VISIBLE);
             productUnitEditNameButton.setVisibility(View.VISIBLE);
             productUnitDescription.setVisibility(View.VISIBLE);
