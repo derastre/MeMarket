@@ -178,7 +178,16 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageData = baos.toByteArray();
 
-        writeNewProductOnFirebase(code, name, type, brand, quantity, units, imageData);
+        int i = productUnitsSpinner.getSelectedItemPosition();
+        int j = productUnitsSpinner.getAdapter().getCount() - 1;
+        if (i == j){
+            //TODO: CONTINUAR AQUI
+            if ()
+
+            writeNewProductWithUnitOnFirebase(code, name, type, brand, quantity, units, imageData);
+
+        }
+        else writeNewProductOnFirebase(code, name, type, brand, quantity, units, imageData);
 
         //finish();
 
@@ -264,7 +273,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     productUnitName.setText(mProductUnit.Name);
                     productUnitDescription.setText(mProductUnit.Type);
                     productUnitCode.setText(mProductUnit.Barcode);
-                    productUnitQty.setText(String.format("%f",mProductUnit.Quantity));
+                    productUnitQty.setText(String.format("%f", mProductUnit.Quantity));
                     productUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
                 } else {
                     finish();
@@ -438,7 +447,6 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         startActivityForResult(new Intent(NewProductActivity.this, ProductActivity.class)
                 .putExtra(SELECT_UI, "Select"), RC_SELECT_PRODUCT);
     }
-
 
     private void showProductUnitCardViewDetails(boolean b) {
         if (b) {
