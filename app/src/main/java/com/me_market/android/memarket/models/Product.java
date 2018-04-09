@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by Arturo Deras on 20/8/2017.
  */
 @IgnoreExtraProperties
-public class Product implements Serializable{
+public class Product implements Serializable {
 
     private String Id;
     public String Barcode;
@@ -27,11 +27,18 @@ public class Product implements Serializable{
     }
 
     public Product(String Barcode, String ProductName, String ProductType, String ProductBrand, Float ProductQuantity, String ProductUnits) {
-
         this.Barcode = Barcode;
         this.Name = ProductName;
         this.Type = ProductType;
         this.Brand = ProductBrand;
+        this.Quantity = ProductQuantity;
+        this.Units = ProductUnits;
+    }
+
+    public Product(String Barcode,String ProductName, String ProductType, Float ProductQuantity, String ProductUnits) {
+        this.Barcode = Barcode;
+        this.Name = ProductName;
+        this.Type = ProductType;
         this.Quantity = ProductQuantity;
         this.Units = ProductUnits;
     }

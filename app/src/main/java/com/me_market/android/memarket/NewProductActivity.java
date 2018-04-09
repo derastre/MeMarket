@@ -180,18 +180,154 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         int i = productUnitsSpinner.getSelectedItemPosition();
         int j = productUnitsSpinner.getAdapter().getCount() - 1;
-        if (i == j){
-            //TODO: CONTINUAR AQUI
-            if ()
-
-            writeNewProductWithUnitOnFirebase(code, name, type, brand, quantity, units, imageData);
-
-        }
-        else writeNewProductOnFirebase(code, name, type, brand, quantity, units, imageData);
+        if (i == j) {
+            if (productUnitCheckbox.isChecked()) {
+                String unitName = productUnitName.getText().toString();
+                String unitDescription = productUnitDescription.getText().toString();
+                Float unitQty = Float.parseFloat(productUnitQty.getText().toString());
+                String unitUnits = productUnitUnitsSpinner.getSelectedItem().toString();
+                writeNewProductWithUnitNoBarcodeOnFirebase(code, name, type, brand, quantity, units, imageData, unitName, unitDescription, unitQty, unitUnits);
+            } else {
+                String unitCode = productUnitCode.getText().toString();
+                writeNewProductWithUnitBarcodeOnFirebase(code, name, type, brand, quantity, units, imageData, unitCode);
+            }
+        } else writeNewProductOnFirebase(code, name, type, brand, quantity, units, imageData);
 
         //finish();
 
     }
+
+    private void writeNewProductWithUnitBarcodeOnFirebase(final String ProductCode,
+                                                          String name,
+                                                          String type,
+                                                          String brand,
+                                                          Float quantity,
+                                                          String units,
+                                                          byte[] image,
+                                                          String unitCode) {
+        // Write to the database
+        uploadComplete = false;
+        showProgressDialog(getString(R.string.saving_new_product), NewProductActivity.this);
+        HashMap<String, Object> childsUpdate = new HashMap<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(mCountryCode);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units);
+
+
+        final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
+        childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), true);
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/" + getString(R.string.barcode_fb), unitCode);
+
+
+        myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(key, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_picture));
+                }
+            }
+        });
+
+        //Write picture
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images_fb) + "/" + key);
+
+        InputStream stream = new ByteArrayInputStream(image);
+        UploadTask uploadTask = productImagesRef.putStream(stream);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(key, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_product_data));
+                }
+            }
+        });
+
+    }
+
+    private void writeNewProductWithUnitNoBarcodeOnFirebase(final String ProductCode,
+                                                            String name,
+                                                            String type,
+                                                            String brand,
+                                                            Float quantity,
+                                                            String units,
+                                                            byte[] image,
+                                                            String unitName,
+                                                            String unitDescription,
+                                                            Float unitQty,
+                                                            String unitUnits) {
+        // Write to the database
+        uploadComplete = false;
+        showProgressDialog(getString(R.string.saving_new_product), NewProductActivity.this);
+        HashMap<String, Object> childsUpdate = new HashMap<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(mCountryCode);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units);
+        Product unitProduct = new Product(null, unitName, unitDescription, quantity, units);
+
+        final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
+        childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), true);
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb), unitProduct);
+
+
+        myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(key, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_picture));
+                }
+            }
+        });
+
+        //Write picture
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images_fb) + "/" + key);
+
+        InputStream stream = new ByteArrayInputStream(image);
+        UploadTask uploadTask = productImagesRef.putStream(stream);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(key, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_product_data));
+                }
+            }
+        });
+
+    }
+
 
     public void writeNewProductOnFirebase(final String ProductCode, String name, String type, String brand, Float quantity, String units, byte[] image) {
         // Write to the database
@@ -204,6 +340,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), false);
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

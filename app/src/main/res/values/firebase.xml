@@ -26,4 +26,10 @@
     <!--locations child-->
     <string name="country_name_fb">country_name</string>
     <string name="cities_fb">cities</string>
+
+    <!--product child-->
+    <string name="hasUnit_fb">hasUnitChild</string>
+    <string name="unitChild_fb">child</string>
+    <string name="barcode_fb">barcode</string>
+
 </resources>
