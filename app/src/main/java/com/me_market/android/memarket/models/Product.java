@@ -17,6 +17,7 @@ public class Product implements Serializable {
     public String Brand;
     public Float Quantity;
     public String Units;
+    public Boolean hasChild;
     private Float currentPrice;
     private Float currentOffer;
     private Boolean isOffer;
@@ -26,16 +27,17 @@ public class Product implements Serializable {
         // Default constructor required for calls to DataSnapshot.getValue(Product.class)
     }
 
-    public Product(String Barcode, String ProductName, String ProductType, String ProductBrand, Float ProductQuantity, String ProductUnits) {
+    public Product(String Barcode, String ProductName, String ProductType, String ProductBrand, Float ProductQuantity, String ProductUnits, Boolean ProductChild) {
         this.Barcode = Barcode;
         this.Name = ProductName;
         this.Type = ProductType;
         this.Brand = ProductBrand;
         this.Quantity = ProductQuantity;
         this.Units = ProductUnits;
+        this.hasChild = ProductChild;
     }
 
-    public Product(String Barcode,String ProductName, String ProductType, Float ProductQuantity, String ProductUnits) {
+    public Product(String Barcode, String ProductName, String ProductType, Float ProductQuantity, String ProductUnits) {
         this.Barcode = Barcode;
         this.Name = ProductName;
         this.Type = ProductType;

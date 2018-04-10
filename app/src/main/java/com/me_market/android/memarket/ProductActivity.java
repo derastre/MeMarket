@@ -70,6 +70,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private String selectUi;
     private String mProductId;
     private Product mProduct;
+    private Product mProductUnit;
     private Boolean scan_barcode_called;
     private Store mStore;
     private String mUserId;
@@ -114,11 +115,13 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.compare_price_button).setOnClickListener(this);
         findViewById(R.id.view_history_button).setOnClickListener(this);
         findViewById(R.id.on_sale_button).setOnClickListener(this);
+        findViewById(R.id.view_unit_detail_button).setOnClickListener(this);
+
 
         //Getting the selected city
-        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
-        mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
-        mCountryCode= sharedPref.getString(getString(R.string.country_pref),null);
+        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        mCityCode = sharedPref.getString(getString(R.string.area_pref), null);
+        mCountryCode = sharedPref.getString(getString(R.string.country_pref), null);
 
         // Get the Intent that started this activity and extract the string
         if (savedInstanceState == null) {
@@ -243,6 +246,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     mProduct = dataSnapshot.getValue(Product.class);
                     if (mProduct != null) {
                         mProduct.setId(dataSnapshot.getKey());
+                        if (mProduct.hasChild) {
+                            mProductUnit = dataSnapshot.child(getString(R.string.unitChild_fb)).getValue(Product.class);
+                            mProductUnit.setId(dataSnapshot.child(getString(R.string.unitChild_fb)).getKey());
+                        } else mProductUnit = null;
                         updateProductUI();
                     }
                 }
@@ -394,21 +401,38 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             //Set product barcode.
             textView = (TextView) findViewById(R.id.productCode);
             textView.setText(mProduct.Barcode);
-            textView = (TextView) findViewById(R.id.productName);
+            textView = (TextView) findViewById(R.id.product_name_TextView);
             textView.setText(mProduct.Name);
-            textView = (TextView) findViewById(R.id.productType);
+            textView = (TextView) findViewById(R.id.product_description_TextView);
             textView.setText(mProduct.Type);
-            textView = (TextView) findViewById(R.id.productBrand);
+            textView = (TextView) findViewById(R.id.product_brand_TextView);
             textView.setText(mProduct.Brand);
-            textView = (TextView) findViewById(R.id.productQuantity);
+            textView = (TextView) findViewById(R.id.product_qty_TextView);
             String Qty = mProduct.Quantity + " " + mProduct.Units;
             textView.setText(Qty);
-            ImageView productImage = (ImageView) findViewById(R.id.productImage);
+            ImageView productImage = (ImageView) findViewById(R.id.product_image_ImageView);
             Glide.with(this)
                     .using(new FirebaseImageLoader())
                     .load(storageRef)
                     .into(productImage);
             findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.view_unit_detail_button).setVisibility(View.GONE);
+
+            //Getting unit detail info
+            if (mProductUnit != null) {
+                if (!mProductUnit.getId().equals("null")) {
+                    findViewById(R.id.view_unit_detail_button).setVisibility(View.VISIBLE);
+                } else {
+                    textView = (TextView) findViewById(R.id.product_unit_name_TextView);
+                    textView.setText(mProductUnit.Name);
+                    textView = (TextView) findViewById(R.id.product_unit_description_TextView);
+                    textView.setText(mProductUnit.Type);
+                    textView = (TextView) findViewById(R.id.product_unit_quantity_TextView);
+                    Qty = mProductUnit.Quantity + " " + mProductUnit.Units;
+                    textView.setText(Qty);
+                }
+            }
+
 
             hideProgressDialog();
 
@@ -756,7 +780,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         readProductFromFirebase();
     }
@@ -815,6 +839,10 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.on_sale_button:
                 markAsOnSaleFirebase();
+                break;
+            case R.id.view_unit_detail_button:
+                startActivity(new Intent(this, ProductActivity.class)
+                        .putExtra(PRODUCT_ID, mProductUnit.getId()));
                 break;
         }
 

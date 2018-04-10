@@ -85,6 +85,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     private ArrayList<String> unitsArrayList;
     private ArrayList<String> unitsUnitArrayList;
     private String mProductUnitId;
+    private Product mProductUnit;
 
 
     @Override
@@ -107,7 +108,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         productImage = (ImageView) findViewById(R.id.productImageInput);
         addPhoto = (Button) findViewById(R.id.add_photo_button);
 
-        unitDetail = (CardView) findViewById(R.id.product_unit_detail_cardview);
+        unitDetail = (CardView) findViewById(R.id.new_product_unit_detail_cardview);
         productUnitCode = (TextInputEditText) findViewById(R.id.product_unit_code_edittext);
         productUnitName = (TextInputEditText) findViewById(R.id.product_unit_name_edittext);
         productUnitDescription = (TextInputEditText) findViewById(R.id.product_description_unit_edittext);
@@ -188,8 +189,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 String unitUnits = productUnitUnitsSpinner.getSelectedItem().toString();
                 writeNewProductWithUnitNoBarcodeOnFirebase(code, name, type, brand, quantity, units, imageData, unitName, unitDescription, unitQty, unitUnits);
             } else {
-                String unitCode = productUnitCode.getText().toString();
-                writeNewProductWithUnitBarcodeOnFirebase(code, name, type, brand, quantity, units, imageData, unitCode);
+                if (mProductUnitId!=null) {
+                    writeNewProductWithUnitBarcodeOnFirebase(code, name, type, brand, quantity, units, imageData, mProductUnitId, mProductUnit );
+                }
             }
         } else writeNewProductOnFirebase(code, name, type, brand, quantity, units, imageData);
 
@@ -204,21 +206,21 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                                                           Float quantity,
                                                           String units,
                                                           byte[] image,
-                                                          String unitCode) {
+                                                          String unitId,
+                                                          Product productUnit) {
         // Write to the database
         uploadComplete = false;
         showProgressDialog(getString(R.string.saving_new_product), NewProductActivity.this);
         HashMap<String, Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
-        Product Product = new Product(ProductCode, name, type, brand, quantity, units);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units, true);
 
 
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
-        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), true);
-        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/" + getString(R.string.barcode_fb), unitCode);
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/" + unitId, productUnit);
 
 
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -278,14 +280,13 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         HashMap<String, Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
-        Product Product = new Product(ProductCode, name, type, brand, quantity, units);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units , true);
         Product unitProduct = new Product(null, unitName, unitDescription, quantity, units);
 
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
-        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), true);
-        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb), unitProduct);
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/null", unitProduct);
 
 
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -336,7 +337,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         HashMap<String, Object> childsUpdate = new HashMap<>();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
-        Product Product = new Product(ProductCode, name, type, brand, quantity, units);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units,false);
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
@@ -405,7 +406,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         if (requestCode == RC_SELECT_PRODUCT) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
-                    Product mProductUnit = data.getParcelableExtra(PRODUCT_DATA);
+                    mProductUnit = data.getParcelableExtra(PRODUCT_DATA);
                     mProductUnitId = data.getStringExtra(PRODUCT_ID);
                     productUnitName.setText(mProductUnit.Name);
                     productUnitDescription.setText(mProductUnit.Type);
