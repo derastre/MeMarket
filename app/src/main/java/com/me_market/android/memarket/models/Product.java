@@ -18,9 +18,20 @@ public class Product implements Serializable {
     public Float Quantity;
     public String Units;
     public Boolean hasChild;
+
+    public Product getProductChild() {
+        return ProductChild;
+    }
+
+    public void setProductChild(Product productChild) {
+        ProductChild = productChild;
+    }
+
+    private Product ProductChild;
     private Float currentPrice;
     private Float currentOffer;
     private Boolean isOffer;
+
 
 
     public Product() {

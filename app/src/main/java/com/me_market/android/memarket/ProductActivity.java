@@ -247,8 +247,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     if (mProduct != null) {
                         mProduct.setId(dataSnapshot.getKey());
                         if (mProduct.hasChild) {
-                            mProductUnit = dataSnapshot.child(getString(R.string.unitChild_fb)).getValue(Product.class);
-                            mProductUnit.setId(dataSnapshot.child(getString(R.string.unitChild_fb)).getKey());
+                            mProductUnit = mProduct.getProductChild();
                         } else mProductUnit = null;
                         updateProductUI();
                     }
@@ -417,12 +416,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     .into(productImage);
             findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
             findViewById(R.id.view_unit_detail_button).setVisibility(View.GONE);
+            findViewById(R.id.product_unit_detail_CardView).setVisibility(View.GONE);
 
             //Getting unit detail info
             if (mProductUnit != null) {
-                if (!mProductUnit.getId().equals("null")) {
+                if (mProductUnit.getId()!=null) {
                     findViewById(R.id.view_unit_detail_button).setVisibility(View.VISIBLE);
                 } else {
+                    findViewById(R.id.product_unit_detail_CardView).setVisibility(View.VISIBLE);
                     textView = (TextView) findViewById(R.id.product_unit_name_TextView);
                     textView.setText(mProductUnit.Name);
                     textView = (TextView) findViewById(R.id.product_unit_description_TextView);
@@ -430,6 +431,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     textView = (TextView) findViewById(R.id.product_unit_quantity_TextView);
                     Qty = mProductUnit.Quantity + " " + mProductUnit.Units;
                     textView.setText(Qty);
+
                 }
             }
 

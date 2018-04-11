@@ -169,19 +169,20 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         String name = productName.getText().toString();
         String type = productType.getText().toString();
         String brand = productBrand.getText().toString();
-        Float quantity = Float.parseFloat(productQty.getText().toString());
+        Float quantity = Float.parseFloat(productQty.getText().toString()); //TODO: Check if empty
         String units = productUnitsSpinner.getSelectedItem().toString();
 
         productImage.setDrawingCacheEnabled(true);
         productImage.buildDrawingCache();
         Bitmap bitmap = productImage.getDrawingCache();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] imageData = baos.toByteArray();
 
         int i = productUnitsSpinner.getSelectedItemPosition();
-        int j = productUnitsSpinner.getAdapter().getCount() - 1;
-        if (i == j) {
+
+        if (i == 1) {
             if (productUnitCheckbox.isChecked()) {
                 String unitName = productUnitName.getText().toString();
                 String unitDescription = productUnitDescription.getText().toString();
@@ -281,13 +282,14 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
         Product Product = new Product(ProductCode, name, type, brand, quantity, units , true);
-        Product unitProduct = new Product(null, unitName, unitDescription, quantity, units);
+        Product unitProduct = new Product(null, unitName, unitDescription, unitQty, unitUnits);
+        Product.setProductChild(unitProduct);
 
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
-        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/null", unitProduct);
-
+        //childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/none", unitProduct);
+        //com.google.firebase.database.DatabaseException: Path '/products/-L9modcCNQx21WiGefSc' is an ancestor of '/products/-L9modcCNQx21WiGefSc/child/none' in an update.
 
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -631,4 +633,5 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         }
     }
+
 }
