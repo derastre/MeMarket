@@ -416,14 +416,14 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     .into(productImage);
             findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
             findViewById(R.id.view_unit_detail_button).setVisibility(View.GONE);
-            findViewById(R.id.product_unit_detail_CardView).setVisibility(View.GONE);
+            findViewById(R.id.product_unit_detail_layout).setVisibility(View.GONE);
 
             //Getting unit detail info
             if (mProductUnit != null) {
                 if (mProductUnit.getId()!=null) {
                     findViewById(R.id.view_unit_detail_button).setVisibility(View.VISIBLE);
                 } else {
-                    findViewById(R.id.product_unit_detail_CardView).setVisibility(View.VISIBLE);
+                    findViewById(R.id.product_unit_detail_layout).setVisibility(View.VISIBLE);
                     textView = (TextView) findViewById(R.id.product_unit_name_TextView);
                     textView.setText(mProductUnit.Name);
                     textView = (TextView) findViewById(R.id.product_unit_description_TextView);

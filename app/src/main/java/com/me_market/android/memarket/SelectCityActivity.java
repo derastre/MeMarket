@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.me_market.android.memarket.CityListFragment.COUNTRY_CODE;
+import static com.me_market.android.memarket.CityListFragment.COUNTRY_NAME;
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 
 public class SelectCityActivity extends BaseActivity implements CountryListFragment.CountryListListener,
@@ -100,11 +101,13 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     }
 
     @Override
-    public void onCountrySelected(String s) {
+    public void onCountrySelected(String code, String name) {
         //Start Stores List Fragment and pass the selected company
         CityListFragment cityListFragment = new CityListFragment();
         Bundle args = new Bundle();
-        args.putString(COUNTRY_CODE, s);
+        args.putString(COUNTRY_CODE, code);
+        args.putString(COUNTRY_NAME, name);
+
         cityListFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

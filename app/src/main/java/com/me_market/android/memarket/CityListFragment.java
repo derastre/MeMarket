@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class CityListFragment extends Fragment {
 
     public static final String COUNTRY_CODE = "com.example.android.memarket.COUNTRY_CODE";
+    public static final String COUNTRY_NAME = "com.example.android.memarket.COUNTRY_NAME";
     private DatabaseReference myRef;
     private ValueEventListener cityListener;
     private ArrayList<String> cityNameArrayList;
@@ -48,7 +50,9 @@ public class CityListFragment extends Fragment {
         View myView = inflater.inflate(R.layout.fragment_city_list, container, false);
 
         selectedCountryCode = getArguments().getString(COUNTRY_CODE);
-
+        String name = getArguments().getString(COUNTRY_NAME);
+        TextView textView = (TextView) myView.findViewById(R.id.countryNameText);
+        textView.setText(name);
         //Setting ListView
         listView = myView.findViewById(R.id.citiesList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,7 +60,7 @@ public class CityListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                mListener.onCitySelected(cityCodeArrayList.get(position),selectedCountryCode);
+                mListener.onCitySelected(cityCodeArrayList.get(position), selectedCountryCode);
             }
         });
 
@@ -73,7 +77,7 @@ public class CityListFragment extends Fragment {
     public void getCitiesListFromFirebase() {
         //Obtener lista de companias de la base de datos
         baseActivity = new BaseActivity();
-        baseActivity.showProgressDialog(getString(R.string.loading),getActivity());
+        baseActivity.showProgressDialog(getString(R.string.loading), getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child(getString(R.string.locations_fb)).child(selectedCountryCode).child(getString(R.string.cities_fb));
 
@@ -83,7 +87,7 @@ public class CityListFragment extends Fragment {
                 cityNameArrayList = new ArrayList<>();
                 cityCodeArrayList = new ArrayList<>();
                 for (DataSnapshot countrySnapshop : dataSnapshot.getChildren()) {
-                    if (countrySnapshop.getValue()!=null){
+                    if (countrySnapshop.getValue() != null) {
                         cityNameArrayList.add(countrySnapshop.getValue().toString());
                         cityCodeArrayList.add(countrySnapshop.getKey());
                     }
@@ -118,7 +122,7 @@ public class CityListFragment extends Fragment {
     }
 
     public interface CityListListener {
-        void onCitySelected(String city,String country);
+        void onCitySelected(String city, String country);
     }
 
     @Override

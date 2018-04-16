@@ -51,7 +51,7 @@ public class CountryListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                mListener.onCountrySelected(countryCodeArrayList.get(position));
+                mListener.onCountrySelected(countryCodeArrayList.get(position),countryNameArrayList.get(position));
             }
         });
 
@@ -117,7 +117,7 @@ public class CountryListFragment extends Fragment {
     }
 
     public interface CountryListListener {
-        void onCountrySelected(String c);
+        void onCountrySelected(String code, String name);
     }
 
     @Override
