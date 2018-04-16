@@ -31,6 +31,13 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <!-- Email Buttons -->
+    <style name="ThemeOverlay.MyEmailButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:background">@color/grey_300</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+
     <!-- Tittle text -->
     <style name="ThemeOverlay.MyTitleText." parent="AppTheme">
         <item name="android:gravity">center</item>

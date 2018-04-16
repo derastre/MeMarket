@@ -54,16 +54,17 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         setContentView(R.layout.activity_login);
 
         // Views
-        mUserNameField = (EditText) findViewById(R.id.field_user_name);
-        mEmailField = (EditText) findViewById(R.id.field_email);
-        mPasswordField = (EditText) findViewById(R.id.field_password);
+        //mUserNameField = (EditText) findViewById(R.id.field_user_name);
+        //mEmailField = (EditText) findViewById(R.id.field_email);
+        //mPasswordField = (EditText) findViewById(R.id.field_password);
 
         // Buttons
-        findViewById(R.id.email_sign_in_button).setOnClickListener(this);
-        findViewById(R.id.email_create_account_button).setOnClickListener(this);
-        findViewById(R.id.create_account_button).setOnClickListener(this);
-        findViewById(R.id.cancel_button).setOnClickListener(this);
+        //findViewById(R.id.email_sign_in_button).setOnClickListener(this);
+        //findViewById(R.id.email_create_account_button).setOnClickListener(this);
+        //findViewById(R.id.create_account_button).setOnClickListener(this);
+        //findViewById(R.id.cancel_button).setOnClickListener(this);
         findViewById(R.id.google_sign_in_button).setOnClickListener(this);
+        findViewById(R.id.facebook_login_button).setOnClickListener(this);
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
@@ -133,11 +134,11 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                     .putExtra(USER_NAME, name)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         } else {
-            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-            findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
+            //findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
+            //findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
             findViewById(R.id.providers_login).setVisibility(View.VISIBLE);
-            findViewById(R.id.create_account_buttons).setVisibility(View.GONE);
-            findViewById(R.id.field_user_name).setVisibility(View.GONE);
+            //findViewById(R.id.create_account_buttons).setVisibility(View.GONE);
+            //findViewById(R.id.field_user_name).setVisibility(View.GONE);
         }
     }
 
@@ -400,16 +401,24 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.email_create_account_button) {
-            showCreateAccountFields(true);
-        } else if (i == R.id.email_sign_in_button) {
-            emailSignIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i == R.id.create_account_button) {
-            createAccount(mUserNameField.getText().toString(), mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i == R.id.cancel_button) {
-            showCreateAccountFields(false);
-        } else if (i == R.id.google_sign_in_button) {
-            googleSignIn();
+        switch (i){
+            case R.id.google_sign_in_button:
+                googleSignIn();
+                break;
+            case R.id.facebook_login_button:
+                break;
         }
+
+//        if (i == R.id.email_create_account_button) {
+//            showCreateAccountFields(true);
+//        } else if (i == R.id.email_sign_in_button) {
+//            emailSignIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+//        } else if (i == R.id.create_account_button) {
+//            createAccount(mUserNameField.getText().toString(), mEmailField.getText().toString(), mPasswordField.getText().toString());
+//        } else if (i == R.id.cancel_button) {
+//            showCreateAccountFields(false);
+//        } else if (i == R.id.google_sign_in_button) {
+//            googleSignIn();
+//        }
     }
 }

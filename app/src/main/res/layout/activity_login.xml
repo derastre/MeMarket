@@ -9,6 +9,38 @@
     android:orientation="vertical"
     tools:context="com.me_market.android.memarket.LoginActivity">
 
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/email_password_buttons"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:paddingLeft="16dp"-->
+    <!--android:paddingRight="16dp"-->
+    <!--android:visibility="visible">-->
+
+    <!--<Button-->
+    <!--android:id="@+id/email_sign_in_button"-->
+    <!--style="@style/ThemeOverlay.MyDarkButton"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="@string/sign_in" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/email_create_account_button"-->
+    <!--style="@style/ThemeOverlay.MyDarkButton"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="@string/create_account" />-->
+    <!--</LinearLayout>-->
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -19,7 +51,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:visibility="gone">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/field_user_name"
@@ -51,59 +84,6 @@
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
-        android:id="@+id/email_password_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:visibility="visible">
-
-        <Button
-            android:id="@+id/email_sign_in_button"
-            style="@style/ThemeOverlay.MyDarkButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/sign_in" />
-
-        <Button
-            android:id="@+id/email_create_account_button"
-            style="@style/ThemeOverlay.MyDarkButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/create_account" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/create_account_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/create_account_button"
-            style="@style/ThemeOverlay.MyDarkButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/create_account" />
-
-        <Button
-            android:id="@+id/cancel_button"
-            style="@style/ThemeOverlay.MyDarkButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cancel_button"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/providers_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -120,26 +100,92 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="@string/use_providers_text" />
+            android:text="@string/welcome_card_tittle" />
 
         <View style="@style/VerticalDivider" />
 
-        <com.google.android.gms.common.SignInButton
+
+        <Button
             android:id="@+id/google_sign_in_button"
+            style="@style/ThemeOverlay.MyDarkButton"
+            android:background="@android:color/holo_red_dark"
+            android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/google_sign_in" />
 
-            />
+        <Button
+            android:id="@+id/facebook_login_button"
+            style="@style/ThemeOverlay.MyDarkButton"
+            android:background="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/facebook_sign_in" />
 
-        <!--        <com.facebook.login.widget.LoginButton
-                    android:id="@+id/facebook_login_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+        <!--<com.google.android.gms.common.SignInButton-->
+            <!--android:id="@+id/google_sign_in_button"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingBottom="10dp"-->
 
-                    />
-                    -->
+            <!--/>-->
+
+        <!--<com.facebook.login.widget.LoginButton-->
+            <!--android:id="@+id/facebook_login_button"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:layout_height="wrap_content"-->
+
+            <!--/>-->
+
 
     </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/create_account_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/email_sign_in_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/email_sign_in" />
+
+        <Button
+            android:id="@+id/create_account_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_account" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            style="@style/ThemeOverlay.MyDarkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_button"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
 
 </LinearLayout>

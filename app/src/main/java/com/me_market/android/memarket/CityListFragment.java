@@ -51,7 +51,7 @@ public class CityListFragment extends Fragment {
 
         selectedCountryCode = getArguments().getString(COUNTRY_CODE);
         String name = getArguments().getString(COUNTRY_NAME);
-        TextView textView = (TextView) myView.findViewById(R.id.countryNameText);
+        TextView textView = myView.findViewById(R.id.countryNameText);
         textView.setText(name);
         //Setting ListView
         listView = myView.findViewById(R.id.citiesList);
