@@ -100,7 +100,9 @@
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="@string/welcome_card_tittle" />
+            android:text="@string/welcome_card_tittle"
+            android:textStyle="bold"
+            android:textSize="40sp"/>
 
         <View style="@style/VerticalDivider" />
 
@@ -133,16 +135,16 @@
 
             <!--/>-->
 
-        <!--<com.facebook.login.widget.LoginButton-->
-            <!--android:id="@+id/facebook_login_button"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_marginStart="8dp"-->
-            <!--android:layout_marginEnd="8dp"-->
-            <!--android:paddingTop="10dp"-->
-            <!--android:paddingBottom="10dp"-->
-            <!--android:layout_height="wrap_content"-->
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebook_login_button_wdgt"
+            android:layout_width="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content"
 
-            <!--/>-->
+            />
 
 
     </LinearLayout>

@@ -11,6 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -46,6 +50,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private GoogleApiClient mGoogleApiClient; //Google
     private CallbackManager mCallbackManager; //Facebook
     private FirebaseAuth mAuth;
+    private LoginButton loginButton;
 
 
     @Override
@@ -71,11 +76,11 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         // [END initialize_auth]
 
 
-        /*
+
         // [START initialize_fblogin]
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        loginButton = (LoginButton) findViewById(R.id.facebook_login_button_wdgt);
         loginButton.setReadPermissions("email", "public_profile");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -100,8 +105,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 // [END_EXCLUDE]
             }
         });
+        loginButton.callOnClick();
         // [END initialize_fblogin]
-        */
+
     }
 
     // [START on_start_check_user]
@@ -406,6 +412,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 googleSignIn();
                 break;
             case R.id.facebook_login_button:
+                loginButton.performClick();
                 break;
         }
 
