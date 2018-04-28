@@ -13,6 +13,8 @@ import android.widget.EditText;
 
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.me_market.android.memarket.components.BaseActivity;
@@ -32,6 +34,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Arrays;
 
 import static com.me_market.android.memarket.SplashActivity.USER_EMAIL;
 import static com.me_market.android.memarket.SplashActivity.USER_EMAIL_VERIFICATION;
@@ -56,6 +60,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         // Views
@@ -74,39 +79,6 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
-
-
-
-        // [START initialize_fblogin]
-        // Initialize Facebook Login button
-        mCallbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) findViewById(R.id.facebook_login_button_wdgt);
-        loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "facebook:onCancel");
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(TAG, "facebook:onError", error);
-                // [START_EXCLUDE]
-                updateUI(null);
-                // [END_EXCLUDE]
-            }
-        });
-        loginButton.callOnClick();
-        // [END initialize_fblogin]
 
     }
 
@@ -265,7 +237,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             editText = (EditText) findViewById(R.id.field_password);
             editText.setText(null);
 
-            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
+            //findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
             findViewById(R.id.create_account_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.providers_login).setVisibility(View.GONE);
 
@@ -277,12 +249,47 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             editText = (EditText) findViewById(R.id.field_password);
             editText.setText(null);
 
-            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
+            //findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.create_account_buttons).setVisibility(View.GONE);
             findViewById(R.id.providers_login).setVisibility(View.VISIBLE);
         }
     }
     //[END EMAIL AUTHENTICATION]
+
+    // [START initialize_fblogin]
+    public void facebookSignIn(){
+
+
+        // Initialize Facebook Login button
+
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","public_profile"));
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+                // [START_EXCLUDE]
+                updateUI(null);
+                // [END_EXCLUDE]
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
+                // [START_EXCLUDE]
+                updateUI(null);
+                // [END_EXCLUDE]
+            }
+        });
+
+    }
+    // [END initialize_fblogin]
 
     // [START GOOGLE AUTHENTICATION]
     private void googleSignIn() {
@@ -412,7 +419,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 googleSignIn();
                 break;
             case R.id.facebook_login_button:
-                loginButton.performClick();
+                facebookSignIn();
                 break;
         }
 
