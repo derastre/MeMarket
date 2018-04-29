@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -420,7 +421,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
             //Getting unit detail info
             if (mProductUnit != null) {
-                if (mProductUnit.getId()!=null) {
+                if (mProductUnit.getId() != null) {
                     findViewById(R.id.view_unit_detail_button).setVisibility(View.VISIBLE);
                 } else {
                     findViewById(R.id.product_unit_detail_layout).setVisibility(View.VISIBLE);
@@ -804,20 +805,6 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        scan_fab.hide();
-//        add_purchase_fab.hide();
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        scan_fab.show();
-//        add_purchase_fab.show();
-//    }
-
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -879,8 +866,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 return true;
             case R.id.select_button:
                 Intent data = new Intent();
+                data.putExtra(PRODUCT_DATA, (Parcelable) mProduct);
                 data.putExtra(PRODUCT_ID, mProductId);
-                data.putExtra(PRODUCT_DATA, mProduct);
                 setResult(CommonStatusCodes.SUCCESS, data);
                 finish();
                 return true;

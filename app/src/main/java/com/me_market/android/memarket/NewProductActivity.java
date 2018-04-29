@@ -83,7 +83,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     private String mCountryCode;
     private boolean uploadComplete;
     private ArrayList<String> unitsArrayList;
-    private ArrayList<String> unitsUnitArrayList;
+    //private ArrayList<String> unitsUnitArrayList;
     private String mProductUnitId;
     private Product mProductUnit;
 
@@ -169,7 +169,10 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         String name = productName.getText().toString();
         String type = productType.getText().toString();
         String brand = productBrand.getText().toString();
-        Float quantity = Float.parseFloat(productQty.getText().toString()); //TODO: Check if empty
+        Float quantity = 0f;
+        if(productQty.getText()!=null) {
+            quantity = Float.parseFloat(productQty.getText().toString());
+        }
         String units = productUnitsSpinner.getSelectedItem().toString();
 
         productImage.setDrawingCacheEnabled(true);
@@ -216,12 +219,14 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child(mCountryCode);
         Product Product = new Product(ProductCode, name, type, brand, quantity, units, true);
-
+        //Product unitProduct = new Product(productUnit.Barcode, productUnit.Name, productUnit.Type, productUnit.Quantity, productUnit.Units);
+        productUnit.setId(unitId);
+        Product.setProductChild(productUnit);
 
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
-        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/" + unitId, productUnit);
+        //childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/" + unitId, productUnit);
 
 
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -288,8 +293,6 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
-        //childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/none", unitProduct);
-        //com.google.firebase.database.DatabaseException: Path '/products/-L9modcCNQx21WiGefSc' is an ancestor of '/products/-L9modcCNQx21WiGefSc/child/none' in an update.
 
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -414,7 +417,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     productUnitDescription.setText(mProductUnit.Type);
                     productUnitCode.setText(mProductUnit.Barcode);
                     productUnitQty.setText(String.format("%f", mProductUnit.Quantity));
-                    productUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
+                    productUnitUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
+                    showProductUnitCardViewDetails(true);
+                    productUnitCheckbox.setEnabled(false);
                 } else {
                     finish();
                 }
@@ -445,8 +450,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         unitsArrayList.add("");
         unitsArrayList.add(getString(R.string.unit_count));
 
-        unitsUnitArrayList = new ArrayList<>();
-        unitsUnitArrayList.add("");
+        //unitsUnitArrayList = new ArrayList<>();
+        //unitsUnitArrayList.add("");
 
         unitsListener = new ValueEventListener() {
             @Override
@@ -456,11 +461,11 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     String unitName = unitsSnapshop.getValue().toString();
                     if (unitName != null) {
                         unitsArrayList.add(unitName);
-                        unitsUnitArrayList.add(unitName);
+          //              unitsUnitArrayList.add(unitName);
                     }
                 }
                 unitsArrayList.add(getString(R.string.add_new_unit_type));
-                unitsUnitArrayList.add(getString(R.string.add_new_unit_type));
+            //    unitsUnitArrayList.add(getString(R.string.add_new_unit_type));
 
                 setUnitsTypesSpinner();
 
@@ -510,10 +515,10 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsArrayList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productUnitsSpinner.setAdapter(adapter);
-
-        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsUnitArrayList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productUnitUnitsSpinner.setAdapter(adapter);
+//        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsUnitArrayList);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        productUnitUnitsSpinner.setAdapter(adapter);
     }
 
     private void addNewProductUnitFirebase() {
@@ -564,8 +569,10 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.product_unit_checkbox:
                 if (((CheckBox) v).isChecked()) {
+                    productUnitScanCodeButton.setEnabled(false);
                     showProductUnitCardViewDetails(true);
                 } else {
+                    productUnitScanCodeButton.setEnabled(true);
                     showProductUnitCardViewDetails(false);
                 }
                 break;
@@ -596,7 +603,6 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             productUnitEditDescriptionButton.setVisibility(View.VISIBLE);
             productUnitQty.setVisibility(View.VISIBLE);
             productUnitUnitsSpinner.setVisibility(View.VISIBLE);
-            productUnitScanCodeButton.setEnabled(false);
             productUnitCode.setEnabled(false);
         } else {
             productUnitName.setVisibility(View.GONE);
@@ -605,7 +611,6 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             productUnitEditDescriptionButton.setVisibility(View.GONE);
             productUnitQty.setVisibility(View.GONE);
             productUnitUnitsSpinner.setVisibility(View.GONE);
-            productUnitScanCodeButton.setEnabled(true);
             productUnitCode.setEnabled(true);
         }
     }
