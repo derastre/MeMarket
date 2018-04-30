@@ -346,7 +346,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
         childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key, Product);
         childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
-        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), false);
+        //childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), false);
         myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
