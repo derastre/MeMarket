@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -45,6 +47,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +62,8 @@ import static com.me_market.android.memarket.ProductActivity.SELECT_UI;
 public class NewProductActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int CAMERA_REQUEST = 1888;
+    private static final int PICTURE_SELECT = 1889;
     private static final int RC_SELECT_PRODUCT = 9003;
-    //private String mUserId;
     private ImageView productImage;
     private TextView productCode;
     private TextInputEditText productType;
@@ -75,6 +78,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     private Spinner productUnitsSpinner;
     private Spinner productUnitUnitsSpinner;
     private Button addPhoto;
+    private Button selectPicture;
     private Button productUnitScanCodeButton;
     private Button productUnitEditNameButton;
     private Button productUnitEditDescriptionButton;
@@ -107,6 +111,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         productUnitsSpinner = (Spinner) findViewById(R.id.spinner_unit);
         productImage = (ImageView) findViewById(R.id.productImageInput);
         addPhoto = (Button) findViewById(R.id.add_photo_button);
+        selectPicture = (Button) findViewById(R.id.select_picture_button);
 
         unitDetail = (CardView) findViewById(R.id.new_product_unit_detail_cardview);
         productUnitCode = (TextInputEditText) findViewById(R.id.product_unit_code_edittext);
@@ -121,6 +126,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
         //Listeners
         addPhoto.setOnClickListener(this);
+        selectPicture.setOnClickListener(this);
         productImage.setOnClickListener(this);
         productUnitScanCodeButton.setOnClickListener(this);
         productUnitEditNameButton.setOnClickListener(this);
@@ -400,6 +406,12 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
+    public void selectPicture(){
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto , PICTURE_SELECT);
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -407,6 +419,27 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             productImage.setVisibility(View.VISIBLE);
             addPhoto.setVisibility(View.GONE);
         }
+
+        if (requestCode == PICTURE_SELECT && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            try {
+                Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                productImage.setImageBitmap(photo);
+                productImage.setVisibility(View.VISIBLE);
+                addPhoto.setVisibility(View.GONE);
+//                If the picture if to big:
+//                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(myStream, false);
+//                Bitmap region = decoder.decodeRegion(new Rect(10, 10, 50, 50), null);
+            }catch (IOException e){
+                Snackbar.make(findViewById(R.id.new_product_scroll_layout),
+                        String.format(getString(R.string.picture_error), CommonStatusCodes.getStatusCodeString(resultCode)),
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+
+        }
+
         //Returning from barcode capture activity
         if (requestCode == RC_SELECT_PRODUCT) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
@@ -565,7 +598,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 takePicture();
                 break;
             case R.id.productImageInput:
-                takePicture();
+                //takePicture();
                 break;
             case R.id.product_unit_checkbox:
                 if (((CheckBox) v).isChecked()) {
@@ -584,6 +617,9 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.product_unit_edit_description_button:
                 productUnitDescription.setEnabled(true);
+                break;
+            case R.id.select_picture_button:
+                selectPicture();
                 break;
 
         }

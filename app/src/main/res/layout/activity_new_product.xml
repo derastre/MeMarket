@@ -59,6 +59,15 @@
                 android:drawableStart="@drawable/ic_camera_alt_black_24dp"
                 android:text="@string/product_image_input" />
 
+            <Button
+                android:id="@+id/select_picture_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:drawableStart="@drawable/ic_photo_black_24dp"
+                android:text="@string/select_picture" />
+
             <ImageView
                 android:id="@+id/productImageInput"
                 android:layout_width="match_parent"
