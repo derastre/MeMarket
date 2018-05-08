@@ -48,7 +48,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <Button
                 android:id="@+id/add_photo_button"
@@ -58,6 +59,13 @@
                 android:adjustViewBounds="true"
                 android:drawableStart="@drawable/ic_camera_alt_black_24dp"
                 android:text="@string/product_image_input" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/or"
+                android:padding="8dp"
+                android:gravity="center"/>
 
             <Button
                 android:id="@+id/select_picture_button"
