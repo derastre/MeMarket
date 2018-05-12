@@ -60,6 +60,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     public static final String UseFlash = "com.me_market.android.memarket.UseFlash";
     public static final String PRODUCT_ID = "com.me_market.android.memarket.PRODUCT_ID";
     public static final String PRODUCT_BARCODE = "com.me_market.android.memarket.PRODUCT_BARCODE";
+    private static final int RC_NEW_PRODUCT = 9009;
 
     //private String mUserId;
     private SurfaceView cameraView;
@@ -297,8 +298,9 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
                     }
                 } else if (dataSnapshot.getChildrenCount() == 0) {
                     //if mProduct code doesn't exist in database go to activity add new mProduct
-                    startActivity(new Intent(BarcodeReader.this, NewProductActivity.class)
-                            .putExtra(PRODUCT_BARCODE, code));
+                    startActivityForResult(new Intent(BarcodeReader.this, NewProductActivity.class)
+                            .putExtra(PRODUCT_BARCODE, code),RC_NEW_PRODUCT);
+
                             //.putExtra(USER_ID, mUserId));
                 } else if (dataSnapshot.getChildrenCount() > 1) {
                     for (DataSnapshot productSnapshop : dataSnapshot.getChildren()) {
@@ -361,5 +363,29 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
             enterCodeManually();
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Returning from barcode capture activity
+
+        if (requestCode == RC_NEW_PRODUCT) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    String id = data.getStringExtra(PRODUCT_ID);
+                    setResultAndExit(id);
+                } else {
+                    finish();
+                }
+            } else {
+                Snackbar.make(findViewById(R.id.placeSnackBar),
+                        String.format(getString(R.string.barcode_error), CommonStatusCodes.getStatusCodeString(resultCode)),
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 }
 

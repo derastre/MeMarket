@@ -240,7 +240,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             public void onComplete(@NonNull Task<Void> task) {
                 if (uploadComplete) {
                     hideProgressDialog();
-                    startProductActivity(key, ProductCode);
+                    //startProductActivity(key, ProductCode);
+                    setResultAndExit(key);
                 } else {
                     uploadComplete = true;
                     updateProgressDialogMessage(getString(R.string.loading_picture));
@@ -305,7 +306,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             public void onComplete(@NonNull Task<Void> task) {
                 if (uploadComplete) {
                     hideProgressDialog();
-                    startProductActivity(key, ProductCode);
+                    //startProductActivity(key, ProductCode);
+                    setResultAndExit(key);
                 } else {
                     uploadComplete = true;
                     updateProgressDialogMessage(getString(R.string.loading_picture));
@@ -383,7 +385,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 if (uploadComplete) {
                     hideProgressDialog();
-                    startProductActivity(key, ProductCode);
+                    //startProductActivity(key, ProductCode);
+                    setResultAndExit(key);
                 } else {
                     uploadComplete = true;
                     updateProgressDialogMessage(getString(R.string.loading_product_data));
@@ -391,6 +394,14 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             }
         });
 
+    }
+
+    private void setResultAndExit(String id) {
+
+        Intent data = new Intent();
+        data.putExtra(PRODUCT_ID, id);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
     }
 
     private void startProductActivity(String id, String code) {
