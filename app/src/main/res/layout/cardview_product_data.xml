@@ -54,9 +54,9 @@
             android:id="@+id/product_unit_detail_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:background="@color/grey_300"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
 
             <TextView
@@ -66,28 +66,44 @@
                 android:text="@string/unit_detail_text"
                 android:textStyle="bold" />
 
-
-            <TextView
-                android:id="@+id/product_unit_name_TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:text="@string/product_no_product_selected" />
-
-            <TextView
-                android:id="@+id/product_unit_description_TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:text="@string/product_no_product_selected" />
-
-            <TextView
-                android:id="@+id/product_unit_quantity_TextView"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content">
 
-                android:text="@string/product_no_product_selected" />
+                <ImageView
+                    android:id="@+id/product_unit_image"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:layout_marginEnd="8dp"
+                    />
 
+                <TextView
+                    android:id="@+id/product_unit_name_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product_no_product_selected"
+                    android:layout_toEndOf="@id/product_unit_image"
+                    />
+
+                <TextView
+                    android:id="@+id/product_unit_description_TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product_no_product_selected"
+                    android:layout_toEndOf="@id/product_unit_image"
+                    android:layout_below="@id/product_unit_name_TextView"/>
+
+                <TextView
+                    android:id="@+id/product_unit_quantity_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product_no_product_selected"
+                    android:layout_toEndOf="@id/product_unit_image"
+                    android:layout_below="@id/product_unit_description_TextView"/>
+
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/view_unit_detail_button"
@@ -95,10 +111,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="8dp"
                 android:text="@string/view_unit_detail"
-                android:textAlignment="center"
-                 />
+                android:textAlignment="center" />
 
         </LinearLayout>
 

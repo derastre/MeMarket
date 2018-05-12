@@ -423,17 +423,22 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             if (mProductUnit != null) {
                 if (mProductUnit.getId() != null) {
                     findViewById(R.id.view_unit_detail_button).setVisibility(View.VISIBLE);
-                } else {
-                    findViewById(R.id.product_unit_detail_layout).setVisibility(View.VISIBLE);
-                    textView = (TextView) findViewById(R.id.product_unit_name_TextView);
-                    textView.setText(mProductUnit.Name);
-                    textView = (TextView) findViewById(R.id.product_unit_description_TextView);
-                    textView.setText(mProductUnit.Type);
-                    textView = (TextView) findViewById(R.id.product_unit_quantity_TextView);
-                    Qty = mProductUnit.Quantity + " " + mProductUnit.Units;
-                    textView.setText(Qty);
-
+                    final StorageReference storageRef2 = storage.getReference().child(mCountryCode).child(getString(R.string.images_fb)).child(mProductUnit.getId());
+                    ImageView productUnitImage = (ImageView) findViewById(R.id.product_unit_image);
+                    Glide.with(this)
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef2)
+                            .into(productUnitImage);
+                    productUnitImage.setVisibility(View.VISIBLE);
                 }
+                findViewById(R.id.product_unit_detail_layout).setVisibility(View.VISIBLE);
+                textView = (TextView) findViewById(R.id.product_unit_name_TextView);
+                textView.setText(mProductUnit.Name);
+                textView = (TextView) findViewById(R.id.product_unit_description_TextView);
+                textView.setText(mProductUnit.Type);
+                textView = (TextView) findViewById(R.id.product_unit_quantity_TextView);
+                Qty = mProductUnit.Quantity + " " + mProductUnit.Units;
+                textView.setText(Qty);
             }
 
 
