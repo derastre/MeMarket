@@ -247,8 +247,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                     mProduct = dataSnapshot.getValue(Product.class);
                     if (mProduct != null) {
                         mProduct.setId(dataSnapshot.getKey());
-                        if (mProduct.hasChild) {
-                            mProductUnit = mProduct.getProductChild();
+                        if (mProduct.hasChild!= null) {
+                            if (mProductUnit.hasChild) mProductUnit = mProduct.getProductChild();
                         } else mProductUnit = null;
                         updateProductUI();
                     }
