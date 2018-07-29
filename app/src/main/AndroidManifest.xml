@@ -7,7 +7,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -116,7 +116,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
-        <activity android:name=".SelectCityActivity"></activity>
+        <activity android:name=".SelectCityActivity" />
+        <activity android:name=".EditProductActivity"></activity>
     </application>
 
 </manifest>

@@ -876,6 +876,11 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 setResult(CommonStatusCodes.SUCCESS, data);
                 finish();
                 return true;
+            case R.id.edit_product_button:
+                if (mProductId != null) {
+                    startActivity(new Intent(this, EditProductActivity.class).putExtra(PRODUCT_ID, mProductId));
+                }
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

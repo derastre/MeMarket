@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.me_market.android.memarket.EditProductActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/edit_product_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="0"
+            android:text="@string/product_code_input" />
+
+        <TextView
+            android:id="@+id/editProduct_productCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="123456"
+            android:textAlignment="textStart" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/editProduct_new_product_scroll_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_margin="8dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/editProduct_productImageInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/no_product"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/editProduct_product_edit_image_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:drawableStart="@drawable/ic_edit_black_24dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"/>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_centerInParent="true">
+
+                    <Button
+                        android:id="@+id/editProduct_add_photo_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:drawableStart="@drawable/ic_camera_alt_black_24dp"
+                        android:text="@string/product_image_input" />
+
+                    <TextView
+                        android:id="@+id/editText_or_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/or"
+                        android:textStyle="bold|italic" />
+
+                    <Button
+                        android:id="@+id/editProduct_select_picture_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:drawableStart="@drawable/ic_photo_black_24dp"
+                        android:text="@string/select_picture" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/editProduct_productNameInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_weight="1"
+                            android:hint="@string/product_name_input"
+                            android:inputType="textCapSentences" />
+
+                        <Button
+                            android:id="@+id/editProduct_product_edit_name_button"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:drawableStart="@drawable/ic_edit_black_24dp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/editProduct_productTypeInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/product_description_input"
+                            android:inputType="textMultiLine"
+                            android:lines="2"
+                            app:hintEnabled="true" />
+
+                        <Button
+                            android:id="@+id/editProduct_product_edit_description_button"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:drawableStart="@drawable/ic_edit_black_24dp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/editProduct_productBrandInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/product_brand_input"
+                            android:inputType="textCapSentences"
+                            app:hintEnabled="true" />
+
+                        <Button
+                            android:id="@+id/editProduct_product_edit_brand_button"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:drawableStart="@drawable/ic_edit_black_24dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/editProduct_productQuantityInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:hint="@string/product_quantity_input"
+                            android:inputType="number"
+                            app:hintEnabled="true" />
+
+                        <Button
+                            android:id="@+id/editProduct_product_edit_qty_button"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:drawableStart="@drawable/ic_edit_black_24dp" />
+
+
+                        <Spinner
+                            android:id="@+id/spinner_unit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/editProduct_newProductUnitDetailCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    app:contentPadding="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/unit_detail_text"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/editProduct_product_unit_code_edittext"
+                                android:layout_width="0px"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:layout_weight="1"
+                                android:hint="@string/product_code_input"
+                                android:inputType="textCapSentences" />
+
+                            <Button
+                                android:id="@+id/editProduct_product_unit_barcode_button"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:drawableStart="@drawable/barcode_scan" />
+
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/editProduct_product_unit_checkbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/product_no_barcode" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/editProduct_product_unit_name_edittext"
+                                android:layout_width="0px"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:layout_weight="1"
+                                android:hint="@string/product_name_input"
+                                android:inputType="textCapSentences"
+                                android:textColorHint="@color/hintColor" />
+
+                            <Button
+                                android:id="@+id/editProduct_product_unit_edit_name_button"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:drawableStart="@drawable/ic_edit_black_24dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/editProduct_product_description_unit_edittext"
+                                android:layout_width="0px"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:hint="@string/product_description_input"
+                                android:inputType="textMultiLine"
+                                android:lines="2"
+                                app:hintEnabled="true" />
+
+                            <Button
+                                android:id="@+id/editProduct_product_unit_edit_description_button"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:drawableStart="@drawable/ic_edit_black_24dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/editProduct_product_unit_quantity_input"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:hint="@string/product_quantity_input"
+                                android:inputType="number"
+                                app:hintEnabled="true" />
+
+                            <Spinner
+                                android:id="@+id/editProduct_product_unit_spinner"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.5" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
