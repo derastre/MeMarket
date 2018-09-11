@@ -214,7 +214,7 @@
 
 
                         <Spinner
-                            android:id="@+id/spinner_unit"
+                            android:id="@+id/editProduct_spinner_unit"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.5" />
@@ -258,7 +258,8 @@
                                 android:layout_marginTop="8dp"
                                 android:layout_weight="1"
                                 android:hint="@string/product_code_input"
-                                android:inputType="textCapSentences" />
+                                android:enabled="false"
+                                android:inputType="none" />
 
                             <Button
                                 android:id="@+id/editProduct_product_unit_barcode_button"
@@ -335,6 +336,13 @@
                                 android:hint="@string/product_quantity_input"
                                 android:inputType="number"
                                 app:hintEnabled="true" />
+
+                            <Button
+                                android:id="@+id/editProduct_product_unit_edit_quantity_button"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:drawableStart="@drawable/ic_edit_black_24dp" />
 
                             <Spinner
                                 android:id="@+id/editProduct_product_unit_spinner"

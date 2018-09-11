@@ -201,6 +201,7 @@
     <string name="facebook_sign_in">Facebook Sign in</string>
     <string name="google_sign_in">Google Sign In</string>
     <string name="or">or</string>
+    <string name="no_barcode">No barcode</string>
 
 
 </resources>

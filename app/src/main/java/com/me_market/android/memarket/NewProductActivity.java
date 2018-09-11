@@ -464,6 +464,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     productUnitUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
                     showProductUnitCardViewDetails(true);
                     productUnitCheckbox.setEnabled(false);
+                    productUnitEditNameButton.setVisibility(View.INVISIBLE);
+                    productUnitEditDescriptionButton.setVisibility(View.INVISIBLE);
                 } else {
                     finish();
                 }
