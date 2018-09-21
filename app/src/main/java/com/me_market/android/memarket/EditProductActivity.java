@@ -355,9 +355,77 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         builder.show();
     }
 
+    private void showProductUnitCardViewDetails(boolean b) {
+        if (b) {
+            productUnitName.setVisibility(View.VISIBLE);
+            productUnitEditNameButton.setVisibility(View.VISIBLE);
+            productUnitDescription.setVisibility(View.VISIBLE);
+            productUnitEditDescriptionButton.setVisibility(View.VISIBLE);
+            productUnitQty.setVisibility(View.VISIBLE);
+            productUnitUnitsSpinner.setVisibility(View.VISIBLE);
+            productUnitCode.setEnabled(false);
+        } else {
+            productUnitName.setVisibility(View.GONE);
+            productUnitEditNameButton.setVisibility(View.GONE);
+            productUnitDescription.setVisibility(View.GONE);
+            productUnitEditDescriptionButton.setVisibility(View.GONE);
+            productUnitQty.setVisibility(View.GONE);
+            productUnitUnitsSpinner.setVisibility(View.GONE);
+            productUnitCode.setEnabled(true);
+        }
+    }
 
     @Override
     public void onClick(View v) {
+        int i = v.getId();
+        switch (i){
+            case R.id.editProduct_product_edit_image_button:
+                addPhoto.setVisibility(View.VISIBLE);
+                selectPicture.setVisibility(View.VISIBLE);
+                findViewById(R.id.editText_or_text).setVisibility(View.VISIBLE);
+                productEditImageButton.setVisibility(View.GONE);
+                break;
 
+            case (R.id.editProduct_product_edit_name_button):
+                productName.setEnabled(true);
+                productEditNameButton.setVisibility(View.GONE);
+                break;
+
+            case (R.id.editProduct_product_edit_description_button):
+                productType.setEnabled(true);
+                productEditDescriptionButton.setVisibility(View.GONE);
+                break;
+
+            case (R.id.editProduct_product_edit_brand_button):
+                productBrand.setEnabled(true);
+                productEditBrandButton.setVisibility(View.GONE);
+                break;
+
+            case (R.id.editProduct_product_edit_qty_button):
+                productQty.setEnabled(true);
+                productUnitsSpinner.setEnabled(true);
+                productEditQtyButton.setVisibility(View.GONE);
+                break;
+
+            case (R.id.editProduct_product_unit_barcode_button):
+
+                break;
+
+            case (R.id.product_unit_edit_name_button):
+                productUnitName.setEnabled(true);
+                productUnitEditNameButton.setVisibility(View.GONE);
+                break;
+
+            case (R.id.product_unit_edit_description_button):
+                productUnitDescription.setEnabled(true);
+                productUnitEditDescriptionButton.setVisibility(View.GONE);
+                break;
+
+            case (R.id.editProduct_product_unit_edit_quantity_button):
+                productUnitQty.setEnabled(true);
+                productUnitUnitsSpinner.setEnabled(true);
+                productUnitEditQtyButton.setVisibility(View.GONE);
+                break;
+        }
     }
 }
