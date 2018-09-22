@@ -119,8 +119,8 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         productEditBrandButton = (Button) findViewById(R.id.editProduct_product_edit_brand_button);
         productEditQtyButton = (Button) findViewById(R.id.editProduct_product_edit_qty_button);
         productUnitScanCodeButton = (Button) findViewById(R.id.editProduct_product_unit_barcode_button);
-        productUnitEditNameButton = (Button) findViewById(R.id.product_unit_edit_name_button);
-        productUnitEditDescriptionButton = (Button) findViewById(R.id.product_unit_edit_description_button);
+        productUnitEditNameButton = (Button) findViewById(R.id.editProduct_product_unit_edit_name_button);
+        productUnitEditDescriptionButton = (Button) findViewById(R.id.editProduct_product_unit_edit_description_button);
         productUnitEditQtyButton = (Button) findViewById(R.id.editProduct_product_unit_edit_quantity_button);
 
 
@@ -158,7 +158,6 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-
     public void readProductFromFirebase() {
 
         if (mProductId != null) {
@@ -194,6 +193,11 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void updateEditProductUI() {
+
+        addPhoto.setVisibility(View.GONE);
+        selectPicture.setVisibility(View.GONE);
+        findViewById(R.id.editText_or_text).setVisibility(View.GONE);
+
         productCode.setText(mProduct.Barcode);
         productName.setText(mProduct.Name);
         productType.setText(mProduct.Type);
