@@ -114,7 +114,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         productUnitUnitsSpinner = (Spinner) findViewById(R.id.editProduct_product_unit_spinner);
 
         productEditImageButton = (Button) findViewById(R.id.editProduct_product_edit_image_button);
-        productEditNameButton= (Button) findViewById(R.id.editProduct_product_edit_name_button);
+        productEditNameButton = (Button) findViewById(R.id.editProduct_product_edit_name_button);
         productEditDescriptionButton = (Button) findViewById(R.id.editProduct_product_edit_description_button);
         productEditBrandButton = (Button) findViewById(R.id.editProduct_product_edit_brand_button);
         productEditQtyButton = (Button) findViewById(R.id.editProduct_product_edit_qty_button);
@@ -148,8 +148,6 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         //Setting the spinner
         getProductUnitsListFromFirebase();
 
-        readProductFromFirebase();
-
         //Setting Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_product_toolbar);
         setSupportActionBar(toolbar);
@@ -174,7 +172,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                     if (mProduct != null) {
                         mProduct.setId(dataSnapshot.getKey());
                         if (mProduct.hasChild != null) {
-                            if (mProductUnit.hasChild) mProductUnit = mProduct.getProductChild();
+                            if (mProduct.hasChild) mProductUnit = mProduct.getProductChild();
                         } else mProductUnit = null;
                         updateEditProductUI();
                     }
@@ -203,7 +201,11 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         productType.setText(mProduct.Type);
         productBrand.setText(mProduct.Brand);
         productQty.setText(mProduct.Quantity.toString());
-        productUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProduct.Units));
+        try {
+            productUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProduct.Units));
+        } catch (NullPointerException e) {
+            productUnitsSpinner.setSelection(0);
+        }
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference storageRef = storage.getReference().child(mCountryCode).child(getString(R.string.images_fb)).child(mProduct.getId());
         Glide.with(this)
@@ -212,17 +214,21 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                 .into(productImage);
 
         unitDetail.setVisibility(View.GONE);
-        if (mProductUnit!=null){
+        if (mProductUnit != null) {
             unitDetail.setVisibility(View.VISIBLE);
 
             productUnitName.setText(mProductUnit.Name);
             productUnitDescription.setText(mProductUnit.Type);
             productUnitQty.setText(String.format("%f", mProductUnit.Quantity));
-            productUnitUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
-            if(mProductUnit.Barcode!=null){
+            try {
+                productUnitUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
+            } catch (NullPointerException e) {
+                productUnitsSpinner.setSelection(0);
+            }
+            if (mProductUnit.Barcode != null) {
                 productUnitCheckbox.setChecked(false);
                 productUnitCode.setText(mProductUnit.Barcode);
-            }else {
+            } else {
                 productUnitCheckbox.setChecked(true);
                 productUnitCode.setText(R.string.no_barcode);
             }
@@ -239,6 +245,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         productBrand.setEnabled(false);
         productQty.setEnabled(false);
         productUnitsSpinner.setEnabled(false);
+        hideProgressDialog();
     }
 
     public void getProductUnitsListFromFirebase() {
@@ -304,6 +311,10 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                 });
 
                 hideProgressDialog();
+
+
+                //Lo coloco aqui para esperar que cargue datos en el spinner y no haya error en la seleccion de unidades
+                readProductFromFirebase();
             }
 
             @Override
@@ -382,7 +393,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        switch (i){
+        switch (i) {
             case R.id.editProduct_product_edit_image_button:
                 addPhoto.setVisibility(View.VISIBLE);
                 selectPicture.setVisibility(View.VISIBLE);
