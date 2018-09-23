@@ -266,7 +266,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 if (uploadComplete) {
                     hideProgressDialog();
-                    startProductActivity(key, ProductCode);
+                    //startProductActivity(key, ProductCode);
+                    setResultAndExit(key);
                 } else {
                     uploadComplete = true;
                     updateProgressDialogMessage(getString(R.string.loading_product_data));
@@ -276,8 +277,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
     }
 
-    private void writeNewProductWithUnitNoBarcodeOnFirebase(final String ProductCode,
-                                                            String name,
+    private void writeNewProductWithUnitNoBarcodeOnFirebase(final String ProductCode,                                                            String name,
                                                             String type,
                                                             String brand,
                                                             Float quantity,
@@ -332,7 +332,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 if (uploadComplete) {
                     hideProgressDialog();
-                    startProductActivity(key, ProductCode);
+                    //startProductActivity(key, ProductCode);
+                    setResultAndExit(key);
                 } else {
                     uploadComplete = true;
                     updateProgressDialogMessage(getString(R.string.loading_product_data));
@@ -360,7 +361,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             public void onComplete(@NonNull Task<Void> task) {
                 if (uploadComplete) {
                     hideProgressDialog();
-                    startProductActivity(key, ProductCode);
+                    setResultAndExit(key);
+                    //startProductActivity(key, ProductCode);
                 } else {
                     uploadComplete = true;
                     updateProgressDialogMessage(getString(R.string.loading_picture));
@@ -603,8 +605,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         builder.show();
     }
 
-    @Override
-    public void onClick(View v) {
+    @Override    public void onClick(View v) {
         int i = v.getId();
         switch (i) {
             case R.id.add_photo_button:

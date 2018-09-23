@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
@@ -13,6 +15,8 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +29,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,10 +40,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Product;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_BARCODE;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
@@ -44,6 +57,7 @@ import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 public class EditProductActivity extends BaseActivity implements View.OnClickListener {
 
     private String mProductId;
+    private String mProductUnitId;
     private Product mProduct;
     private Product mProductUnit;
     private FirebaseDatabase mDatabase;
@@ -51,6 +65,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
     private String mCityCode;
     private String mCountryCode;
     private ValueEventListener myProductListener;
+    private Boolean uploadComplete;
 
     private ImageView productImage;
     private TextView productCode;
@@ -167,12 +182,15 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                 @Override
 
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
+                    mProductUnitId = null;
                     mProduct = dataSnapshot.getValue(Product.class);
                     if (mProduct != null) {
                         mProduct.setId(dataSnapshot.getKey());
                         if (mProduct.hasChild != null) {
-                            if (mProduct.hasChild) mProductUnit = mProduct.getProductChild();
+                            if (mProduct.hasChild) {
+                                mProductUnit = mProduct.getProductChild();
+                                mProductUnitId = mProductUnit.getId();
+                            }
                         } else mProductUnit = null;
                         updateEditProductUI();
                     }
@@ -388,6 +406,283 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
             productUnitUnitsSpinner.setVisibility(View.GONE);
             productUnitCode.setEnabled(true);
         }
+    }
+
+
+    public void editProduct() {
+        //Add button OnClick event
+        String code = productCode.getText().toString();
+        String name = productName.getText().toString();
+        String type = productType.getText().toString();
+        String brand = productBrand.getText().toString();
+        Float quantity = 0f;
+        if (productQty.getText() != null) {
+            quantity = Float.parseFloat(productQty.getText().toString());
+        }
+        String units = productUnitsSpinner.getSelectedItem().toString();
+
+        productImage.setDrawingCacheEnabled(true);
+        productImage.buildDrawingCache();
+        Bitmap bitmap = productImage.getDrawingCache();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageData = baos.toByteArray();
+
+        int i = productUnitsSpinner.getSelectedItemPosition();
+
+        if (i == 1) {
+            if (productUnitCheckbox.isChecked()) {
+                String unitName = productUnitName.getText().toString();
+                String unitDescription = productUnitDescription.getText().toString();
+                Float unitQty = Float.parseFloat(productUnitQty.getText().toString());
+                String unitUnits = productUnitUnitsSpinner.getSelectedItem().toString();
+                writeProductEdittedWithUnitNoBarcodeOnFirebase(mProductId, code, name, type, brand, quantity, units, imageData, unitName, unitDescription, unitQty, unitUnits);
+            } else {
+                if (mProductUnitId != null) {
+                    writeProductEdittedWithUnitBarcodeOnFirebase(mProductId, code, name, type, brand, quantity, units, imageData, mProductUnitId, mProductUnit);
+                }
+            }
+        } else
+            writeProductEdittedOnFirebase(mProductId, code, name, type, brand, quantity, units, imageData);
+
+        //finish();
+
+    }
+
+    private void writeProductEdittedWithUnitBarcodeOnFirebase(final String productId, final String ProductCode,
+                                                              String name,
+                                                              String type,
+                                                              String brand,
+                                                              Float quantity,
+                                                              String units,
+                                                              byte[] image,
+                                                              String unitId,
+                                                              Product productUnit) {
+        // Write to the database
+        uploadComplete = false;
+        showProgressDialog(getString(R.string.saving_new_product), EditProductActivity.this);
+        HashMap<String, Object> childsUpdate = new HashMap<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(mCountryCode);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units, true);
+        //Product unitProduct = new Product(productUnit.Barcode, productUnit.Name, productUnit.Type, productUnit.Quantity, productUnit.Units);
+        productUnit.setId(unitId);
+        Product.setProductChild(productUnit);
+
+        //final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + productId, Product);
+        //childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
+        //childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.unitChild_fb) + "/" + unitId, productUnit);
+
+
+        myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(productId, ProductCode);
+                    //setResultAndExit(key);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_picture));
+                }
+            }
+        });
+
+        //Write picture
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images_fb) + "/" + productId);
+
+        InputStream stream = new ByteArrayInputStream(image);
+        UploadTask uploadTask = productImagesRef.putStream(stream);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(productId, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_product_data));
+                }
+            }
+        });
+
+    }
+
+    private void writeProductEdittedWithUnitNoBarcodeOnFirebase(final String productId, final String ProductCode, String name,
+                                                                String type,
+                                                                String brand,
+                                                                Float quantity,
+                                                                String units,
+                                                                byte[] image,
+                                                                String unitName,
+                                                                String unitDescription,
+                                                                Float unitQty,
+                                                                String unitUnits) {
+        // Write to the database
+        uploadComplete = false;
+        showProgressDialog(getString(R.string.saving_new_product), EditProductActivity.this);
+        HashMap<String, Object> childsUpdate = new HashMap<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(mCountryCode);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units, true);
+        Product unitProduct = new Product(null, unitName, unitDescription, unitQty, unitUnits);
+        Product.setProductChild(unitProduct);
+
+        //final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + productId, Product);
+        //childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
+
+        myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(productId, ProductCode);
+                    //setResultAndExit(key);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_picture));
+                }
+            }
+        });
+
+        //Write picture
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images_fb) + "/" + productId);
+
+        InputStream stream = new ByteArrayInputStream(image);
+        UploadTask uploadTask = productImagesRef.putStream(stream);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(productId, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_product_data));
+                }
+            }
+        });
+
+    }
+
+
+    public void writeProductEdittedOnFirebase(final String productId, final String ProductCode, String name, String type, String brand, Float quantity, String units, byte[] image) {
+        // Write to the database
+        uploadComplete = false;
+        showProgressDialog(getString(R.string.saving_new_product), EditProductActivity.this);
+        HashMap<String, Object> childsUpdate = new HashMap<>();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(mCountryCode);
+        Product Product = new Product(ProductCode, name, type, brand, quantity, units, false);
+        //final String key = myRef.child(getString(R.string.products_keys_fb)).child(ProductCode).push().getKey();
+        childsUpdate.put("/" + getString(R.string.products_fb) + "/" + productId, Product);
+        //childsUpdate.put("/" + getString(R.string.products_keys_fb) + "/" + ProductCode + "/" + key, name);
+        //childsUpdate.put("/" + getString(R.string.products_fb) + "/" + key + "/" + getString(R.string.hasUnit_fb), false);
+        myRef.updateChildren(childsUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(productId, ProductCode);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_picture));
+                }
+            }
+        });
+
+        //Write picture
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images_fb) + "/" + productId);
+
+        InputStream stream = new ByteArrayInputStream(image);
+        UploadTask uploadTask = productImagesRef.putStream(stream);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                if (uploadComplete) {
+                    hideProgressDialog();
+                    startProductActivity(productId, ProductCode);
+                    //setResultAndExit(key);
+                } else {
+                    uploadComplete = true;
+                    updateProgressDialogMessage(getString(R.string.loading_product_data));
+                }
+            }
+        });
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_item_toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //AppBar onClick method
+        int i = item.getItemId();
+
+        switch (i) {
+            case R.id.select_button:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.save_edit_question);
+
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        editProduct();
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    private void startProductActivity(String id, String code) {
+        startActivity(new Intent(this, ProductActivity.class)
+                .putExtra(PRODUCT_ID, id)
+                .putExtra(PRODUCT_BARCODE, code)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        );
     }
 
     @Override

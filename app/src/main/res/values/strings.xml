@@ -202,6 +202,7 @@
     <string name="google_sign_in">Google Sign In</string>
     <string name="or">or</string>
     <string name="no_barcode">No barcode</string>
+    <string name="save_edit_question">Save changes?</string>
 
 
 </resources>
