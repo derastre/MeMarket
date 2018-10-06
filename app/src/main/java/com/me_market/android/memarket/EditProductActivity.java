@@ -1,10 +1,13 @@
 package com.me_market.android.memarket;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -29,6 +32,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,6 +50,7 @@ import com.me_market.android.memarket.models.Product;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +58,14 @@ import java.util.HashMap;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_BARCODE;
 import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
+import static com.me_market.android.memarket.ProductActivity.PRODUCT_DATA;
+import static com.me_market.android.memarket.ProductActivity.SELECT_UI;
 
 public class EditProductActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int PICTURE_SELECT = 1889;
+    private static final int RC_SELECT_PRODUCT = 9003;
     private String mProductId;
     private String mProductUnitId;
     private Product mProduct;
@@ -408,7 +418,6 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-
     public void editProduct() {
         //Add button OnClick event
         String code = productCode.getText().toString();
@@ -690,10 +699,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         int i = v.getId();
         switch (i) {
             case R.id.editProduct_product_edit_image_button:
-                addPhoto.setVisibility(View.VISIBLE);
-                selectPicture.setVisibility(View.VISIBLE);
-                findViewById(R.id.editText_or_text).setVisibility(View.VISIBLE);
-                productEditImageButton.setVisibility(View.GONE);
+                showEditPictureButtons(true);
                 break;
 
             case (R.id.editProduct_product_edit_name_button):
@@ -718,7 +724,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                 break;
 
             case (R.id.editProduct_product_unit_barcode_button):
-
+                startGetBarcode();
                 break;
 
             case (R.id.product_unit_edit_name_button):
@@ -736,6 +742,113 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                 productUnitUnitsSpinner.setEnabled(true);
                 productUnitEditQtyButton.setVisibility(View.GONE);
                 break;
+
+            case R.id.add_photo_button:
+                takePicture();
+                break;
+
+            case R.id.select_picture_button:
+                selectPicture();
+                break;
+
+            case R.id.product_unit_checkbox:
+                if (((CheckBox) v).isChecked()) {
+                    productUnitScanCodeButton.setEnabled(false);
+                    showProductUnitCardViewDetails(true);
+                } else {
+                    productUnitScanCodeButton.setEnabled(true);
+                    showProductUnitCardViewDetails(false);
+                }
+                break;
         }
+    }
+
+    private void showEditPictureButtons(boolean b) {
+        if(b) {
+            addPhoto.setVisibility(View.VISIBLE);
+            selectPicture.setVisibility(View.VISIBLE);
+            findViewById(R.id.editText_or_text).setVisibility(View.VISIBLE);
+            productEditImageButton.setVisibility(View.GONE);
+        }else{
+            addPhoto.setVisibility(View.GONE);
+            selectPicture.setVisibility(View.GONE);
+            findViewById(R.id.editText_or_text).setVisibility(View.GONE);
+            productEditImageButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void takePicture() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
+    public void selectPicture(){
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto , PICTURE_SELECT);
+    }
+
+    private void startGetBarcode() {
+        startActivityForResult(new Intent(EditProductActivity.this, ProductActivity.class)
+                .putExtra(SELECT_UI, "Select"), RC_SELECT_PRODUCT);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            productImage.setImageBitmap(photo);
+            productImage.setVisibility(View.VISIBLE);
+            showEditPictureButtons(false);
+        }
+
+        if (requestCode == PICTURE_SELECT && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            try {
+                Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                productImage.setImageBitmap(photo);
+                productImage.setVisibility(View.VISIBLE);;
+                showEditPictureButtons(false);
+//                If the picture if to big:
+//                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(myStream, false);
+//                Bitmap region = decoder.decodeRegion(new Rect(10, 10, 50, 50), null);
+            }catch (IOException e){
+                Snackbar.make(findViewById(R.id.new_product_scroll_layout),
+                        String.format(getString(R.string.picture_error), CommonStatusCodes.getStatusCodeString(resultCode)),
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+
+        }
+
+        //Returning from barcode capture activity
+        if (requestCode == RC_SELECT_PRODUCT) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    mProductUnit = data.getParcelableExtra(PRODUCT_DATA);
+                    mProductUnitId = data.getStringExtra(PRODUCT_ID);
+                    productUnitName.setText(mProductUnit.Name);
+                    productUnitDescription.setText(mProductUnit.Type);
+                    productUnitCode.setText(mProductUnit.Barcode);
+                    productUnitQty.setText(String.format("%f", mProductUnit.Quantity));
+                    productUnitUnitsSpinner.setSelection(((ArrayAdapter) productUnitsSpinner.getAdapter()).getPosition(mProductUnit.Units));
+                    showProductUnitCardViewDetails(true);
+                    productUnitCheckbox.setEnabled(false);
+                    productUnitEditNameButton.setVisibility(View.INVISIBLE);
+                    productUnitEditDescriptionButton.setVisibility(View.INVISIBLE);
+                } else {
+                    finish();
+                }
+            } else {
+                Snackbar.make(findViewById(R.id.new_product_scroll_layout),
+                        String.format(getString(R.string.barcode_error), CommonStatusCodes.getStatusCodeString(resultCode)),
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+
     }
 }
