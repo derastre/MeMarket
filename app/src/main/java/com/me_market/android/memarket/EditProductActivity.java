@@ -220,9 +220,8 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
 
     private void updateEditProductUI() {
 
-        addPhoto.setVisibility(View.GONE);
-        selectPicture.setVisibility(View.GONE);
-        findViewById(R.id.editText_or_text).setVisibility(View.GONE);
+        showEditPictureButtons(false);
+        showProductUnitCardViewDetails(false);
 
         productCode.setText(mProduct.Barcode);
         productName.setText(mProduct.Name);
@@ -751,7 +750,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                 selectPicture();
                 break;
 
-            case R.id.product_unit_checkbox:
+            case R.id.editProduct_product_unit_checkbox:
                 if (((CheckBox) v).isChecked()) {
                     productUnitScanCodeButton.setEnabled(false);
                     showProductUnitCardViewDetails(true);
