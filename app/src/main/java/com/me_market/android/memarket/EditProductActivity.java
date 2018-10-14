@@ -31,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +44,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.me_market.android.memarket.components.BaseActivity;
@@ -237,10 +239,20 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         }
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference storageRef = storage.getReference().child(mCountryCode).child(getString(R.string.images_fb)).child(mProduct.getId());
-        Glide.with(this)
-                .using(new FirebaseImageLoader())
-                .load(storageRef)
-                .into(productImage);
+        storageRef.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+            @Override
+            public void onSuccess(StorageMetadata storageMetadata) {
+                Long creationTimeMillis = storageMetadata.getCreationTimeMillis();
+                Glide.with(EditProductActivity.this)
+                        .using(new FirebaseImageLoader())
+                        .load(storageRef)
+                        .signature(new StringSignature(String.valueOf(creationTimeMillis)))
+                        .into(productImage);
+                findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
+                findViewById(R.id.view_unit_detail_button).setVisibility(View.GONE);
+                findViewById(R.id.product_unit_detail_layout).setVisibility(View.GONE);
+            }
+        });
 
         unitDetail.setVisibility(View.GONE);
         if (mProductUnit != null) {
@@ -744,11 +756,11 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                 productUnitEditQtyButton.setVisibility(View.GONE);
                 break;
 
-            case R.id.add_photo_button:
+            case R.id.editProduct_add_photo_button:
                 takePicture();
                 break;
 
-            case R.id.select_picture_button:
+            case R.id.editProduct_select_picture_button:
                 selectPicture();
                 break;
 

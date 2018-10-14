@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,7 +27,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.StorageMetadata;
 import com.me_market.android.memarket.components.BaseActivity;
 import com.me_market.android.memarket.models.Product;
 import com.me_market.android.memarket.models.Purchase;
@@ -68,6 +74,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     private FloatingActionButton scan_fab;
     private FloatingActionButton add_purchase_fab;
+    private ImageView productImage;
     private String selectUi;
     private String mProductId;
     private Product mProduct;
@@ -90,6 +97,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     private ValueEventListener myPurchasesListener;
 
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
@@ -101,6 +109,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_profile_toolbar);
         scan_fab = (FloatingActionButton) findViewById(R.id.scan_fab);
         add_purchase_fab = (FloatingActionButton) findViewById(R.id.add_purchase_fab);
+        productImage = (ImageView) findViewById(R.id.product_image_ImageView);
 
         //Setting Toolbar
         setSupportActionBar(toolbar);
@@ -397,6 +406,21 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             //Storage for product picture
             FirebaseStorage storage = FirebaseStorage.getInstance();
             final StorageReference storageRef = storage.getReference().child(mCountryCode).child(getString(R.string.images_fb)).child(id);
+            storageRef.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                @Override
+                public void onSuccess(StorageMetadata storageMetadata) {
+                    Long creationTimeMillis = storageMetadata.getCreationTimeMillis();
+                    Glide.with(ProductActivity.this)
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .signature(new StringSignature(String.valueOf(creationTimeMillis)))
+                            .into(productImage);
+                    findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
+                    findViewById(R.id.view_unit_detail_button).setVisibility(View.GONE);
+                    findViewById(R.id.product_unit_detail_layout).setVisibility(View.GONE);
+                }
+            });
+
             TextView textView;
             //Set product barcode.
             textView = (TextView) findViewById(R.id.productCode);
@@ -410,14 +434,9 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
             textView = (TextView) findViewById(R.id.product_qty_TextView);
             String Qty = mProduct.Quantity + " " + mProduct.Units;
             textView.setText(Qty);
-            ImageView productImage = (ImageView) findViewById(R.id.product_image_ImageView);
-            Glide.with(this)
-                    .using(new FirebaseImageLoader())
-                    .load(storageRef)
-                    .into(productImage);
-            findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
-            findViewById(R.id.view_unit_detail_button).setVisibility(View.GONE);
-            findViewById(R.id.product_unit_detail_layout).setVisibility(View.GONE);
+
+
+
 
             //Getting unit detail info
             if (mProductUnit != null) {

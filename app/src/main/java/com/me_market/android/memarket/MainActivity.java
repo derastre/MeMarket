@@ -126,7 +126,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             Glide.with(this)
                     .load(pictureUri)
                     .placeholder(R.drawable.default_avatar)
-                    .error(R.drawable.error)
+                    //.error(R.drawable.error)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .animate(R.anim.fade_in)
                     .centerCrop()

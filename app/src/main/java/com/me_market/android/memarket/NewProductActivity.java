@@ -257,7 +257,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         StorageReference productImagesRef = storageRef.child(mCountryCode).child(getString(R.string.images_fb) + "/" + key);
 
         InputStream stream = new ByteArrayInputStream(image);
-        UploadTask uploadTask = productImagesRef.putStream(stream);
+        final UploadTask uploadTask = productImagesRef.putStream(stream);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -268,7 +268,6 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 if (uploadComplete) {
                     hideProgressDialog();
-                    //startProductActivity(key, ProductCode);
                     setResultAndExit(key);
                 } else {
                     uploadComplete = true;
