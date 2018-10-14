@@ -141,17 +141,19 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
         mCityCode = sharedPref.getString(getString(R.string.area_pref), null);
         mCountryCode = sharedPref.getString(getString(R.string.country_pref), null);
 
+        //Setting Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.new_product_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
+
         //Setting the spinner
         getProductUnitsListFromFirebase();
 
         //Setting the unit detail card view
         initializeUnitDetailCardView();
 
-        //Setting Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.new_product_toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
-        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
+
 
 
     }

@@ -117,7 +117,11 @@
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
         <activity android:name=".SelectCityActivity" />
-        <activity android:name=".EditProductActivity"></activity>
+        <activity android:name=".EditProductActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.me_market.android.memarket.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

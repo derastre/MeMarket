@@ -170,14 +170,16 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
         mCityCode = sharedPref.getString(getString(R.string.area_pref), null);
         mCountryCode = sharedPref.getString(getString(R.string.country_pref), null);
 
-        //Setting the spinner
-        getProductUnitsListFromFirebase();
-
         //Setting Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_product_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
+
+        //Setting the spinner
+        getProductUnitsListFromFirebase();
+
+
 
     }
 
