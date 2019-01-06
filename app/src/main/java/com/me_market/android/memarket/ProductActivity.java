@@ -69,6 +69,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     public static final String SELECT_UI = "com.me_market.android.memarket.SELECT_UI";
     public static final String filename = "myPurchases.save";
     private static final int RC_BARCODE_CAPTURE = 9001;
+    private static final int RC_STORE_SELECT = 9002;
     public static final String PRODUCT_DATA = "com.me_market.android.memarket.PRODUCT_DATA";
 
 
@@ -187,17 +188,7 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
 
-        // Set store name on price card
-        TextView textView;
-        String storename;
-        if (mStore != null) {
-            storename = mStore.CompanyData.Name + " " + mStore.Name;
-        } else {
-            storename = getString(R.string.select_store_instruction);
-        }
 
-        textView = (TextView) findViewById(R.id.selectedStoreName);
-        textView.setText(storename);
     }
 
     private void askToSelectStore() {
@@ -222,9 +213,8 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void startSelectStore() {
-        startActivity(new Intent(ProductActivity.this, SelectStoreActivity.class));
-        mStore = getSelectedStore();
-        readProductFromFirebase();
+        startActivityForResult(new Intent(ProductActivity.this, SelectStoreActivity.class),RC_STORE_SELECT);
+
     }
 
     public void scan_barcode() {
@@ -472,6 +462,18 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
 
     public void updateProductPriceOfferUI() {
         String id = mProduct.getId();
+        // Set store name on price card
+        TextView textView;
+        String storename;
+        if (mStore != null) {
+            storename = mStore.CompanyData.Name + " " + mStore.Name;
+        } else {
+            storename = getString(R.string.select_store_instruction);
+        }
+
+        textView = (TextView) findViewById(R.id.selectedStoreName);
+        textView.setText(storename);
+
         if (id != null && mStore != null) {
 
             TextView price_text = (TextView) findViewById(R.id.productPrice);
@@ -923,23 +925,30 @@ public class ProductActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //Returning from barcode capture activity
-
-        if (requestCode == RC_BARCODE_CAPTURE) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    mProductId = data.getStringExtra(PRODUCT_ID);
-                    readProductFromFirebase();
+        switch (requestCode){
+            case RC_BARCODE_CAPTURE:
+                if (resultCode == CommonStatusCodes.SUCCESS) {
+                    if (data != null) {
+                        mProductId = data.getStringExtra(PRODUCT_ID);
+                        readProductFromFirebase();
+                    } else {
+                        finish();
+                    }
                 } else {
-                    finish();
+                    Snackbar.make(findViewById(R.id.placeSnackBar),
+                            String.format(getString(R.string.barcode_error), CommonStatusCodes.getStatusCodeString(resultCode)),
+                            Snackbar.LENGTH_SHORT)
+                            .show();
                 }
-            } else {
-                Snackbar.make(findViewById(R.id.placeSnackBar),
-                        String.format(getString(R.string.barcode_error), CommonStatusCodes.getStatusCodeString(resultCode)),
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+                break;
+
+            case RC_STORE_SELECT:
+                mStore = getSelectedStore();
+                readProductFromFirebase();
+                break;
+
+           default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

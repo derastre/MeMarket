@@ -510,11 +510,11 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     String unitName = unitsSnapshop.getValue().toString();
                     if (unitName != null) {
                         unitsArrayList.add(unitName);
-          //              unitsUnitArrayList.add(unitName);
+
                     }
                 }
-                unitsArrayList.add(getString(R.string.add_new_unit_type));
-            //    unitsUnitArrayList.add(getString(R.string.add_new_unit_type));
+            //    unitsArrayList.add(getString(R.string.add_new_unit_type));
+
 
                 setUnitsTypesSpinner();
 
@@ -523,7 +523,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         int j = productUnitsSpinner.getAdapter().getCount() - 1;
-                        if (i == j) addNewProductUnitFirebase();
+                        //if (i == j) addNewProductUnitFirebase();
                         if (i == 1) unitDetail.setVisibility(View.VISIBLE);
                         else unitDetail.setVisibility(View.GONE);
                     }
@@ -537,8 +537,8 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        int j = productUnitUnitsSpinner.getAdapter().getCount() - 1;
-                        if (i == j) addNewProductUnitFirebase();
+                      //  int j = productUnitUnitsSpinner.getAdapter().getCount() - 1;
+                      //  if (i == j) addNewProductUnitFirebase();
                     }
 
                     @Override
@@ -561,13 +561,12 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setUnitsTypesSpinner() {
+        productUnitsSpinner.setAdapter(null);
+        productUnitUnitsSpinner.setAdapter(null);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsArrayList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productUnitsSpinner.setAdapter(adapter);
         productUnitUnitsSpinner.setAdapter(adapter);
-//        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsUnitArrayList);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        productUnitUnitsSpinner.setAdapter(adapter);
     }
 
     private void addNewProductUnitFirebase() {

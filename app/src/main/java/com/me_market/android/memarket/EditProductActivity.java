@@ -248,9 +248,6 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                         .load(storageRef)
                         .signature(new StringSignature(String.valueOf(creationTimeMillis)))
                         .into(productImage);
-                findViewById(R.id.scroll_group_view).setVisibility(View.VISIBLE);
-                findViewById(R.id.view_unit_detail_button).setVisibility(View.GONE);
-                findViewById(R.id.product_unit_detail_layout).setVisibility(View.GONE);
             }
         });
 
@@ -317,7 +314,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                         //              unitsUnitArrayList.add(unitName);
                     }
                 }
-                unitsArrayList.add(getString(R.string.add_new_unit_type));
+                //unitsArrayList.add(getString(R.string.add_new_unit_type));
                 //    unitsUnitArrayList.add(getString(R.string.add_new_unit_type));
 
                 setUnitsTypesSpinner();
@@ -327,7 +324,7 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         int j = productUnitsSpinner.getAdapter().getCount() - 1;
-                        if (i == j) addNewProductUnitFirebase();
+                        //if (i == j) addNewProductUnitFirebase();
                         if (i == 1) unitDetail.setVisibility(View.VISIBLE);
                         else unitDetail.setVisibility(View.GONE);
                     }
@@ -341,8 +338,8 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        int j = productUnitUnitsSpinner.getAdapter().getCount() - 1;
-                        if (i == j) addNewProductUnitFirebase();
+                       //F int j = productUnitUnitsSpinner.getAdapter().getCount() - 1;
+                        //if (i == j) addNewProductUnitFirebase();
                     }
 
                     @Override
@@ -369,6 +366,8 @@ public class EditProductActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setUnitsTypesSpinner() {
+        productUnitsSpinner.setAdapter(null);
+        productUnitUnitsSpinner.setAdapter(null);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, unitsArrayList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productUnitsSpinner.setAdapter(adapter);
