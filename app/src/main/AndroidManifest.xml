@@ -25,7 +25,7 @@
             android:value="@string/facebook_app_id" />
 
         <provider
-            android:name=".components.MySuggestionProvider"
+            android:name=".components.MySuggestionProvider" android:exported="false" 
             android:authorities="com.me_market.android.memarket.MySuggestionProvider" />
 
         <activity
