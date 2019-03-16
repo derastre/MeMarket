@@ -431,7 +431,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             productImage.setImageBitmap(photo);
             productImage.setVisibility(View.VISIBLE);
-            addPhoto.setVisibility(View.GONE);
+            findViewById(R.id.add_image_buttons).setVisibility(View.GONE);
         }
 
         if (requestCode == PICTURE_SELECT && resultCode == Activity.RESULT_OK) {
@@ -440,7 +440,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 productImage.setImageBitmap(photo);
                 productImage.setVisibility(View.VISIBLE);
-                addPhoto.setVisibility(View.GONE);
+                findViewById(R.id.add_image_buttons).setVisibility(View.GONE);
 //                If the picture if to big:
 //                BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(myStream, false);
 //                Bitmap region = decoder.decodeRegion(new Rect(10, 10, 50, 50), null);
@@ -612,7 +612,7 @@ public class NewProductActivity extends BaseActivity implements View.OnClickList
                 takePicture();
                 break;
             case R.id.productImageInput:
-                //takePicture();
+                findViewById(R.id.add_image_buttons).setVisibility(View.VISIBLE);
                 break;
             case R.id.product_unit_checkbox:
                 if (((CheckBox) v).isChecked()) {

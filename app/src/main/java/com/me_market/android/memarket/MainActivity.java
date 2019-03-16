@@ -45,6 +45,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.android.gms.ads.MobileAds;
 
+import org.w3c.dom.Text;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,7 +61,7 @@ import static com.me_market.android.memarket.SplashActivity.USER_NAME;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String SHARED_PREF = "com.example.android.memarket.SHARED_PREF";
+    public static final String SHARED_PREF = "com.me_market.android.memarket.SHARED_PREF";
     private String mUserId;
     private String mUserName;
     private String mUserEmail;
@@ -74,10 +76,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private ValueEventListener myOfferListener;
     private AdView mAdView;
     private String mCityCode;
+    private SharedPreferences sharedPref;
 
 
-    //TODO: Poner ciertas cosas bajo PAIS (product_units,product_keys, etc)
-    //Precios y ofertas si deberian estar bajo ciudad.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,12 +86,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         //Setting the Ads
         MobileAds.initialize(this, "ca-app-pub-8262098314220863~2165729690");
-        mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         //Setting Toolbar and Navigation Drawer
-        mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        mainToolbar = findViewById(R.id.main_toolbar);
         mainDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         setSupportActionBar(mainToolbar);
         mainActionBarDrawerToggle = new ActionBarDrawerToggle(this, mainDrawerLayout, mainToolbar, R.string.open, R.string.close);
@@ -141,16 +142,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mEmailVerified) {
             textView.setText(displayName);
         } else {
-            textView.setText(displayName + "\n" + getString(R.string.verify_email));
+            String text= displayName + "\n" + getString(R.string.verify_email);
+            textView.setText(text);
         }
 
         //Getting the selected city
-        SharedPreferences sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
+        sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
         if (mCityCode == null) {
             gotoSelectCity();
         } else {
             readOffersFromFirebase();
+        }
+
+        boolean wlcm_card = sharedPref.getBoolean(getString(R.string.welcome_card_bool),false);
+        if(wlcm_card){
+            findViewById(R.id.welcome_card).setVisibility(View.GONE);
+        }else{
+            findViewById(R.id.welcome_card).setVisibility(View.VISIBLE);
         }
 
     }
@@ -267,6 +276,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             searchProducts();
         } else if (i == R.id.got_it_button) {
             findViewById(R.id.welcome_card).setVisibility(View.GONE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(getString(R.string.welcome_card_bool),true);
+            editor.apply();
         }
     }
 

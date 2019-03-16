@@ -203,6 +203,7 @@
     <string name="or">or</string>
     <string name="no_barcode">No barcode</string>
     <string name="save_edit_question">Save changes?</string>
+    <string name="welcome_card_bool">welcome_card_bool</string>
 
 
 </resources>
