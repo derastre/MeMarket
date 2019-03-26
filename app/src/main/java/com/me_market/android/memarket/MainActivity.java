@@ -45,8 +45,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.android.gms.ads.MobileAds;
 
-import org.w3c.dom.Text;
-
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -164,7 +162,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
-    public void searchProducts() {
+    public void findProducts() {
         //startActivity(new Intent(this, BarcodeReader.class).putExtra(USER_ID, mUserId));
         startActivity(new Intent(this, ProductActivity.class)
                 .putExtra(USER_ID, mUserId)
@@ -273,7 +271,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.main_floating_button) {
-            searchProducts();
+            findProducts();
         } else if (i == R.id.got_it_button) {
             findViewById(R.id.welcome_card).setVisibility(View.GONE);
             SharedPreferences.Editor editor = sharedPref.edit();

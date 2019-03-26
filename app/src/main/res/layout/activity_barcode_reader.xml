@@ -19,12 +19,30 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="end|bottom"
-        android:visibility="gone"
+        android:visibility="visible"
         android:src="@drawable/ic_edit_black_24dp"
-        android:layout_margin="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
         app:borderWidth="2dp"
         app:fabSize="normal"
         app:rippleColor="#222"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/history_code_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/enter_code_button"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end|bottom"
+        android:visibility="visible"
+        android:src="@drawable/ic_history_black_24dp"
+        android:backgroundTint="@android:color/white"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:rippleColor="#222"/>
+
 
     <TextView
         android:id="@+id/code_info"
@@ -32,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/enter_code_button"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        />
 
 </RelativeLayout>
