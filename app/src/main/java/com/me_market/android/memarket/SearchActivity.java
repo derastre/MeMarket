@@ -133,7 +133,7 @@ public class SearchActivity extends BaseActivity {
             }
 
             ArrayAdapter<String> adapter =
-                    new ArrayAdapter<>(context, R.layout.text_listview_layout, R.id.list_content, resultsList);
+                    new ArrayAdapter<>(context, R.layout.listview_text, R.id.list_content, resultsList);
             listView.setAdapter(adapter);
         }
     }

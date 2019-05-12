@@ -142,7 +142,7 @@ public class StoresListFragment extends Fragment implements View.OnClickListener
         }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.text_listview_layout, R.id.list_content, storesNameList);
+                new ArrayAdapter<>(context, R.layout.listview_text, R.id.list_content, storesNameList);
         listView.setAdapter(adapter);
     }
 

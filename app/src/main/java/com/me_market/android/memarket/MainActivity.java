@@ -408,7 +408,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.on_sale_recyclerview_layout, parent, false);
+                    .inflate(R.layout.cardview_on_sale, parent, false);
 
 
             return new ViewHolder(itemView);

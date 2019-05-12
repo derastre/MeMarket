@@ -159,7 +159,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     private void findCountryCityGeocode(Location location) {
         updateProgressDialogMessage(getString(R.string.getting_area_name));
         //View where we add a new city
-        dialogView = getLayoutInflater().inflate(R.layout.add_country_city_dialog, null);
+        dialogView = getLayoutInflater().inflate(R.layout.dialog_add_country_city, null);
 
         Geocoder geocoder = new Geocoder(SelectCityActivity.this, Locale.getDefault());
         try {

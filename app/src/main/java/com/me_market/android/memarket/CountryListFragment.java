@@ -111,7 +111,7 @@ public class CountryListFragment extends Fragment {
 //        }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.text_listview_layout, R.id.list_content, countryNameArrayList);
+                new ArrayAdapter<>(context, R.layout.listview_text, R.id.list_content, countryNameArrayList);
         listView.setAdapter(adapter);
 
     }

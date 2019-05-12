@@ -127,7 +127,7 @@ public class CompaniesListFragment extends Fragment implements View.OnClickListe
         }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.text_listview_layout, R.id.list_content, companiesNameList);
+                new ArrayAdapter<>(context, R.layout.listview_text, R.id.list_content, companiesNameList);
         listView.setAdapter(adapter);
 
     }

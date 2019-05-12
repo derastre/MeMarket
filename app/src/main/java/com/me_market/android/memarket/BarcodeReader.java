@@ -40,10 +40,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.me_market.android.memarket.BarcodeHistory.BARCODE_HISTORY_SAVE;
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
+import static com.me_market.android.memarket.ProductActivity.MY_PURCHASES_SAVE;
 
 
 public class BarcodeReader extends BaseActivity implements View.OnClickListener {
@@ -147,6 +150,9 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     }
 
     private void setResultAndExit(String id) {
+
+        //Save Id for scan history
+        saveBarcodeHistoryArrayLocally(id);
 
         Intent data = new Intent();
         data.putExtra(PRODUCT_ID, id);
@@ -342,6 +348,26 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
             }
         });
         builder.show();
+    }
+
+    private void saveBarcodeHistoryArrayLocally(String ProductId) {
+        ArrayList productIds = new ArrayList();
+        try {
+            productIds = readObjectsFromFile(BARCODE_HISTORY_SAVE, getApplicationContext());
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+        }
+        productIds.add(ProductId);
+        try {
+            writeObjectsToFile(BARCODE_HISTORY_SAVE, productIds, getApplicationContext());
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        }
     }
 
     @Override

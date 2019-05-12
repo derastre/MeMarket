@@ -204,6 +204,7 @@
     <string name="no_barcode">No barcode</string>
     <string name="save_edit_question">Save changes?</string>
     <string name="welcome_card_bool">welcome_card_bool</string>
+    <string name="barcode_history_label">Scan history</string>
 
 
 </resources>

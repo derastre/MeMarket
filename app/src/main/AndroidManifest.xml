@@ -14,6 +14,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <activity android:name=".BarcodeHistory"></activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -25,11 +27,12 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-8262098314220863~2165729690"/>
+            android:value="ca-app-pub-8262098314220863~2165729690" />
 
         <provider
-            android:name=".components.MySuggestionProvider" android:exported="false" 
-            android:authorities="com.me_market.android.memarket.MySuggestionProvider" />
+            android:name=".components.MySuggestionProvider"
+            android:authorities="com.me_market.android.memarket.MySuggestionProvider"
+            android:exported="false" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -120,9 +123,9 @@
                 android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
         <activity android:name=".SelectCityActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.me_market.android.memarket.MainActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.me_market.android.memarket.MainActivity" />
         </activity>
         <activity android:name=".EditProductActivity">
             <meta-data

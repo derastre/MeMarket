@@ -116,7 +116,7 @@ public class CityListFragment extends Fragment {
 //        }
 
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(context, R.layout.text_listview_layout, R.id.list_content, cityNameArrayList);
+                new ArrayAdapter<>(context, R.layout.listview_text, R.id.list_content, cityNameArrayList);
         listView.setAdapter(adapter);
 
     }

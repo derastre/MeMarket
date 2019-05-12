@@ -127,7 +127,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
     private void setShoppingListOnListView() {
         //listView = (ListView) findViewById(R.id.shopping_list_listview);
         if (shoppingListItems != null) {
-            ShoppingListActivity.productArrayAdapter adapter = new ShoppingListActivity.productArrayAdapter(this, R.layout.shopping_list_listview_layout, shoppingListItems);
+            ShoppingListActivity.productArrayAdapter adapter = new ShoppingListActivity.productArrayAdapter(this, R.layout.listview_shopping_list, shoppingListItems);
             adapter.notifyDataSetInvalidated();
             listView.setAdapter(adapter);
         } else {
@@ -206,7 +206,7 @@ public class ShoppingListActivity extends BaseActivity implements View.OnClickLi
             ShoppingListActivity.ViewHolder holder = null;
             LayoutInflater inflater = getLayoutInflater();
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.shopping_list_listview_layout, null, false);
+                convertView = inflater.inflate(R.layout.listview_shopping_list, null, false);
                 holder = new ShoppingListActivity.ViewHolder(convertView);
                 convertView.setTag(holder);
             } else {

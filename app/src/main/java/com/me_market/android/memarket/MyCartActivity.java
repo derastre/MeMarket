@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
-import static com.me_market.android.memarket.ProductActivity.filename;
+import static com.me_market.android.memarket.ProductActivity.MY_PURCHASES_SAVE;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
 
@@ -150,7 +150,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
         purchaseArrayList = readRegisterProductLocally();
         listView = (ListView) findViewById(R.id.my_cart_listview);
         if (purchaseArrayList != null) {
-            productArrayAdapter adapter = new productArrayAdapter(this, R.layout.my_cart_listview_layout, purchaseArrayList);
+            productArrayAdapter adapter = new productArrayAdapter(this, R.layout.listview_my_cart, purchaseArrayList);
             listView.setAdapter(adapter);
             showTotalPrice();
         } else {
@@ -219,7 +219,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
             public void onClick(DialogInterface dialogInterface, int j) {
                 try {
                     purchaseArrayList = null;
-                    emptyObjectFile(filename, getApplicationContext());
+                    emptyObjectFile(MY_PURCHASES_SAVE, getApplicationContext());
                     setListProducts();
                 } catch (IOException e) {
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -239,7 +239,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
     private void eraseProduct(int position) {
         purchaseArrayList.remove(position);
         try {
-            writeObjectsToFile(filename, purchaseArrayList, getApplicationContext());
+            writeObjectsToFile(MY_PURCHASES_SAVE, purchaseArrayList, getApplicationContext());
         } catch (IOException e) {
             System.out.println("Error initializing stream");
         }
@@ -313,7 +313,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
             ViewHolder holder = null;
             LayoutInflater inflater = getLayoutInflater();
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.my_cart_listview_layout, null, false);
+                convertView = inflater.inflate(R.layout.listview_my_cart, null, false);
                 holder = new ViewHolder(convertView);
                 convertView.setTag(holder);
             } else {
@@ -389,7 +389,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
     private ArrayList<Purchase> readRegisterProductLocally() {
         ArrayList purchases;
         try {
-            purchases = readObjectsFromFile(filename, this);
+            purchases = readObjectsFromFile(MY_PURCHASES_SAVE, this);
             return purchases;
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
