@@ -85,6 +85,7 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
         barcodeInfo = (TextView) findViewById(R.id.code_info);
         enter_code_fab = (FloatingActionButton) findViewById(R.id.enter_code_button);
         enter_code_fab.setOnClickListener(this);
+        findViewById(R.id.history_code_button).setOnClickListener(this);
 
         // read parameters from the intent used to launch the activity.
         autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
@@ -385,9 +386,8 @@ public class BarcodeReader extends BaseActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.enter_code_button) {
-            enterCodeManually();
-        }
+        if (i == R.id.enter_code_button) enterCodeManually();
+        if (i==R.id.history_code_button) startActivity(new Intent(BarcodeReader.this,BarcodeHistory.class) );
     }
 
     @Override
