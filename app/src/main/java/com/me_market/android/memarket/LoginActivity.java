@@ -296,6 +296,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                //.requestIdToken("906279912165-ca1b4hejnuu652svbg6k2qcd1ta57jfv.apps.googleusercontent.com")
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -386,7 +387,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        showProgressDialog(getString(R.string.loading),LoginActivity.this);
+        //showProgressDialog(getString(R.string.loading),LoginActivity.this);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -397,17 +398,17 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
-                updateUI(null);
+
                 mGoogleApiClient = null;
                 Snackbar.make(findViewById(R.id.login_layout), "Google Login failed.", Snackbar.LENGTH_SHORT).show();
-
+                updateUI(null);
                 // [END_EXCLUDE]
             }
         } else {
             // Pass the activity result back to the Facebook SDK
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
-        hideProgressDialog();
+        //hideProgressDialog();
     }
     // [END onactivityresult]
 

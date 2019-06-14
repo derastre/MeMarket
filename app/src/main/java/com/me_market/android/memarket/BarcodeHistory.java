@@ -66,9 +66,9 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
         listView = findViewById(R.id.barcode_history_listview);
 
         //Getting the product shopping list
-        if (mUserId != null) {
+        //if (mUserId != null) {
             readProductArrayFromFirebase();
-        }
+        //}
 
 
     }
