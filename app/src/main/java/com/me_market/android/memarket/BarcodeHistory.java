@@ -66,9 +66,9 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
         listView = findViewById(R.id.barcode_history_listview);
 
         //Getting the product shopping list
-        //if (mUserId != null) {
+   //     if (mUserId != null) {
             readProductArrayFromFirebase();
-        //}
+     //   }
 
 
     }
@@ -108,6 +108,12 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
             if (!productIdListHistory.isEmpty()){
                 setBarcodeHistoryList();
             }
+        }else {
+            listView = (ListView) findViewById(R.id.my_cart_listview);
+            ArrayAdapter<String> adaptador;
+            adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
+            adaptador.add("Lista Vacia");
+            listView.setAdapter(adaptador);
         }
     }
 
