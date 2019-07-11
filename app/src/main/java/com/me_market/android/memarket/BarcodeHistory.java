@@ -37,6 +37,7 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
     private String mCountryCode;
     private ArrayList<Product> productListHistory;
     private static final int RC_SELECT_BARCODE = 9009;
+    private int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,33 +67,40 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
         listView = findViewById(R.id.barcode_history_listview);
 
         //Getting the product shopping list
-   //     if (mUserId != null) {
-            readProductArrayFromFirebase();
-     //   }
+        //if (mUserId != null) {
+        readProductArrayFromFirebase();
+        //}
 
 
     }
 
 
     private void readProductArrayFromFirebase() {
-        ArrayList<String> productIdListHistory = readBarcodeHistoryArrayLocally();
+        final ArrayList<String> productIdListHistory = readBarcodeHistoryArrayLocally();
 
         if (productIdListHistory != null) {
             showProgressDialog(getString(R.string.loading), BarcodeHistory.this);
 
             DatabaseReference myRef;
             ValueEventListener myListener;
-
+            counter = 0;
             productListHistory = new ArrayList<>();
             for (String id : productIdListHistory) {
-                myRef = mDatabase.getReference().child("products").child(id);
+
+                myRef = mDatabase.getReference().child(mCountryCode).child("products").child(id);
                 myListener = new ValueEventListener() {
                     @Override
 
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        counter++;
                         Product mProduct = dataSnapshot.getValue(Product.class);
                         if (mProduct != null) {
                             productListHistory.add(mProduct);
+                        }
+                        if (counter == productIdListHistory.size()) {
+                            if (!productListHistory.isEmpty()) {
+                                setBarcodeHistoryList();
+                            }
                         }
                     }
 
@@ -105,15 +113,6 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
                 myRef.addListenerForSingleValueEvent(myListener);
 
             }
-            if (!productIdListHistory.isEmpty()){
-                setBarcodeHistoryList();
-            }
-        }else {
-            listView = (ListView) findViewById(R.id.my_cart_listview);
-            ArrayAdapter<String> adaptador;
-            adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
-            adaptador.add("Lista Vacia");
-            listView.setAdapter(adaptador);
         }
     }
 
