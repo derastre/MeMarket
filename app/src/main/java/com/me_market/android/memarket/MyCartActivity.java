@@ -148,7 +148,7 @@ public class MyCartActivity extends BaseActivity implements View.OnClickListener
 
     private void setListProducts() {
         purchaseArrayList = readRegisterProductLocally();
-        listView = (ListView) findViewById(R.id.my_cart_listview);
+        listView = findViewById(R.id.my_cart_listview);
         if (purchaseArrayList != null) {
             productArrayAdapter adapter = new productArrayAdapter(this, R.layout.listview_my_cart, purchaseArrayList);
             listView.setAdapter(adapter);

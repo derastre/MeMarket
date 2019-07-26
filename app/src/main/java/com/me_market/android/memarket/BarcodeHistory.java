@@ -118,10 +118,10 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
 
     private void setBarcodeHistoryList() {
 
-        listView = (ListView) findViewById(R.id.my_cart_listview);
+        listView = findViewById(R.id.barcode_history_listview);
         if (productListHistory != null) {
             barcodeHistoryArrayAdapter adapter = new barcodeHistoryArrayAdapter(this, R.layout.listview_my_cart, productListHistory);
-            adapter.notifyDataSetInvalidated();
+            //adapter.notifyDataSetInvalidated();
             listView.setAdapter(adapter);
 
         } else {
