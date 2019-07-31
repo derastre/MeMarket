@@ -1,6 +1,7 @@
 package com.me_market.android.memarket;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -25,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.me_market.android.memarket.BarcodeReader.PRODUCT_ID;
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 import static com.me_market.android.memarket.SplashActivity.USER_ID;
 
@@ -209,7 +211,7 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
         public View getView(final int position, View convertView, ViewGroup parent) {
 
             //get the property we are displaying
-            Product product = products.get(position);
+            final Product product = products.get(position);
 
             //get the inflater and inflate the XML layout for each item
             BarcodeHistory.ViewHolder holder = null;
@@ -225,7 +227,14 @@ public class BarcodeHistory extends BaseActivity implements View.OnClickListener
             holder.getNameText().setText(product.Name);
             holder.getTypeText().setText(product.Type);
             holder.getCodeText().setText(product.Barcode);
-
+            holder.row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(BarcodeHistory.this, ProductActivity.class)
+                            .putExtra(PRODUCT_ID, product.getId()));
+                            //.putExtra(USER_ID, mUserId));
+                }
+            });
 
             return convertView;
         }
