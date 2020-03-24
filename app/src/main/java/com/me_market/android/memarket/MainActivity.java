@@ -71,9 +71,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private String pictureUri;
     private FloatingActionButton mainFab;
     private Query myOfferQuery;
+    private Query myLastAddedQuery;
     private ValueEventListener myOfferListener;
+    private ValueEventListener myLastAddedListener;
     private AdView mAdView;
     private String mCityCode;
+    private String mCountryCode;
     private SharedPreferences sharedPref;
 
 
@@ -147,10 +150,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //Getting the selected city
         sharedPref = this.getSharedPreferences(SHARED_PREF,Context.MODE_PRIVATE);
         mCityCode = sharedPref.getString(getString(R.string.area_pref),null);
+        mCountryCode = sharedPref.getString(getString(R.string.country_pref), null);
         if (mCityCode == null) {
             gotoSelectCity();
         } else {
-            readOffersFromFirebase();
+            //readOffersFromFirebase();
+            readLastAddedProducts();
         }
 
         boolean wlcm_card = sharedPref.getBoolean(getString(R.string.welcome_card_bool),false);
@@ -228,6 +233,55 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         };
 
         myOfferQuery.addValueEventListener(myOfferListener);
+    }
+    private void readLastAddedProducts() {
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference LastProductRef;
+
+        LastProductRef = mDatabase.getReference().child(mCountryCode).child(getString(R.string.products_fb));
+        myLastAddedQuery = LastProductRef.orderByKey().limitToLast(10);
+        myLastAddedListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Product mProduct;
+                ArrayList<Product> products = new ArrayList<>();
+                if (dataSnapshot.getChildren() != null) {
+
+                    for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
+                        if (productSnapshot.getValue() != null) {
+                            mProduct = productSnapshot.getValue(Product.class);
+                            mProduct.setId(productSnapshot.getKey());
+                            products.add(mProduct);
+                        }
+                    }
+                }
+                setLastAddedRecyclerView(products);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        myLastAddedQuery.addValueEventListener(myLastAddedListener);
+    }
+
+    private void setLastAddedRecyclerView(ArrayList<Product> products) {
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.on_sale_recyclerView);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        lastAddedArrayAdapter mAdapter = new lastAddedArrayAdapter(products);
+        mRecyclerView.setAdapter(mAdapter);
+
     }
 
     private void setSalesRecyclerView(ArrayList<Sale> sales) {
@@ -468,6 +522,103 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         @Override
         public int getItemCount() {
             return sales.size();
+        }
+
+    }
+
+    class lastAddedArrayAdapter extends RecyclerView.Adapter<lastAddedArrayAdapter.ViewHolder> {
+
+        private ArrayList<Product> products;
+
+        public lastAddedArrayAdapter(ArrayList<Product> products) {
+            this.products = products;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private View row;
+            private TextView name = null, type = null, price = null;
+            private ImageView image;
+
+            public ViewHolder(View row) {
+                super(row);
+                this.row = row;
+            }
+
+            public TextView getNameText() {
+                if (this.name == null) {
+                    this.name = (TextView) row.findViewById(R.id.on_sale_product_name);
+                }
+                return this.name;
+            }
+
+            public TextView getTypeText() {
+                if (this.type == null) {
+                    this.type = (TextView) row.findViewById(R.id.on_sale_product_type);
+                }
+                return this.type;
+            }
+
+            public TextView getPriceText() {
+                if (this.price == null) {
+                    this.price = (TextView) row.findViewById(R.id.on_sale_product_price);
+                }
+                return this.price;
+            }
+
+            public ImageView getImage() {
+                if (this.image == null) {
+                    this.image = (ImageView) row.findViewById(R.id.on_sale_product_image);
+                }
+                return this.image;
+            }
+
+        }
+
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.cardview_on_sale, parent, false);
+
+
+            return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+
+            //get the property we are displaying
+            final Product product = products.get(position);
+            if (product.getId() != null) {
+//                FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+//                DatabaseReference myRef = mDatabase.getReference().child("products").child(sale.productId);
+
+                holder.getNameText().setText(product.Name);
+                holder.getTypeText().setText(product.Type);
+                holder.getPriceText().setText("");
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference().child(mCountryCode).child(getString(R.string.images_fb)).child(product.getId());
+                Glide.with(MainActivity.this)
+                        .using(new FirebaseImageLoader())
+                        .load(storageRef)
+                        .into(holder.getImage());
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, ProductActivity.class)
+                                .putExtra(PRODUCT_ID, product.getId())
+                                .putExtra(USER_ID, mUserId));
+                    }
+                });
+
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return products.size();
         }
 
     }
