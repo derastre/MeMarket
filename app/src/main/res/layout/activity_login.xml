@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context="com.me_market.android.memarket.LoginActivity">
+    tools:context="com.me_market.android.memarket.LoginActivity"
+    android:background="@drawable/blurred_login_background">
 
 
     <!--<LinearLayout-->
@@ -87,7 +88,12 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <View style="@style/VerticalDivider" />
+        <ImageView
+            android:id="@+id/logoPicture"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/memarket_logo"
+            android:contentDescription="Logo"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -97,9 +103,10 @@
             android:paddingTop="10dp"
             android:text="@string/welcome_card_tittle"
             android:textSize="40sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@android:color/white"/>
 
-        <View style="@style/VerticalDivider" />
+
 
         <Button
             android:id="@+id/google_sign_in_button"
@@ -107,9 +114,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@android:color/holo_red_dark"
+            android:background="#FF3E30"
             android:text="@string/google_sign_in"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/facebook_login_button"
@@ -117,9 +125,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@android:color/holo_blue_dark"
+            android:background="#3b5998 "
             android:text="@string/facebook_sign_in"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/terms_text_TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="100dp"
+            android:text="@string/login_accept_terms"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -154,6 +176,8 @@
             android:layout_height="wrap_content"
             android:text="@string/cancel_button"
             android:visibility="gone" />
+
+
     </LinearLayout>
 
 

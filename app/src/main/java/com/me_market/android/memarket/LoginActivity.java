@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -55,6 +57,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     private CallbackManager mCallbackManager; //Facebook
     private FirebaseAuth mAuth;
     private LoginButton loginButton;
+    private TextView termsTextView;
 
 
     @Override
@@ -75,6 +78,8 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         //findViewById(R.id.cancel_button).setOnClickListener(this);
         findViewById(R.id.google_sign_in_button).setOnClickListener(this);
         findViewById(R.id.facebook_login_button).setOnClickListener(this);
+        termsTextView = findViewById(R.id.terms_text_TextView);
+        termsTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();

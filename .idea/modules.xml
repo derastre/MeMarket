@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/MeMarket.iml" filepath="$PROJECT_DIR$/.idea/MeMarket.iml" />
       <module fileurl="file://$PROJECT_DIR$/MeMarket-MeMarket.iml" filepath="$PROJECT_DIR$/MeMarket-MeMarket.iml" group="MeMarket" />
       <module fileurl="file://$PROJECT_DIR$/app/MeMarket-app.iml" filepath="$PROJECT_DIR$/app/MeMarket-app.iml" group="MeMarket/app" />
+      <module fileurl="file://$PROJECT_DIR$/Projects-MeMarket-MeMarket.iml" filepath="$PROJECT_DIR$/Projects-MeMarket-MeMarket.iml" group="MeMarket" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

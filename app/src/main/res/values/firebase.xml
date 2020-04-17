@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--database roots-->
-    <string name="companies_fb">companies</string>
-    <string name="companies_types_fb">companies_types</string>
-    <string name="prices_fb">prices</string>
-    <string name="prices_history_fb">prices_history</string>
-    <string name="product_units_fb">product_units</string>
-    <string name="products_fb">products</string>
-    <string name="products_keys_fb">products_keys</string>
-    <string name="purchases_fb">purchases</string>
-    <string name="sales_fb">sales</string>
-    <string name="sales_history_fb">sales_history</string>
-    <string name="shopping_list_fb">shopping_list</string>
-    <string name="stores_fb">stores</string>
-    <string name="locations_fb">locations</string>
+    <string name="companies_fb" translatable="false">companies</string>
+    <string name="companies_types_fb" translatable="false">companies_types</string>
+    <string name="prices_fb" translatable="false">prices</string>
+    <string name="prices_history_fb" translatable="false">prices_history</string>
+    <string name="product_units_fb" translatable="false">product_units</string>
+    <string name="products_fb" translatable="false">products</string>
+    <string name="products_keys_fb" translatable="false">products_keys</string>
+    <string name="purchases_fb" translatable="false">purchases</string>
+    <string name="sales_fb" translatable="false">sales</string>
+    <string name="sales_history_fb" translatable="false">sales_history</string>
+    <string name="shopping_list_fb" translatable="false">shopping_list</string>
+    <string name="stores_fb" translatable="false">stores</string>
+    <string name="locations_fb" translatable="false">locations</string>
 
-    <string name="images_fb">images</string>
+    <string name="images_fb" translatable="false">images</string>
 
     <!--shopping list child-->f
-    <string name="checked_fb">checked</string>
+    <string name="checked_fb" translatable="false">checked</string>
 
     <!--Stores childs-->
-    <string name="companydata_id_fb">CompanyData/id</string>
+    <string name="companydata_id_fb" translatable="false">CompanyData/id</string>
 
     <!--locations child-->
-    <string name="country_name_fb">country_name</string>
-    <string name="cities_fb">cities</string>
+    <string name="country_name_fb" translatable="false">country_name</string>
+    <string name="cities_fb" translatable="false">cities</string>
 
     <!--product child-->
-    <string name="hasUnit_fb">hasUnitChild</string>
-    <string name="unitChild_fb">child</string>
-    <string name="barcode_fb">barcode</string>
+    <string name="hasUnit_fb" translatable="false">hasUnitChild</string>
+    <string name="unitChild_fb" translatable="false">child</string>
+    <string name="barcode_fb" translatable="false">barcode</string>
 
 </resources>
