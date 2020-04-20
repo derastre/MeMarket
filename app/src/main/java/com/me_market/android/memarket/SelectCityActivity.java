@@ -41,12 +41,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import static com.me_market.android.memarket.CityListFragment.COUNTRY_CODE;
-import static com.me_market.android.memarket.CityListFragment.COUNTRY_NAME;
+import static com.me_market.android.memarket.StateListFragment.COUNTRY_CODE;
+import static com.me_market.android.memarket.StateListFragment.COUNTRY_NAME;
+import static com.me_market.android.memarket.CityListFragment.STATE_NAME;
+import static com.me_market.android.memarket.CityListFragment.STATE_CODE;
 import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 
 public class SelectCityActivity extends BaseActivity implements CountryListFragment.CountryListListener,
-        CityListFragment.CityListListener, View.OnClickListener {
+        CityListFragment.CityListListener, StateListFragment.StateListListener,View.OnClickListener {
 
     private static final int RC_HANDLE_LOCATION_PERM = 3;
     private static final String TAG = "Location";
@@ -103,10 +105,30 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     @Override
     public void onCountrySelected(String code, String name) {
         //Start Stores List Fragment and pass the selected company
-        CityListFragment cityListFragment = new CityListFragment();
+        StateListFragment stateListFragment = new StateListFragment();
         Bundle args = new Bundle();
         args.putString(COUNTRY_CODE, code);
         args.putString(COUNTRY_NAME, name);
+
+        stateListFragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.fragment_container_city, stateListFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void onStateSelected(String stateCode, String stateName, String countryCode) {
+        //Start Stores List Fragment and pass the selected company
+        CityListFragment cityListFragment = new CityListFragment();
+        Bundle args = new Bundle();
+        args.putString(STATE_CODE, stateCode);
+        args.putString(STATE_NAME, stateName);
+        args.putString(COUNTRY_CODE, countryCode);
 
         cityListFragment.setArguments(args);
 
@@ -129,6 +151,8 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
 
         finish();
     }
+
+
 
     private void getlocation() {
         //Setting GPS attemps back to 0

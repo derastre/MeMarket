@@ -1,8 +1,8 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.me_market.android.memarket.CityListFragment">
+    tools:context="com.me_market.android.memarket.CountryListFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,15 +10,15 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/stateNameText"
+            android:id="@+id/countryNameText"
             style="@style/Base.TextAppearance.AppCompat.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="" />
+            android:visibility="visible" />
 
         <ListView
-            android:id="@+id/citiesList"
+            android:id="@+id/statesList"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_margin="8dp"
@@ -26,4 +26,4 @@
 
         </ListView>
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

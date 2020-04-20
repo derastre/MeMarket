@@ -21,18 +21,21 @@ import com.me_market.android.memarket.components.BaseActivity;
 
 import java.util.ArrayList;
 
+import static com.me_market.android.memarket.StateListFragment.COUNTRY_CODE;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CityListFragment extends Fragment {
 
-    public static final String COUNTRY_CODE = "com.example.android.memarket.COUNTRY_CODE";
-    public static final String COUNTRY_NAME = "com.example.android.memarket.COUNTRY_NAME";
+    public static final String STATE_CODE = "com.me_market.android.memarket.STATE_CODE";
+    public static final String STATE_NAME = "com.me_market.android.memarket.STATE_NAME";
     private DatabaseReference myRef;
     private ValueEventListener cityListener;
     private ArrayList<String> cityNameArrayList;
     private ArrayList<String> cityCodeArrayList;
+    private String selectedStateCode;
     private String selectedCountryCode;
     private ListView listView;
     private BaseActivity baseActivity;
@@ -48,10 +51,10 @@ public class CityListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View myView = inflater.inflate(R.layout.fragment_city_list, container, false);
-
         selectedCountryCode = getArguments().getString(COUNTRY_CODE);
-        String name = getArguments().getString(COUNTRY_NAME);
-        TextView textView = myView.findViewById(R.id.countryNameText);
+        selectedStateCode = getArguments().getString(STATE_CODE);
+        String name = getArguments().getString(STATE_NAME);
+        TextView textView = myView.findViewById(R.id.stateNameText);
         textView.setText(name);
         //Setting ListView
         listView = myView.findViewById(R.id.citiesList);
@@ -79,7 +82,7 @@ public class CityListFragment extends Fragment {
         baseActivity = new BaseActivity();
         baseActivity.showProgressDialog(getString(R.string.loading), getActivity());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child(getString(R.string.locations_fb)).child(selectedCountryCode).child(getString(R.string.cities_fb));
+        myRef = database.getReference().child(getString(R.string.locations_fb)).child(selectedCountryCode).child(getString(R.string.states_fb)).child(selectedStateCode).child(getString(R.string.cities_fb));
 
         cityListener = new ValueEventListener() {
             @Override
@@ -107,14 +110,7 @@ public class CityListFragment extends Fragment {
     }
 
     private void setCitiesNameListView() {
-        //Colocar los nombres de las companias en la lista.
-
         Context context = getActivity();
-//        ArrayList<String> companiesNameList = new ArrayList<>();
-//        for (int i = 0; i < countryNameArrayList.size(); i++) {
-//            companiesNameList.add(countryNameArrayList.get(i));
-//        }
-
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(context, R.layout.listview_text, R.id.list_content, cityNameArrayList);
         listView.setAdapter(adapter);

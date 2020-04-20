@@ -206,6 +206,9 @@
     <string name="welcome_card_bool" translatable="false">welcome_card_bool</string>
     <string name="barcode_history_label">Scan history</string>
     <string name="login_accept_terms">By logging in you agree to the <a href="https://me-market.com/termsandconditions.html">"terms of service"</a></string>
+    <string name="state_list">State</string>
+    <string name="state_name_fb" translatable="false">state_name</string>
+    <string name="states_fb" translatable="false">states</string>
 
 
 </resources>
