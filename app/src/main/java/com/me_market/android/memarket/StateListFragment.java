@@ -27,7 +27,7 @@ public class StateListFragment extends Fragment {
     private DatabaseReference myRef;
     private ValueEventListener stateListener;
     private ArrayList<String> stateNameArrayList;
-    private ArrayList<String> stateCodeArrayList;
+    //private ArrayList<String> stateCodeArrayList;
     private String selectedCountryCode;
     private ListView listView;
     private BaseActivity baseActivity;
@@ -60,7 +60,7 @@ public class StateListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                mListener.onStateSelected(stateCodeArrayList.get(position),stateNameArrayList.get(position),selectedCountryCode);
+                mListener.onStateSelected(stateNameArrayList.get(position),selectedCountryCode);
             }
         });
 
@@ -84,16 +84,10 @@ public class StateListFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 stateNameArrayList = new ArrayList<>();
-                stateCodeArrayList = new ArrayList<>();
+                //stateCodeArrayList = new ArrayList<>();
                 for (DataSnapshot stateSnapshop : dataSnapshot.getChildren()) {
                     if (stateSnapshop.getValue()!=null){
-                        try {
-                            stateNameArrayList.add(stateSnapshop.child(getString(R.string.state_name_fb)).getValue().toString());
-                        } catch (NullPointerException e){
-                            stateNameArrayList.add(getString(R.string.empty));
-                        }
-
-                        stateCodeArrayList.add(stateSnapshop.getKey());
+                        stateNameArrayList.add(stateSnapshop.getKey());
                     }
                 }
                 setStatesNameListView();
@@ -121,7 +115,7 @@ public class StateListFragment extends Fragment {
     }
 
     public interface StateListListener {
-        void onStateSelected(String stateCode, String stateName, String countryCode);
+        void onStateSelected(String stateName, String countryCode);
     }
 
     @Override

@@ -13,15 +13,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.me_market.android.memarket.components.BaseActivity;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -36,6 +34,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.me_market.android.memarket.components.BaseActivity;
 
 import java.util.Arrays;
 
@@ -301,7 +300,6 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                //.requestIdToken("906279912165-ca1b4hejnuu652svbg6k2qcd1ta57jfv.apps.googleusercontent.com")
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();

@@ -31,9 +31,10 @@
             android:id="@+id/on_sale_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:text="test"/>
 
         <TextView
             android:id="@+id/on_sale_product_type"

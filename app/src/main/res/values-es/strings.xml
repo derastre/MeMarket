@@ -149,4 +149,11 @@
     <string name="barcode_history_label">Historial escaneo</string>
     <string name="login_accept_terms">Al iniciar sesion usted acepta los <a href="https://me-market.com/termsandconditions.html">\"terrminos y condiciones</a>  de este sitio</string>
     <string name="state_list">Estado</string>
+    <string name="automatic_button">Automático</string>
+    <string name="manual_button">Manual</string>
+    <string name="automatic_manual_location_dialog_text">Quiere ingresar su ubicación manualmente o usar su GPS?</string>
+    <string name="state">Estado</string>
+    <string name="city">Ciudad</string>
+    <string name="cannot_use_location_msg">No se puede usar el metodo automatico en este dispositivo.</string>
+    <string name="cannot_gps_msg">No se logro ubicar posicion.</string>
 </resources>

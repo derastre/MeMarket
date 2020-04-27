@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -35,20 +35,23 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.me_market.android.memarket.components.BaseActivity;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import static com.me_market.android.memarket.CityListFragment.STATE_NAME;
+import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 import static com.me_market.android.memarket.StateListFragment.COUNTRY_CODE;
 import static com.me_market.android.memarket.StateListFragment.COUNTRY_NAME;
-import static com.me_market.android.memarket.CityListFragment.STATE_NAME;
-import static com.me_market.android.memarket.CityListFragment.STATE_CODE;
-import static com.me_market.android.memarket.MainActivity.SHARED_PREF;
 
 public class SelectCityActivity extends BaseActivity implements CountryListFragment.CountryListListener,
-        CityListFragment.CityListListener, StateListFragment.StateListListener,View.OnClickListener {
+        CityListFragment.CityListListener, StateListFragment.StateListListener,
+        ManualSelectLocationFragment.ManualCityListener, View.OnClickListener {
 
     private static final int RC_HANDLE_LOCATION_PERM = 3;
     private static final String TAG = "Location";
@@ -58,6 +61,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     private String cityName;
     private String countryName;
     private String countryCode;
+    private String stateName;
     private int attemps;
     private boolean mRequestingLocationUpdates;
     private LocationRequest mLocationRequest;
@@ -122,11 +126,11 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     }
 
     @Override
-    public void onStateSelected(String stateCode, String stateName, String countryCode) {
+    public void onStateSelected(String stateName, String countryCode) {
         //Start Stores List Fragment and pass the selected company
         CityListFragment cityListFragment = new CityListFragment();
         Bundle args = new Bundle();
-        args.putString(STATE_CODE, stateCode);
+        //args.putString(STATE_CODE, stateCode);
         args.putString(STATE_NAME, stateName);
         args.putString(COUNTRY_CODE, countryCode);
 
@@ -142,17 +146,24 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     }
 
     @Override
-    public void onCitySelected(String city, String country) {
+    public void onCitySelected(String city, String countryCode) {
         SharedPreferences sharedPref = getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.area_pref), city);
-        editor.putString(getString(R.string.country_pref), country);
+        editor.putString(getString(R.string.country_pref), countryCode);
         editor.commit();
 
         finish();
     }
 
-
+    public void onManualCitySelected(String cName, String cCode, String sName, String ctyName){
+        countryCode = cCode;
+        countryName = cName;
+        stateName = sName;
+        cityName = ctyName;
+        writeNewLocationInFirebase(countryCode, countryName, stateName, cityName );
+        onCitySelected(cityName,countryCode);
+    }
 
     private void getlocation() {
         //Setting GPS attemps back to 0
@@ -167,7 +178,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            // Got last known location. In some rare sit uations this can be null.
+                            // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 findCountryCityGeocode(location);
                             } else {
@@ -183,9 +194,12 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     private void findCountryCityGeocode(Location location) {
         updateProgressDialogMessage(getString(R.string.getting_area_name));
         //View where we add a new city
+
+        dialogView = new View(this);
         dialogView = getLayoutInflater().inflate(R.layout.dialog_add_country_city, null);
 
         Geocoder geocoder = new Geocoder(SelectCityActivity.this, Locale.getDefault());
+
         try {
             List<Address> list = geocoder.getFromLocation(
                     location.getLatitude(), location.getLongitude(), 1);
@@ -193,18 +207,56 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
                 Address address = list.get(0);
                 countryName = address.getCountryName();
                 countryCode = address.getCountryCode();
-                cityName = address.getAdminArea();
-                if (cityName != null) {
+                stateName = address.getAdminArea();
+                cityName = address.getSubAdminArea();
+                if (cityName != null && countryCode!= null) {
                     TextView textView = dialogView.findViewById(R.id.country_name_textview);
                     textView.setText(countryName);
                     textView = dialogView.findViewById(R.id.country_code_textview);
                     textView.setText(countryCode);
+                    textView = dialogView.findViewById(R.id.state_name_textview);
+                    textView.setText(stateName);
                     textView = dialogView.findViewById(R.id.city_name_textview);
                     textView.setText(cityName);
                     hideProgressDialog();
                     add_new_city();
                 } else {
-                    findCurrentLocation();
+
+                        hideProgressDialog();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage(R.string.cannot_gps_msg);
+                        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.show();
+                    //findCurrentLocation();
+                }
+            }else{
+                if(!geocoder.isPresent()){
+                    hideProgressDialog();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(R.string.cannot_use_location_msg);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.show();
+                }else {
+                    hideProgressDialog();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(R.string.cannot_gps_msg);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.show();
                 }
             }
         } catch (IOException e) {
@@ -251,10 +303,11 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
         builder.setPositiveButton(R.string.add_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-
+                writeNewLocationInFirebase(countryCode, countryName, stateName, cityName );
+                onCitySelected(cityName,countryCode);
             }
         });
+
         builder.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -262,8 +315,63 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
             }
         });
         builder.show();
-        //dialog = builder.create();
-        //dialog.show();
+
+    }
+
+    private void request_add_new_city() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.automatic_manual_location_dialog_text);
+
+        // Set up the buttons
+        builder.setPositiveButton(R.string.manual_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startManualCitySelection();
+            }
+        });
+
+        builder.setNegativeButton(R.string.automatic_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getlocation();
+            }
+        });
+        builder.show();
+
+    }
+
+    private void startManualCitySelection() {
+        ManualSelectLocationFragment manualSelectLocationFragment = new ManualSelectLocationFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container_city, manualSelectLocationFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void writeNewLocationInFirebase(String mcountryCode, String mcountryName, String mstateName, String mcityName) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child(getString(R.string.locations_fb));
+//        myRef.child(mcountryCode)
+//                .child(getString(R.string.states_fb))
+//                .child(mstateName)
+//                .child(getString(R.string.cities_fb))
+//                .push().setValue(mcityName);
+
+        HashMap<String, Object> childsUpdate = new HashMap<>();
+        String key = myRef.child(mcountryCode)
+                .child(getString(R.string.states_fb))
+                .child(mstateName)
+                .child(getString(R.string.cities_fb))
+                .push().getKey();
+        childsUpdate.put("/" + mcountryCode + "/" + getString(R.string.country_name_fb), mcountryName);
+        childsUpdate.put("/" + mcountryCode + "/" +
+                getString(R.string.states_fb) + "/" +
+                mstateName + "/" +
+                getString(R.string.cities_fb) + "/" +
+                key, mcityName);
+        myRef.updateChildren(childsUpdate);
     }
 
     private void requestLocationPermission() {
@@ -364,7 +472,7 @@ public class SelectCityActivity extends BaseActivity implements CountryListFragm
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.add_city_fab) {
-            getlocation();
+            request_add_new_city();
         }
     }
 }

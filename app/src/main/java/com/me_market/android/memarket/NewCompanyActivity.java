@@ -84,7 +84,6 @@ public class NewCompanyActivity extends BaseActivity {
         DatabaseReference myRef = database.getReference().child(mCountryCode);
         Company company= new Company(name,type);
         myRef.child(getString(R.string.companies_fb)).push().setValue(company);
-
     }
 
     public void getCompaniesTypesListFromFirebase() {

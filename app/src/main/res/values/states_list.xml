@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="SV">
+        <item>San Salvador</item>
+        <item>"La Libertad"</item>
+    </string-array>
+    <string-array name="US">
+        <item>California</item>
+        <item>New York</item>
+    </string-array>
+</resources>

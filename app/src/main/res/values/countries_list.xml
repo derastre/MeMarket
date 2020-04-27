@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="countries_codes">
+        <item>SV</item>
+        <item>US</item>
+    </string-array>
+
+    <string-array name="countries_names">
+        <item>El Salvador</item>
+        <item>United States</item>
+    </string-array>
+    <array name="countries_States">
+        <item>San Salvador, La Libertad, La Paz</item>
+        <item>New York, Washington, Texas</item>
+    </array>
+</resources>
